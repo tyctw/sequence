@@ -643,6 +643,29 @@ style.textContent = `
   }
 `;
 document.head.appendChild(style);
+        // 防止複製
+      document.addEventListener('copy', function(e) {
+      e.preventDefault();
+      return false;
+    });
+
+    // 防止截圖 (僅適用於部分瀏覽器)
+    document.addEventListener('keyup', function(e) {
+      if (e.key == 'PrintScreen') {
+        navigator.clipboard.writeText('');
+        alert('截圖功能已被禁用');
+      }
+    });
+
+    // 防止右鍵點擊
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
+
+    // 防止拖曳選擇文字
+    document.onselectstart = function() {
+      return false;
+    };
 </script>
 
 </body></html>
