@@ -1,316 +1,513 @@
 <html>
-<title>桃園市高中普通科與職業類科序位</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
-
-  body {
-    font-family: 'Noto Sans TC', Arial, sans-serif;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    margin: 0;
-    padding: 40px;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  h1 {
-    color: #2c3e50;
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 2.5em;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-  }
-
-  .container {
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    width: 95%;
-    max-width: 1200px;
-    margin-bottom: 30px;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-  }
-
-  th, td {
-    padding: 15px;
-    text-align: left;
-    border-bottom: 1px solid #e0e0e0;
-  }
-
-  th {
-    background-color: #3498db;
-    color: white;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-
-  th:hover {
-    background-color: #2980b9;
-  }
-
-  tr:nth-child(even) {
-    background-color: #f8f9fa;
-  }
-
-  tr:hover {
-    background-color: #e8f4f8;
-  }
-
-  .bar-chart {
-    width: 200px;
-    height: 20px;
-    background-color: #ecf0f1;
-    border-radius: 10px;
-    overflow: hidden;
-    position: relative;
-  }
-
-  .bar {
-    height: 100%;
-    background: linear-gradient(90deg, #3498db, #2ecc71);
-    position: absolute;
-    left: 0;
-    top: 0;
-    transition: width 0.5s ease-in-out;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-
-  tr {
-    animation: fadeIn 0.5s ease-in-out;
-  }
-
-  footer {
-    margin-top: auto;
-    text-align: center;
-    padding: 20px;
-    color: #34495e;
-    font-size: 0.9em;
-    width: 100%;
-    background-color: rgba(255, 255, 255, 0.7);
-    border-top: 1px solid #bdc3c7;
-  }
-
-  .button-container {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
-
-  .button {
-    padding: 10px 20px;
-    margin: 0 10px;
-    font-size: 1em;
-    color: white;
-    background-color: #3498db;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-
-  .button:hover {
-    background-color: #2980b9;
-  }
-
-  .button.active {
-    background-color: #2ecc71;
-  }
-</style>
-</head>
-<body>
-  <h1>桃園市高中普通科與職業類科序位</h1>
-
-  <div class="button-container">
-    <button id="normalBtn" class="button">普通科</button>
-    <button id="vocationalBtn" class="button active">職業類科</button>
-  </div>
-
-  <div class="container">
-    <table id="schoolTable">
-      <thead>
-        <tr>
-          <th onclick="sortTable(0)">學校名稱</th>
-          <th onclick="sortTable(1)">序位累積比率</th>
-          <th onclick="sortTable(2)">序位累積排名</th>
-          <th>序位累積比率圖表</th>
-        </tr>
-      </thead>
-      <tbody id="tableBody">
-        <!-- Table content will be dynamically populated here -->
-      </tbody>
-    </table>
-  </div>
-
-  <footer>
-    <p>&copy; 2024 TYCTW桃園市高中普通科與職業類科序位. 版權所有。</p>
-    <p>資料幾供參考</p>
-  </footer>
-
-  <script>
-    const normalSchools = [
-      { name: "武陵高中(普通科)", rate: "3.96%", rank: 719 },
-      { name: "中壢高中(普通科)", rate: "10.65%", rank: 1938 },
-      { name: "桃園高中(普通科)", rate: "15.11%", rank: 2748 },
-      { name: "內壢高中(普通科)", rate: "18.46%", rank: 3359 },
-      { name: "平鎮高中(普通科)", rate: "26.28%", rank: 4781 },
-      { name: "南崁高中(普通科)", rate: "40.79%", rank: 7423 },
-      { name: "永豐高中(普通科)", rate: "34.11%", rank: 5903 },
-      { name: "大園高中(普通科)", rate: "30.59%", rank: 5293 },
-      { name: "陽明高中(普通科)", rate: "24.61%", rank: 4477 },
-      { name: "壽山高中(普通科)", rate: "38.88%", rank: 7075 },
-      { name: "楊梅高中(普通科)", rate: "46.04%", rank: 8378 },
-      { name: "龍潭高中(普通科)", rate: "47.21%", rank: 8590 },
-      { name: "新屋高中(普通科)", rate: "70.70%", rank: 12866 },
-      { name: "觀音高中(普通科)", rate: "70.70%", rank: 12866 },
-      { name: "大溪高中(普通科)", rate: "63.33%", rank: 11524 },
-      { name: "振聲高中(普通科)", rate: "53.32%", rank: 9702 },
-      { name: "中壢高商(綜合科)", rate: "33.33%", rank: 6064 }
-    ];
-
-    const vocationalSchools = [
-      { name: "壽山高中(廣告設計科)", rate: "52.29%", rank: 8635 },
-      { name: "壽山高中(應用英語科)", rate: "49%", rank: 8091 },
-      { name: "壽山高中(國際貿易科)", rate: "46.41%", rank: 7664 },
-      { name: "中壢高商(資料處理)", rate: "49%", rank: 8091 },
-      { name: "中壢高商(國際貿易)", rate: "49%", rank: 8091 },
-      { name: "中壢高商(商業經營)", rate: "38.33%", rank: 6975 },
-      { name: "中壢家商(流行服飾)", rate: "58.60%", rank: 9677 },
-      { name: "中壢家商(商業經營)", rate: "52.29%", rank: 8635 },
-      { name: "中壢家商(資料處理)", rate: "52.29%", rank: 8635 },
-      { name: "中壢家商(家政科)", rate: "58.60%", rank: 9677 },
-      { name: "中壢家商(應用英語)", rate: "37.55%", rank: 6200 },
-      { name: "北科附工(電機科)", rate: "33.84%", rank: 5588 },
-      { name: "北科附工(動力機械)", rate: "52.29%", rank: 8635 },
-      { name: "北科附工(汽車科)", rate: "53.56%", rank: 8844 },
-      { name: "北科附工(模具科)", rate: "53.56%", rank: 8844 },
-      { name: "北科附工(生物產業電機科)", rate: "49%", rank: 8091 },
-      { name: "北科附工(電子科)", rate: "38.16%", rank: 6302 },
-      { name: "北科附工(農業經營)", rate: "52.29%", rank: 8635 },
-      { name: "北科附工(園藝科)", rate: "40.71%", rank: 6722 },
-      { name: "北科附工(畜產保健科)", rate: "40.71%", rank: 6722 },
-      { name: "北科附工(化工科)", rate: "N/A", rank: 0 },
-      { name: "北科附工(機械科)", rate: "N/A", rank: 0 },
-      { name: "龍潭高中(園藝科)", rate: "72.38%", rank: 13170 },
-      { name: "龍潭高中(造園科)", rate: "73.24%", rank: 13327 },
-      { name: "龍潭高中(機械科)", rate: "67.29%", rank: 12245 },
-      { name: "龍潭高中(畜產保健)", rate: "63.60%", rank: 11007 },
-      { name: "龍潭高中(電子科)", rate: "63.34%", rank: 11525 },
-      { name: "楊梅高中(電子科)", rate: "60.51%", rank: 11011 },
-      { name: "楊梅高中(資訊科)", rate: "60.51%", rank: 11011 },
-      { name: "振聲高中(電子商務)", rate: "72.38%", rank: 13170 },
-      { name: "振聲高中(多媒體設計)", rate: "72.38%", rank: 13170 },
-      { name: "振聲高中(觀光事業科)", rate: "66.74%", rank: 12144 },
-      { name: "振聲高中(商業經營科)", rate: "61.88%", rank: 10219 },
-      { name: "振聲高中(資訊科)", rate: "60.13%", rank: 9930 },
-      { name: "振聲高中(應用英語科)", rate: "53.56%", rank: 8844 },
-      { name: "振聲高中(廣告設計科)", rate: "65.58%", rank: 11934 },
-      { name: "關西高中(園藝科)", rate: "77.49%", rank: 14101 },
-      { name: "關西高中(畜產保健科)", rate: "77.49%", rank: 14101 },
-      { name: "關西高中(家政科)", rate: "69.33%", rank: 12615 }
-    ];
-
-    function populateTable(schools) {
-      const tableBody = document.getElementById('tableBody');
-      tableBody.innerHTML = '';
-      schools.forEach(school => {
-        const row = `
-          <tr>
-            <td>${school.name}</td>
-            <td>${school.rate}</td>
-            <td>${school.rank}</td>
-            <td><div class="bar-chart"><div class="bar" style="width: ${school.rate}"></div></div></td>
-          </tr>
-        `;
-        tableBody.innerHTML += row;
-      });
+  <title>桃園市高中普通科與職業類科序位</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700&family=Roboto:wght@300;400;700&display=swap');
+  
+    :root {
+      --primary-color: #4a90e2;
+      --secondary-color: #50c878;
+      --background-color: #f0f4f8;
+      --text-color: #333;
+      --header-color: #2c3e50;
+      --border-color: #e0e0e0;
+      --hover-color: #e8f0fe;
     }
-
-    function sortTable(n) {
-      var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-      table = document.getElementById("schoolTable");
-      switching = true;
-      dir = "asc";
-      while (switching) {
-        switching = false;
-        rows = table.rows;
-        for (i = 1; i < (rows.length - 1); i++) {
-          shouldSwitch = false;
-          x = rows[i].getElementsByTagName("TD")[n];
-          y = rows[i + 1].getElementsByTagName("TD")[n];
-          if (dir == "asc") {
-            if (n === 0) {
-              if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-                shouldSwitch = true;
-                break;
+  
+    body {
+      font-family: 'Noto Sans TC', 'Roboto', sans-serif;
+      background: var(--background-color);
+      margin: 0;
+      padding: 40px 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--text-color);
+      line-height: 1.8;
+      font-size: 18px;
+    }
+  
+    h1 {
+      color: var(--header-color);
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: 3em;
+      font-weight: 700;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+      letter-spacing: 2px;
+    }
+  
+    .container {
+      background-color: white;
+      border-radius: 15px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+      width: 95%;
+      max-width: 1200px;
+      margin-bottom: 40px;
+      transition: all 0.3s ease;
+    }
+  
+    .container:hover {
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+      transform: translateY(-5px);
+    }
+  
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+  
+    th, td {
+      padding: 20px 18px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+  
+    th {
+      background-color: var(--primary-color);
+      color: white;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      font-size: 1.1em;
+    }
+  
+    th:hover {
+      background-color: #3a7bc8;
+    }
+  
+    tr:nth-child(even) {
+      background-color: #f8f9fa;
+    }
+  
+    tr:hover {
+      background-color: var(--hover-color);
+    }
+  
+    .bar-chart {
+      width: 250px;
+      height: 15px;
+      background-color: #e6e6e6;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+    }
+  
+    .bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      position: absolute;
+      left: 0;
+      top: 0;
+      transition: width 0.5s ease-in-out;
+      border-radius: 10px;
+    }
+  
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  
+    tr {
+      animation: fadeIn 0.6s ease-in-out;
+    }
+  
+    footer {
+      margin-top: auto;
+      text-align: center;
+      padding: 30px;
+      color: var(--text-color);
+      font-size: 1em;
+      width: 100%;
+      background-color: rgba(255, 255, 255, 0.8);
+      border-top: 1px solid var(--border-color);
+    }
+  
+    .button-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+  
+    .button {
+      padding: 15px 30px;
+      margin: 0 15px;
+      font-size: 1.2em;
+      color: white;
+      background-color: var(--primary-color);
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      font-weight: 500;
+    }
+  
+    .button:hover {
+      background-color: #3a7bc8;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+    }
+  
+    .button.active {
+      background-color: var(--secondary-color);
+    }
+  
+    .school-name {
+      font-weight: 500;
+      color: #2c3e50;
+      font-size: 1.1em;
+    }
+  
+    .rank {
+      font-weight: 700;
+      color: #e74c3c;
+      font-size: 1.2em;
+    }
+  
+    .rate {
+      color: #3498db;
+      font-size: 1.1em;
+    }
+  
+    #tableBody td:nth-child(2),
+    #tableBody td:nth-child(3) {
+      text-align: center;
+    }
+  
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      cursor: help;
+    }
+  
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: 240px;
+      background-color: #555;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 10px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      margin-left: -120px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-size: 0.9em;
+    }
+  
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+  
+    /* 手機版樣式 */
+    @media (max-width: 768px) {
+      body {
+        padding: 20px 10px;
+        font-size: 16px;
+      }
+      
+      h1 {
+        font-size: 2.2em;
+      }
+      
+      .container {
+        width: 100%;
+        overflow-x: auto;
+      }
+      
+      table {
+        font-size: 0.95em;
+      }
+      
+      th, td {
+        padding: 15px 12px;
+      }
+      
+      .bar-chart {
+        width: 150px;
+      }
+  
+      .button {
+        padding: 12px 24px;
+        font-size: 1em;
+      }
+  
+      .button-container {
+        flex-direction: column;
+        align-items: center;
+      }
+  
+      .button {
+        margin: 8px 0;
+        width: 80%;
+      }
+  
+      .tooltip .tooltiptext {
+        width: 200px;
+        margin-left: -100px;
+      }
+    }
+  
+    /* 增加響應式設計 */
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.8em;
+      }
+  
+      table {
+        font-size: 0.9em;
+      }
+  
+      th, td {
+        padding: 12px 10px;
+      }
+  
+      .bar-chart {
+        width: 120px;
+      }
+  
+      .button {
+        font-size: 0.9em;
+        padding: 10px 20px;
+      }
+    }
+  </style>
+  </head>
+  <body>
+    <h1>桃園市高中普通科與職業類科序位</h1>
+  
+    <div class="button-container">
+      <button id="normalBtn" class="button">普通科</button>
+      <button id="vocationalBtn" class="button active">職業類科</button>
+    </div>
+  
+    <div class="container">
+      <table id="schoolTable">
+        <thead>
+          <tr>
+            <th onclick="sortTable(0)">學校名稱</th>
+            <th onclick="sortTable(1)">序位累積比率</th>
+            <th onclick="sortTable(2)">序位累積排名</th>
+            <th>序位累積比率圖表</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <!-- Table content will be dynamically populated here -->
+        </tbody>
+      </table>
+    </div>
+  
+    <footer>
+      <p>&copy; 2024 TYCTW桃園市高中普通科與職業類科序位. 版權所有。</p>
+      <p>資料幾供參考</p>
+    </footer>
+  
+    <script>
+      const normalSchools = [
+        { name: "武陵高中(普通科)", rate: "3.96%", rank: 719 },
+        { name: "中壢高中(普通科)", rate: "10.65%", rank: 1938 },
+        { name: "桃園高中(普通科)", rate: "15.11%", rank: 2748 },
+        { name: "內壢高中(普通科)", rate: "18.46%", rank: 3359 },
+        { name: "平鎮高中(普通科)", rate: "26.28%", rank: 4781 },
+        { name: "南崁高中(普通科)", rate: "40.79%", rank: 7423 },
+        { name: "永豐高中(普通科)", rate: "34.11%", rank: 5903 },
+        { name: "大園高中(普通科)", rate: "30.59%", rank: 5293 },
+        { name: "陽明高中(普通科)", rate: "24.61%", rank: 4477 },
+        { name: "壽山高中(普通科)", rate: "38.88%", rank: 7075 },
+        { name: "楊梅高中(普通科)", rate: "46.04%", rank: 8378 },
+        { name: "龍潭高中(普通科)", rate: "47.21%", rank: 8590 },
+        { name: "新屋高中(普通科)", rate: "70.70%", rank: 12866 },
+        { name: "觀音高中(普通科)", rate: "70.70%", rank: 12866 },
+        { name: "大溪高中(普通科)", rate: "63.33%", rank: 11524 },
+        { name: "振聲高中(普通科)", rate: "53.32%", rank: 9702 },
+        { name: "中壢高商(綜合科)", rate: "33.33%", rank: 6064 }
+      ];
+  
+      const vocationalSchools = [
+        { name: "壽山高中(廣告設計科)", rate: "52.29%", rank: 8635 },
+        { name: "壽山高中(應用英語科)", rate: "49%", rank: 8091 },
+        { name: "壽山高中(國際貿易科)", rate: "46.41%", rank: 7664 },
+        { name: "中壢高商(資料處理)", rate: "49%", rank: 8091 },
+        { name: "中壢高商(國際貿易)", rate: "49%", rank: 8091 },
+        { name: "中壢高商(商業經營)", rate: "38.33%", rank: 6975 },
+        { name: "中壢家商(流行服飾)", rate: "58.60%", rank: 9677 },
+        { name: "中壢家商(商業經營)", rate: "52.29%", rank: 8635 },
+        { name: "中壢家商(資料處理)", rate: "52.29%", rank: 8635 },
+        { name: "中壢家商(家政科)", rate: "58.60%", rank: 9677 },
+        { name: "中壢家商(應用英語)", rate: "37.55%", rank: 6200 },
+        { name: "北科附工(電機科)", rate: "33.84%", rank: 5588 },
+        { name: "北科附工(動力機械)", rate: "52.29%", rank: 8635 },
+        { name: "北科附工(汽車科)", rate: "53.56%", rank: 8844 },
+        { name: "北科附工(模具科)", rate: "53.56%", rank: 8844 },
+        { name: "北科附工(生物產業電機科)", rate: "49%", rank: 8091 },
+        { name: "北科附工(電子科)", rate: "38.16%", rank: 6302 },
+        { name: "北科附工(農業經營)", rate: "52.29%", rank: 8635 },
+        { name: "北科附工(園藝科)", rate: "40.71%", rank: 6722 },
+        { name: "北科附工(畜產保健科)", rate: "40.71%", rank: 6722 },
+        { name: "北科附工(化工科)", rate: "N/A", rank: 0 },
+        { name: "北科附工(機械科)", rate: "N/A", rank: 0 },
+        { name: "龍潭高中(園藝科)", rate: "72.38%", rank: 13170 },
+        { name: "龍潭高中(造園科)", rate: "73.24%", rank: 13327 },
+        { name: "龍潭高中(機械科)", rate: "67.29%", rank: 12245 },
+        { name: "龍潭高中(畜產保健)", rate: "63.60%", rank: 11007 },
+        { name: "龍潭高中(電子科)", rate: "63.34%", rank: 11525 },
+        { name: "楊梅高中(電子科)", rate: "60.51%", rank: 11011 },
+        { name: "楊梅高中(資訊科)", rate: "60.51%", rank: 11011 },
+        { name: "振聲高中(電子商務)", rate: "72.38%", rank: 13170 },
+        { name: "振聲高中(多媒體設計)", rate: "72.38%", rank: 13170 },
+        { name: "振聲高中(觀光事業科)", rate: "66.74%", rank: 12144 },
+        { name: "振聲高中(商業經營科)", rate: "61.88%", rank: 10219 },
+        { name: "振聲高中(資訊科)", rate: "60.13%", rank: 9930 },
+        { name: "振聲高中(應用英語科)", rate: "53.56%", rank: 8844 },
+        { name: "振聲高中(廣告設計科)", rate: "65.58%", rank: 11934 },
+        { name: "關西高中(園藝科)", rate: "77.49%", rank: 14101 },
+        { name: "關西高中(畜產保健科)", rate: "77.49%", rank: 14101 },
+        { name: "關西高中(家政科)", rate: "69.33%", rank: 12615 }
+      ];
+  
+      function populateTable(schools) {
+        const tableBody = document.getElementById('tableBody');
+        tableBody.innerHTML = '';
+        schools.forEach(school => {
+          const row = `
+            <tr>
+              <td class="school-name">${school.name}</td>
+              <td class="rate tooltip">${school.rate}<span class="tooltiptext">序位累積比率表示該校在全部學校中的相對位置</span></td>
+              <td class="rank">${school.rank}</td>
+              <td><div class="bar-chart"><div class="bar" style="width: ${school.rate}"></div></div></td>
+            </tr>
+          `;
+          tableBody.innerHTML += row;
+        });
+      }
+  
+      function sortTable(n) {
+        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+        table = document.getElementById("schoolTable");
+        switching = true;
+        dir = "asc";
+        while (switching) {
+          switching = false;
+          rows = table.rows;
+          for (i = 1; i < (rows.length - 1); i++) {
+            shouldSwitch = false;
+            x = rows[i].getElementsByTagName("TD")[n];
+            y = rows[i + 1].getElementsByTagName("TD")[n];
+            if (dir == "asc") {
+              if (n === 0) {
+                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                  shouldSwitch = true;
+                  break;
+                }
+              } else {
+                if (parseFloat(x.innerHTML) > parseFloat(y.innerHTML)) {
+                  shouldSwitch = true;
+                  break;
+                }
               }
-            } else {
-              if (parseFloat(x.innerHTML) > parseFloat(y.innerHTML)) {
-                shouldSwitch = true;
-                break;
-              }
-            }
-          } else if (dir == "desc") {
-            if (n === 0) {
-              if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-                shouldSwitch = true;
-                break;
-              }
-            } else {
-              if (parseFloat(x.innerHTML) < parseFloat(y.innerHTML)) {
-                shouldSwitch = true;
-                break;
+            } else if (dir == "desc") {
+              if (n === 0) {
+                if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                  shouldSwitch = true;
+                  break;
+                }
+              } else {
+                if (parseFloat(x.innerHTML) < parseFloat(y.innerHTML)) {
+                  shouldSwitch = true;
+                  break;
+                }
               }
             }
           }
-        }
-        if (shouldSwitch) {
-          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-          switching = true;
-          switchcount ++;
-        } else {
-          if (switchcount == 0 && dir == "asc") {
-            dir = "desc";
+          if (shouldSwitch) {
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
             switching = true;
+            switchcount ++;
+          } else {
+            if (switchcount == 0 && dir == "asc") {
+              dir = "desc";
+              switching = true;
+            }
           }
         }
       }
-    }
-
-    document.addEventListener('DOMContentLoaded', (event) => {
-      const normalBtn = document.getElementById('normalBtn');
-      const vocationalBtn = document.getElementById('vocationalBtn');
-
-      normalBtn.addEventListener('click', () => {
-        populateTable(normalSchools);
-        normalBtn.classList.add('active');
-        vocationalBtn.classList.remove('active');
-        sortTable(2); // 按照序位累積排名排序
-      });
-
-      vocationalBtn.addEventListener('click', () => {
+  
+      document.addEventListener('DOMContentLoaded', (event) => {
+        const normalBtn = document.getElementById('normalBtn');
+        const vocationalBtn = document.getElementById('vocationalBtn');
+  
+        normalBtn.addEventListener('click', () => {
+          populateTable(normalSchools);
+          normalBtn.classList.add('active');
+          vocationalBtn.classList.remove('active');
+          sortTable(2); // 按照序位累積排名排序
+        });
+  
+        vocationalBtn.addEventListener('click', () => {
+          populateTable(vocationalSchools);
+          vocationalBtn.classList.add('active');
+          normalBtn.classList.remove('active');
+          sortTable(2); // 按照序位累積排名排序
+        });
+  
+        // 初始化顯示職業類科資料並排序
         populateTable(vocationalSchools);
-        vocationalBtn.classList.add('active');
-        normalBtn.classList.remove('active');
-        sortTable(2); // 按照序位累積排名排序
+        sortTable(2); // 按照序位累積排名從小到大排序
       });
-
-      // 初始化顯示職業類科資料並排序
-      populateTable(vocationalSchools);
-      sortTable(2); // 按照序位累積排名從小到大排序
-    });
-  </script>
-</body></html>
+  
+      // 增加手機版觸控支持
+      document.addEventListener('touchstart', handleTouchStart, false);        
+      document.addEventListener('touchmove', handleTouchMove, false);
+  
+      var xDown = null;                                                        
+      var yDown = null;
+  
+      function handleTouchStart(evt) {                                         
+          xDown = evt.touches[0].clientX;                                      
+          yDown = evt.touches[0].clientY;                                      
+      };                                                
+  
+      function handleTouchMove(evt) {
+          if ( ! xDown || ! yDown ) {
+              return;
+          }
+  
+          var xUp = evt.touches[0].clientX;                                    
+          var yUp = evt.touches[0].clientY;
+  
+          var xDiff = xDown - xUp;
+          var yDiff = yDown - yUp;
+  
+          if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {
+              if ( xDiff > 0 ) {
+                  /* left swipe */ 
+              } else {
+                  /* right swipe */
+              }                       
+          } else {
+              if ( yDiff > 0 ) {
+                  /* up swipe */ 
+              } else { 
+                  /* down swipe */
+              }                                                                 
+          }
+          /* reset values */
+          xDown = null;
+          yDown = null;                                             
+      };
+    </script>
+  </body></html>
