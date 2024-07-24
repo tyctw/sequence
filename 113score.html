@@ -1,671 +1,713 @@
 <html><head>  <title>113會考分數序位對照</title>
-  <style>
-body {
-  font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin: 0;
-  padding: 20px;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  color: #333;
-  min-height: 100vh;
-  font-size: 18px;
-  transition: background 0.5s ease;
-  display: flex;
-  flex-direction: column;
-  line-height: 1.6;
-}
-
-body:hover {
-  background: linear-gradient(135deg, #c3cfe2 0%, #f5f7fa 100%);
-}
-
-h1 {
-  color: #2c3e50;
-  text-align: center;
-  font-size: 3em;
-  margin-bottom: 30px;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-  letter-spacing: 1px;
-  animation: titleFadeIn 1.5s ease-out;
-}
-
-@keyframes titleFadeIn {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  background-color: rgba(255, 255, 255, 0.95);
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  padding: 30px;
-  transition: all 0.3s ease;
-  animation: containerFadeIn 1s ease-out;
-  flex-grow: 1;
-}
-
-@keyframes containerFadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.container:hover {
-  box-shadow: 0 15px 40px rgba(0,0,0,0.15);
-  transform: translateY(-5px);
-}
-
-.search-container {
-  margin-bottom: 30px;
-  text-align: center;
-  animation: searchFadeIn 1.2s ease-out 0.5s both;
-}
-
-@keyframes searchFadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-#searchInput {
-  width: 80%;
-  max-width: 400px;
-  padding: 15px 25px;
-  font-size: 18px;
-  border: none;
-  border-radius: 25px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
-  background-color: #f8f9fa;
-}
-
-#searchInput:focus {
-  outline: none;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-  background-color: #fff;
-  width: 85%;
-  max-width: 420px;
-}
-
-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  background-color: white;
-  border-radius: 8px;
-  overflow: hidden;
-  animation: tableFadeIn 1.5s ease-out 0.8s both;
-}
-
-@keyframes tableFadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-th, td {
-  padding: 15px;
-  text-align: left;
-  border-bottom: 1px solid #e0e0e0;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-}
-
-th {
-  background-color: #3498db;
-  color: white;
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  font-size: 16px;
-}
-
-tr:nth-child(even) {
-  background-color: #f8f9fa;
-}
-
-tr:hover {
-  background-color: #e8f4f8;
-  transform: scale(1.02);
-  transition: all 0.3s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-tr {
-  animation: fadeIn 0.5s ease-out;
-}
-
-.grade-A {
-  color: #27ae60;
-  font-weight: bold;
-  transition: color 0.3s ease;
-}
-
-.grade-B {
-  color: #2980b9;
-  transition: color 0.3s ease;
-}
-
-.grade-C {
-  color: #e67e22;
-  transition: color 0.3s ease;
-}
-
-.grade-unavailable {
-  color: #95a5a6;
-  font-style: italic;
-  transition: color 0.3s ease;
-}
-
-tr:hover .grade-A { color: #219a52; }
-tr:hover .grade-B { color: #2471a3; }
-tr:hover .grade-C { color: #d35400; }
-
-.header {
-  background: linear-gradient(45deg, #3498db, #2980b9);
-  color: white;
-  padding: 30px;
-  border-radius: 12px 12px 0 0;
-  margin: -30px -30px 30px -30px;
-  animation: headerSlideDown 1s ease-out;
-}
-
-@keyframes headerSlideDown {
-  from { transform: translateY(-100%); }
-  to { transform: translateY(0); }
-}
-
-.header h1 {
-  margin: 0;
-  color: white;
-  font-size: 3.2em;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-}
-
-.search-icon {
-  position: absolute;
-  left: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #95a5a6;
-  font-size: 20px;
-  transition: all 0.3s ease;
-}
-
-#searchInput:focus + .search-icon {
-  color: #3498db;
-}
-
-.search-container {
-  position: relative;
-}
-
-#searchInput {
-  padding-left: 50px;
-}
-
-.table-container {
-  max-height: 70vh;
-  overflow-y: auto;
-  border-radius: 8px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-
-.table-container::-webkit-scrollbar {
-  width: 10px;
-}
-
-.table-container::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 5px;
-}
-
-.table-container::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 5px;
-  transition: background 0.3s ease;
-}
-
-.table-container::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
-}
-
-.highlight {
-  animation: pulse 0.5s ease-in-out;
-}
-
-@media (max-width: 768px) {
+    <style>
   body {
-    padding: 15px;
-    font-size: 16px;
-  }
-
-  .container {
+    font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
     padding: 20px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    color: #333;
+    min-height: 100vh;
+    font-size: 18px;
+    transition: background 0.5s ease;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.6;
   }
-
+  
+  body:hover {
+    background: linear-gradient(135deg, #c3cfe2 0%, #f5f7fa 100%);
+  }
+  
   h1 {
-    font-size: 2.5em;
+    color: #2c3e50;
+    text-align: center;
+    font-size: 3em;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    letter-spacing: 1px;
+    animation: titleFadeIn 1.5s ease-out;
   }
-
+  
+  @keyframes titleFadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    padding: 30px;
+    transition: all 0.3s ease;
+    animation: containerFadeIn 1s ease-out;
+    flex-grow: 1;
+  }
+  
+  @keyframes containerFadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .container:hover {
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    transform: translateY(-5px);
+  }
+  
+  .search-container {
+    margin-bottom: 30px;
+    text-align: center;
+    animation: searchFadeIn 1.2s ease-out 0.5s both;
+  }
+  
+  @keyframes searchFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
   #searchInput {
-    width: 90%;
-    max-width: none;
+    width: 80%;
+    max-width: 400px;
+    padding: 15px 25px;
+    font-size: 18px;
+    border: none;
+    border-radius: 25px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    background-color: #f8f9fa;
+  }
+  
+  #searchInput:focus {
+    outline: none;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    background-color: #fff;
+    width: 85%;
+    max-width: 420px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    animation: tableFadeIn 1.5s ease-out 0.8s both;
+  }
+  
+  @keyframes tableFadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+  
+  th {
+    background-color: #3498db;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
     font-size: 16px;
   }
-
-  th, td {
-    padding: 12px;
+  
+  tr:nth-child(even) {
+    background-color: #f8f9fa;
+  }
+  
+  tr:hover {
+    background-color: #e8f4f8;
+    transform: scale(1.02);
+    transition: all 0.3s ease;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  tr {
+    animation: fadeIn 0.5s ease-out;
+  }
+  
+  .grade-A {
+    color: #27ae60;
+    font-weight: bold;
+    transition: color 0.3s ease;
+  }
+  
+  .grade-B {
+    color: #2980b9;
+    transition: color 0.3s ease;
+  }
+  
+  .grade-C {
+    color: #e67e22;
+    transition: color 0.3s ease;
+  }
+  
+  .grade-unavailable {
+    color: #95a5a6;
+    font-style: italic;
+    transition: color 0.3s ease;
+  }
+  
+  tr:hover .grade-A { color: #219a52; }
+  tr:hover .grade-B { color: #2471a3; }
+  tr:hover .grade-C { color: #d35400; }
+  
+  .header {
+    background: linear-gradient(45deg, #3498db, #2980b9);
+    color: white;
+    padding: 30px;
+    border-radius: 12px 12px 0 0;
+    margin: -30px -30px 30px -30px;
+    animation: headerSlideDown 1s ease-out;
+  }
+  
+  @keyframes headerSlideDown {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(0); }
+  }
+  
+  .header h1 {
+    margin: 0;
+    color: white;
+    font-size: 3.2em;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+  }
+  
+  .search-icon {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #95a5a6;
+    font-size: 20px;
+    transition: all 0.3s ease;
+  }
+  
+  #searchInput:focus + .search-icon {
+    color: #3498db;
+  }
+  
+  .search-container {
+    position: relative;
+  }
+  
+  #searchInput {
+    padding-left: 50px;
+  }
+  
+  .table-container {
+    max-height: 70vh;
+    overflow-y: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+  
+  .table-container::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  .table-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 5px;
+  }
+  
+  .table-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+  }
+  
+  .table-container::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+  
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+  
+  .highlight {
+    animation: pulse 0.5s ease-in-out;
+  }
+  
+  @media (max-width: 768px) {
+    body {
+      padding: 15px;
+      font-size: 16px;
+    }
+  
+    .container {
+      padding: 20px;
+    }
+  
+    h1 {
+      font-size: 2.5em;
+    }
+  
+    #searchInput {
+      width: 90%;
+      max-width: none;
+      font-size: 16px;
+    }
+  
+    th, td {
+      padding: 12px;
+      font-size: 14px;
+    }
+  
+    .table-container {
+      max-height: 60vh;
+    }
+  }
+  
+  .mobile-scroll-hint {
+    display: none;
+    text-align: center;
+    margin-top: 15px;
+    color: #7f8c8d;
+    font-style: italic;
+    animation: fadeIn 1s ease-out;
     font-size: 14px;
   }
-
-  .table-container {
-    max-height: 60vh;
+  
+  @media (max-width: 768px) {
+    .mobile-scroll-hint {
+      display: block;
+    }
   }
+  
+  footer {
+    background-color: #34495e;
+    color: #ecf0f1;
+    text-align: center;
+    padding: 25px;
+    font-size: 16px;
+    margin-top: 40px;
+    border-radius: 0 0 12px 12px;
+    animation: footerFadeIn 1s ease-out;
+  }
+  
+  @keyframes footerFadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  footer p {
+    margin: 8px 0;
+  }
+  
+  footer a {
+    color: #3498db;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  footer a:hover {
+    color: #2980b9;
+    text-decoration: underline;
+  }
+  /* 新增導航欄樣式 */
+.nav-bar {
+  background-color: #2c3e50;
+  padding: 15px 0;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-.mobile-scroll-hint {
-  display: none;
-  text-align: center;
-  margin-top: 15px;
-  color: #7f8c8d;
-  font-style: italic;
-  animation: fadeIn 1s ease-out;
-  font-size: 14px;
+.nav-bar a {
+  color: #ecf0f1;
+  text-decoration: none;
+  padding: 10px 20px;
+  margin: 0 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  font-weight: bold;
+}
+
+.nav-bar a:hover {
+  background-color: #ecf0f1;
+  color: #2c3e50;
 }
 
 @media (max-width: 768px) {
-  .mobile-scroll-hint {
-    display: block;
+  .nav-bar {
+    padding: 10px 0;
   }
-}
-
-footer {
-  background-color: #34495e;
-  color: #ecf0f1;
-  text-align: center;
-  padding: 25px;
-  font-size: 16px;
-  margin-top: 40px;
-  border-radius: 0 0 12px 12px;
-  animation: footerFadeIn 1s ease-out;
-}
-
-@keyframes footerFadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-footer p {
-  margin: 8px 0;
-}
-
-footer a {
-  color: #3498db;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-footer a:hover {
-  color: #2980b9;
-  text-decoration: underline;
-}
-
-</style></head><body>
-
-<div class="container">
-  <div class="header">
-    <h1>113會考分數序位對照</h1>
-  </div>
-
-  <div class="search-container">
-    <input type="text" id="searchInput" placeholder="搜尋...">
-    <span class="search-icon">🔍</span>
-  </div>
-
-  <div class="table-container">
-    <table id="gradeTable">
-      <tr>
-        <th>國文</th>
-        <th>數學</th>
-        <th>英文</th>
-        <th>社會</th>
-        <th>自然</th>
-        <th>作文</th>
-        <th>比率區間</th>
-        <th>序位區間</th>
-        <th>分數</th>
-        <th>積點</th>
-        <th>積分</th>
-      </tr>
-    </table>
-  </div>
-
-  <div class="mobile-scroll-hint">
-    ← 左右滑動查看更多成績詳情 →
-  </div>
-</div>
-
-<footer>
-  <p>&copy; <span id="currentYear"></span> 113會考分數序位對照. All rights reserved.</p>
-  <p>以上資料為113會考生填取表單資料</p>
-</footer>
-
-<script>
-const data = `國文成績	數學成績	英文成績	社會成績	自然成績	作文成績	比率區間	序位區間	分數	總積點	總積分
-B	C	B	B	B	四級分	67.84~ 67.23	11103~11203	4B1C0+	9	21
-B	C	B+	B	B	四級分	23.24~ 22.62	3838~ 3735	4B1C1+	10	21
-B	C	B+	B	B+	四級分	69.73~70.48	7236~ 7136	4B1C2+	11	21
-B+	C	B++	B	B	四級分	68.48~67.85	9587~ 9455	4B1C3+	12	21
-B++	C	B	B+	B+	四級分	43.81~ 43.21	7236~ 7136	4B1C4+	13	21
-未取得	未取得	未取得	未取得	未取得	四級分	未取得	未取得	4B1C5+	14	21
-未取得	未取得	未取得	未取得	未取得	四級分	未取得	未取得	4B1C6+	15	21
-未取得	未取得	未取得	未取得	未取得	四級分	未取得	未取得	4B1C7+	16	21
-未取得	未取得	未取得	未取得	未取得	四級分	未取得	未取得	4B1C8+	17	21
-未取得	未取得	未取得	未取得	未取得	四級分	未取得	未取得	4B1C9+	18	21
-未取得	未取得	未取得	未取得	未取得	四級分	未取得	未取得	4B1C10+	19	21
-B	B	B	B	B	四級分	61.88~63.51	10219~10489	5B0+	10	23
-B	B	B+	B	B	四級分	60.13~61.07	9930~10086	5B1+	11	23
-B	B+	B	B	B+	四級分	58.6~58.22	9677~9781	5B2+	12	23
-B++	B	B	B	B+	四級分	53.56~54.45	8844~8993	5B3+	13	23
-B+	B	B++	B	B+	四級分	52.29~9103	8635~8742	5B4+	14	23
-B++	B	B++	B+	B	四級分	49~49.69	8091~8207	5B5+	15	23
-B++	B+	B+	B+	B+	四級分	46.41~47.04	7664~7768	5B6+	16	23
-未取得	未取得	未取得	未取得	未取得	未取得	未取得	7351~7453	5B7+	17	23
-B++	B+	B+	B++	B+	四級分	44.51~45.13	7351~7453	5B8+	18	23
-B++	B++	B++	B+	B++	四級分	41.92~42.52	6922~7023	5B9+	19	23
-B++	B++	B++	B++	B++	四級分	40.71~41.3	6722~6821	5B10+	20	23
-A	B	B	B	B	四級分	40.1~40.7	6622~6721	1A4B0+	13	25
-未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	1A4B1+	14	25
-A	B	B	B+	B+	四級分	39.42~40.09	6510~6621	1A4B2+	15	25
-A	B	B	B++	B+	四級分	38.16~38.77	6302~6403	1A4B3+	16	25
-B	A	B++	B+	B+	四級分	37.55~38.15	6200~6301	1A4B4+	17	25
-未取得	未取得	未取得	未取得	未取得	未取得	未取得	5788~5997	1A4B5+	18	25
-B++	B+	B++	A	B+	四級分	33.84~34.44	5588~5687	1A4B6+	19	25
-A	B++	B++	B++	B+	四級分	31.32~31.92	5172~5272	1A4B7+	20	25
-B+	B++	A+	B++	B++	四級分	30.72~31.31	5072~5171	1A4B8+	21	25
-B++	A+	B++	B++	B++	四級分	29.5~30.1	4872~4971	1A4B9+	22	25
-A++	B++	B++	B++	B++	五級分	28.89~29.49	4771~4871	1A4B10+	23	25
-未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	2A3B0+	16	27
-未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	2A3B1+	17	27
-未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	2A3B2+	18	27
-A	B+	B+	A	B+	四級分	27.65~28.68	4566~4670	2A3B3+	19	27
-未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	2A3B4+	20	27
-A	B+	A	B++	B++	四級分	25.79~26.39	4258~4359	2A3B5+	21	27
-A	B++	B++	B++	A	四級分	24.51~25.11	4048~4147	2A3B6+	22	27
-A++	A	B+	B++	B++	四級分	22.01~22.61	3634~3734	2A3B7+	23	27
-未取得	未取得	未取得	未取得	未取得	未取得	未取得	3634~3734	2A3B8+	24	27
-A++	A++	B++	B++	B++	四級分	未取得	3534-3633	2A3B9+	25	27
-未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	2A3B10+	26	27
-未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	3A2B0+	19	29
-未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	3A2B1+	20	29
-未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	3A2B2+	21	29
-A	A	A	B+	B++	四級分	20.19~20.79	3334~3433	3A2B3+	22	29
-A	B+	A	A+	B++	四級分	19.56~20.18	3230~3333	3A2B4+	23	29
-A	B+	A++	A++	B	四級分	18.96~19.55	3130~3229	3A2B5+	24	29
-未取得	未取得	未取得	未取得	未取得	未取得	未取得	2722~3026	3A2B6+	25	29
-A+	A+	B+	A++	B++	四級分	15.87~16.48	2621~2721	3A2B7+	26	29
-未取得	未取得	未取得	未取得	未取得	未取得	未取得	2521~2620	3A2B8+	27	29
-未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	3A2B9+	28	29
-未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	3A2B10+	29	29
-未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	4A1B0+	22	31
-未取得	未取得	未取得	未取得	未取得	未取得	未取得	2421~2520	4A1B1+	23	31
-A	A	A	A	B++	四級分	14.05~14.65	2319~2420	4A1B2+	24	31
-未取得	未取得	未取得	未取得	未取得	未取得	未取得	2215~2420	4A1B3+	25	31
-A++	A	B++	A	A	四級分	12.2~12.8	2015~2114	4A1B4+	26	31
-A++	A	B+	A++	A	四級分	11.59~12.19	1913~2014	4A1B5+	27	31
-未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	4A1B6+	28	31
-未取得	未取得	未取得	未取得	未取得	未取得	未取得	1612~1811	4A1B7+	29	31
-A+	A++	A+	B++	A++	四級分	9.76~10.36	1612~1711	4A1B8+	30	31
-未取得	未取得	未取得	未取得	未取得	未取得	未取得	1512~1611	4A1B9+	31	31
-未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	4A1B10+	32	31
-未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	5A0+	25	33
-未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	5A1+	26	33
-A	A	A	A++	A	五級分	8.55~9.15	1411~1511	5A2+	27	33
-未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	5A3+	28	33
-未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	5A4+	29	33
-A++	A+	A++	A	A	四級分	未取得	897~1005	5A5+	30	33
-A++	A	A++	A++	A	五級分	4.83~5.43	797~896	5A6+	31	33
-A++	A+	A++	A++	A	五級分	3~4	596~696	5A7+	32	33
-A++	A++	A++	A	A++	四級分	未取得	268~482	5A8+	33	33
-A++	A++	A++	A+	A++	四級分	未取得	153~267	5A9+	34	33
-A++	A++	A++	A++	A++	五級分	0.01~0.92	1~152	5A10+	35	33`;
-
-const rows = data.trim().split('\n');
-const table = document.getElementById('gradeTable');
-
-function getGradeClass(grade) {
-  if (grade.startsWith('A')) return 'grade-A';
-  if (grade.startsWith('B')) return 'grade-B';
-  if (grade.startsWith('C')) return 'grade-C';
-  return 'grade-unavailable';
-}
-
-rows.forEach((row, index) => {
-  if (index === 0) return; // Skip header row
-  const cols = row.split('\t');
-  const tr = document.createElement('tr');
-  cols.forEach((col, colIndex) => {
-    const td = document.createElement('td');
-    td.textContent = col;
-    if (colIndex < 5) {
-      td.className = getGradeClass(col);
-    }
-    tr.appendChild(td);
-  });
-  table.appendChild(tr);
-});
-
-document.getElementById('searchInput').addEventListener('keyup', function() {
-  const searchTerm = this.value.toLowerCase();
-  const rows = table.getElementsByTagName('tr');
   
-  for (let i = 1; i < rows.length; i++) {
-    const row = rows[i];
-    const cells = row.getElementsByTagName('td');
-    let found = false;
-    
-    for (let j = 0; j < cells.length; j++) {
-      const cellText = cells[j].textContent.toLowerCase();
-      if (cellText.includes(searchTerm)) {
-        found = true;
-        cells[j].classList.add('highlight');
-        setTimeout(() => cells[j].classList.remove('highlight'), 500);
-        break;
+  .nav-bar a {
+    padding: 8px 15px;
+    margin: 0 5px;
+    font-size: 14px;
+  }
+}
+  </style></head><body>
+  <!-- 新增導航欄 -->
+<nav class="nav-bar">
+    <a href="https://sites.google.com/view/tyctw/">回到主網頁</a>
+    <a href="https://tyctw.github.io/">落點分析系統</a>
+    <a href="https://tyctw.github.io/Admission/">查看各校完整分數</a>
+    <a href="https://tyctw.github.io/front/">各區放榜網址</a>
+  </nav>
+  <div class="container">
+    <div class="header">
+      <h1>113會考分數序位對照</h1>
+    </div>
+  
+    <div class="search-container">
+      <input type="text" id="searchInput" placeholder="搜尋...">
+      <span class="search-icon">🔍</span>
+    </div>
+  
+    <div class="table-container">
+      <table id="gradeTable">
+        <tr>
+          <th>國文</th>
+          <th>數學</th>
+          <th>英文</th>
+          <th>社會</th>
+          <th>自然</th>
+          <th>作文</th>
+          <th>比率區間</th>
+          <th>序位區間</th>
+          <th>分數</th>
+          <th>積點</th>
+          <th>積分</th>
+        </tr>
+      </table>
+    </div>
+  
+    <div class="mobile-scroll-hint">
+      ← 左右滑動查看更多成績詳情 →
+    </div>
+  </div>
+  
+  <footer>
+    <p>&copy; <span id="currentYear"></span> 113會考分數序位對照. All rights reserved.</p>
+    <p>以上資料為113會考生填取表單資料</p>
+  </footer>
+  
+  <script>
+  const data = `國文成績	數學成績	英文成績	社會成績	自然成績	作文成績	比率區間	序位區間	分數	總積點	總積分
+  B	C	B	B	B	四級分	67.84~ 67.23	11103~11203	4B1C0+	9	21
+  B	C	B+	B	B	四級分	23.24~ 22.62	3838~ 3735	4B1C1+	10	21
+  B	C	B+	B	B+	四級分	69.73~70.48	7236~ 7136	4B1C2+	11	21
+  B+	C	B++	B	B	四級分	68.48~67.85	9587~ 9455	4B1C3+	12	21
+  B++	C	B	B+	B+	四級分	43.81~ 43.21	7236~ 7136	4B1C4+	13	21
+  未取得	未取得	未取得	未取得	未取得	四級分	未取得	未取得	4B1C5+	14	21
+  未取得	未取得	未取得	未取得	未取得	四級分	未取得	未取得	4B1C6+	15	21
+  未取得	未取得	未取得	未取得	未取得	四級分	未取得	未取得	4B1C7+	16	21
+  未取得	未取得	未取得	未取得	未取得	四級分	未取得	未取得	4B1C8+	17	21
+  未取得	未取得	未取得	未取得	未取得	四級分	未取得	未取得	4B1C9+	18	21
+  未取得	未取得	未取得	未取得	未取得	四級分	未取得	未取得	4B1C10+	19	21
+  B	B	B	B	B	四級分	61.88~63.51	10219~10489	5B0+	10	23
+  B	B	B+	B	B	四級分	60.13~61.07	9930~10086	5B1+	11	23
+  B	B+	B	B	B+	四級分	58.6~58.22	9677~9781	5B2+	12	23
+  B++	B	B	B	B+	四級分	53.56~54.45	8844~8993	5B3+	13	23
+  B+	B	B++	B	B+	四級分	52.29~9103	8635~8742	5B4+	14	23
+  B++	B	B++	B+	B	四級分	49~49.69	8091~8207	5B5+	15	23
+  B++	B+	B+	B+	B+	四級分	46.41~47.04	7664~7768	5B6+	16	23
+  未取得	未取得	未取得	未取得	未取得	未取得	未取得	7351~7453	5B7+	17	23
+  B++	B+	B+	B++	B+	四級分	44.51~45.13	7351~7453	5B8+	18	23
+  B++	B++	B++	B+	B++	四級分	41.92~42.52	6922~7023	5B9+	19	23
+  B++	B++	B++	B++	B++	四級分	40.71~41.3	6722~6821	5B10+	20	23
+  A	B	B	B	B	四級分	40.1~40.7	6622~6721	1A4B0+	13	25
+  未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	1A4B1+	14	25
+  A	B	B	B+	B+	四級分	39.42~40.09	6510~6621	1A4B2+	15	25
+  A	B	B	B++	B+	四級分	38.16~38.77	6302~6403	1A4B3+	16	25
+  B	A	B++	B+	B+	四級分	37.55~38.15	6200~6301	1A4B4+	17	25
+  未取得	未取得	未取得	未取得	未取得	未取得	未取得	5788~5997	1A4B5+	18	25
+  B++	B+	B++	A	B+	四級分	33.84~34.44	5588~5687	1A4B6+	19	25
+  A	B++	B++	B++	B+	四級分	31.32~31.92	5172~5272	1A4B7+	20	25
+  B+	B++	A+	B++	B++	四級分	30.72~31.31	5072~5171	1A4B8+	21	25
+  B++	A+	B++	B++	B++	四級分	29.5~30.1	4872~4971	1A4B9+	22	25
+  A++	B++	B++	B++	B++	五級分	28.89~29.49	4771~4871	1A4B10+	23	25
+  未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	2A3B0+	16	27
+  未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	2A3B1+	17	27
+  未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	2A3B2+	18	27
+  A	B+	B+	A	B+	四級分	27.65~28.68	4566~4670	2A3B3+	19	27
+  未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	2A3B4+	20	27
+  A	B+	A	B++	B++	四級分	25.79~26.39	4258~4359	2A3B5+	21	27
+  A	B++	B++	B++	A	四級分	24.51~25.11	4048~4147	2A3B6+	22	27
+  A++	A	B+	B++	B++	四級分	22.01~22.61	3634~3734	2A3B7+	23	27
+  未取得	未取得	未取得	未取得	未取得	未取得	未取得	3634~3734	2A3B8+	24	27
+  A++	A++	B++	B++	B++	四級分	未取得	3534-3633	2A3B9+	25	27
+  未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	2A3B10+	26	27
+  未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	3A2B0+	19	29
+  未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	3A2B1+	20	29
+  未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	3A2B2+	21	29
+  A	A	A	B+	B++	四級分	20.19~20.79	3334~3433	3A2B3+	22	29
+  A	B+	A	A+	B++	四級分	19.56~20.18	3230~3333	3A2B4+	23	29
+  A	B+	A++	A++	B	四級分	18.96~19.55	3130~3229	3A2B5+	24	29
+  未取得	未取得	未取得	未取得	未取得	未取得	未取得	2722~3026	3A2B6+	25	29
+  A+	A+	B+	A++	B++	四級分	15.87~16.48	2621~2721	3A2B7+	26	29
+  未取得	未取得	未取得	未取得	未取得	未取得	未取得	2521~2620	3A2B8+	27	29
+  未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	3A2B9+	28	29
+  未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	3A2B10+	29	29
+  未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	4A1B0+	22	31
+  未取得	未取得	未取得	未取得	未取得	未取得	未取得	2421~2520	4A1B1+	23	31
+  A	A	A	A	B++	四級分	14.05~14.65	2319~2420	4A1B2+	24	31
+  未取得	未取得	未取得	未取得	未取得	未取得	未取得	2215~2420	4A1B3+	25	31
+  A++	A	B++	A	A	四級分	12.2~12.8	2015~2114	4A1B4+	26	31
+  A++	A	B+	A++	A	四級分	11.59~12.19	1913~2014	4A1B5+	27	31
+  未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	4A1B6+	28	31
+  未取得	未取得	未取得	未取得	未取得	未取得	未取得	1612~1811	4A1B7+	29	31
+  A+	A++	A+	B++	A++	四級分	9.76~10.36	1612~1711	4A1B8+	30	31
+  未取得	未取得	未取得	未取得	未取得	未取得	未取得	1512~1611	4A1B9+	31	31
+  未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	4A1B10+	32	31
+  未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	5A0+	25	33
+  未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	5A1+	26	33
+  A	A	A	A++	A	五級分	8.55~9.15	1411~1511	5A2+	27	33
+  未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	5A3+	28	33
+  未取得	未取得	未取得	未取得	未取得	未取得	未取得	未取得	5A4+	29	33
+  A++	A+	A++	A	A	四級分	未取得	897~1005	5A5+	30	33
+  A++	A	A++	A++	A	五級分	4.83~5.43	797~896	5A6+	31	33
+  A++	A+	A++	A++	A	五級分	3~4	596~696	5A7+	32	33
+  A++	A++	A++	A	A++	四級分	未取得	268~482	5A8+	33	33
+  A++	A++	A++	A+	A++	四級分	未取得	153~267	5A9+	34	33
+  A++	A++	A++	A++	A++	五級分	0.01~0.92	1~152	5A10+	35	33`;
+  
+  const rows = data.trim().split('\n');
+  const table = document.getElementById('gradeTable');
+  
+  function getGradeClass(grade) {
+    if (grade.startsWith('A')) return 'grade-A';
+    if (grade.startsWith('B')) return 'grade-B';
+    if (grade.startsWith('C')) return 'grade-C';
+    return 'grade-unavailable';
+  }
+  
+  rows.forEach((row, index) => {
+    if (index === 0) return; // Skip header row
+    const cols = row.split('\t');
+    const tr = document.createElement('tr');
+    cols.forEach((col, colIndex) => {
+      const td = document.createElement('td');
+      td.textContent = col;
+      if (colIndex < 5) {
+        td.className = getGradeClass(col);
       }
+      tr.appendChild(td);
+    });
+    table.appendChild(tr);
+  });
+  
+  document.getElementById('searchInput').addEventListener('keyup', function() {
+    const searchTerm = this.value.toLowerCase();
+    const rows = table.getElementsByTagName('tr');
+    
+    for (let i = 1; i < rows.length; i++) {
+      const row = rows[i];
+      const cells = row.getElementsByTagName('td');
+      let found = false;
+      
+      for (let j = 0; j < cells.length; j++) {
+        const cellText = cells[j].textContent.toLowerCase();
+        if (cellText.includes(searchTerm)) {
+          found = true;
+          cells[j].classList.add('highlight');
+          setTimeout(() => cells[j].classList.remove('highlight'), 500);
+          break;
+        }
+      }
+      
+      row.style.display = found ? '' : 'none';
     }
-    
-    row.style.display = found ? '' : 'none';
+  });
+  
+  // Add row hover effect
+  const tableRows = document.querySelectorAll('#gradeTable tr');
+  tableRows.forEach(row => {
+    row.addEventListener('mouseenter', () => {
+      row.style.transform = 'scale(1.02)';
+      row.style.transition = 'transform 0.3s ease';
+    });
+    row.addEventListener('mouseleave', () => {
+      row.style.transform = 'scale(1)';
+    });
+  });
+  
+  // Add smooth scrolling effect
+  document.querySelector('.table-container').addEventListener('scroll', (e) => {
+    e.target.style.scrollBehavior = 'smooth';
+  });
+  
+  // Add focus animation to search input
+  const searchInput = document.getElementById('searchInput');
+  searchInput.addEventListener('focus', () => {
+    searchInput.style.animation = 'pulse 0.5s ease-in-out';
+  });
+  searchInput.addEventListener('blur', () => {
+    searchInput.style.animation = 'none';
+  });
+  
+  // Mobile scroll hint
+  const mobileScrollHint = document.querySelector('.mobile-scroll-hint');
+  let hintTimeout;
+  
+  function showScrollHint() {
+    mobileScrollHint.style.opacity = '1';
+    clearTimeout(hintTimeout);
+    hintTimeout = setTimeout(() => {
+      mobileScrollHint.style.opacity = '0';
+    }, 3000);
   }
-});
-
-// Add row hover effect
-const tableRows = document.querySelectorAll('#gradeTable tr');
-tableRows.forEach(row => {
-  row.addEventListener('mouseenter', () => {
-    row.style.transform = 'scale(1.02)';
-    row.style.transition = 'transform 0.3s ease';
-  });
-  row.addEventListener('mouseleave', () => {
-    row.style.transform = 'scale(1)';
-  });
-});
-
-// Add smooth scrolling effect
-document.querySelector('.table-container').addEventListener('scroll', (e) => {
-  e.target.style.scrollBehavior = 'smooth';
-});
-
-// Add focus animation to search input
-const searchInput = document.getElementById('searchInput');
-searchInput.addEventListener('focus', () => {
-  searchInput.style.animation = 'pulse 0.5s ease-in-out';
-});
-searchInput.addEventListener('blur', () => {
-  searchInput.style.animation = 'none';
-});
-
-// Mobile scroll hint
-const mobileScrollHint = document.querySelector('.mobile-scroll-hint');
-let hintTimeout;
-
-function showScrollHint() {
-  mobileScrollHint.style.opacity = '1';
-  clearTimeout(hintTimeout);
-  hintTimeout = setTimeout(() => {
-    mobileScrollHint.style.opacity = '0';
-  }, 3000);
-}
-
-if (window.innerWidth <= 768) {
+  
+  if (window.innerWidth <= 768) {
+    const tableContainer = document.querySelector('.table-container');
+    tableContainer.addEventListener('scroll', showScrollHint);
+    showScrollHint();
+  }
+  
+  // Responsive font size adjustment
+  function adjustFontSize() {
+    const vw = window.innerWidth;
+    if (vw < 768) {
+      document.body.style.fontSize = '16px';
+    } else {
+      document.body.style.fontSize = '18px';
+    }
+  }
+  
+  window.addEventListener('resize', adjustFontSize);
+  adjustFontSize();
+  
+  // Footer year update
+  const currentYear = new Date().getFullYear();
+  document.getElementById('currentYear').textContent = currentYear;
+  
+  // Add table row hover animation
   const tableContainer = document.querySelector('.table-container');
-  tableContainer.addEventListener('scroll', showScrollHint);
-  showScrollHint();
-}
-
-// Responsive font size adjustment
-function adjustFontSize() {
-  const vw = window.innerWidth;
-  if (vw < 768) {
-    document.body.style.fontSize = '16px';
-  } else {
-    document.body.style.fontSize = '18px';
-  }
-}
-
-window.addEventListener('resize', adjustFontSize);
-adjustFontSize();
-
-// Footer year update
-const currentYear = new Date().getFullYear();
-document.getElementById('currentYear').textContent = currentYear;
-
-// Add table row hover animation
-const tableContainer = document.querySelector('.table-container');
-tableContainer.addEventListener('mouseover', (e) => {
-  if (e.target.tagName === 'TD') {
-    const row = e.target.parentElement;
-    row.style.transform = 'scale(1.02)';
-    row.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
-    row.style.transition = 'all 0.3s ease';
-  }
-});
-
-tableContainer.addEventListener('mouseout', (e) => {
-  if (e.target.tagName === 'TD') {
-    const row = e.target.parentElement;
-    row.style.transform = 'scale(1)';
-    row.style.boxShadow = 'none';
-  }
-});
-
-// Add scroll to top button
-const scrollToTopButton = document.createElement('button');
-scrollToTopButton.innerHTML = '↑';
-scrollToTopButton.style.cssText = `
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  padding: 10px 15px;
-  background-color: #3498db;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 20px;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-`;
-
-document.body.appendChild(scrollToTopButton);
-
-window.addEventListener('scroll', () => {
-  if (window.pageYOffset > 300) {
-    scrollToTopButton.style.opacity = '1';
-  } else {
-    scrollToTopButton.style.opacity = '0';
-  }
-});
-
-scrollToTopButton.addEventListener('click', () => {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-});
-
-// Add loading animation
-const loadingOverlay = document.createElement('div');
-loadingOverlay.style.cssText = `
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(255, 255, 255, 0.8);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-`;
-
-const loadingSpinner = document.createElement('div');
-loadingSpinner.style.cssText = `
-  border: 5px solid #f3f3f3;
-  border-top: 5px solid #3498db;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  animation: spin 1s linear infinite;
-`;
-
-loadingOverlay.appendChild(loadingSpinner);
-document.body.appendChild(loadingOverlay);
-
-window.addEventListener('load', () => {
-  loadingOverlay.style.display = 'none';
-});
-
-// Add custom animation keyframes
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-`;
-document.head.appendChild(style);
-        // 防止複製
-      document.addEventListener('copy', function(e) {
-      e.preventDefault();
-      return false;
-    });
-
-    // 防止截圖 (僅適用於部分瀏覽器)
-    document.addEventListener('keyup', function(e) {
-      if (e.key == 'PrintScreen') {
-        navigator.clipboard.writeText('');
-        alert('截圖功能已被禁用');
-      }
-    });
-
-    // 防止右鍵點擊
-    document.addEventListener('contextmenu', function(e) {
-      e.preventDefault();
-    });
-
-    // 防止拖曳選擇文字
-    document.onselectstart = function() {
-      return false;
-    };
-</script>
-
-</body></html>
+  tableContainer.addEventListener('mouseover', (e) => {
+    if (e.target.tagName === 'TD') {
+      const row = e.target.parentElement;
+      row.style.transform = 'scale(1.02)';
+      row.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
+      row.style.transition = 'all 0.3s ease';
+    }
+  });
+  
+  tableContainer.addEventListener('mouseout', (e) => {
+    if (e.target.tagName === 'TD') {
+      const row = e.target.parentElement;
+      row.style.transform = 'scale(1)';
+      row.style.boxShadow = 'none';
+    }
+  });
+  
+  // Add scroll to top button
+  const scrollToTopButton = document.createElement('button');
+  scrollToTopButton.innerHTML = '↑';
+  scrollToTopButton.style.cssText = `
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 15px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  `;
+  
+  document.body.appendChild(scrollToTopButton);
+  
+  window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 300) {
+      scrollToTopButton.style.opacity = '1';
+    } else {
+      scrollToTopButton.style.opacity = '0';
+    }
+  });
+  
+  scrollToTopButton.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  
+  // Add loading animation
+  const loadingOverlay = document.createElement('div');
+  loadingOverlay.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  `;
+  
+  const loadingSpinner = document.createElement('div');
+  loadingSpinner.style.cssText = `
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #3498db;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+  `;
+  
+  loadingOverlay.appendChild(loadingSpinner);
+  document.body.appendChild(loadingOverlay);
+  
+  window.addEventListener('load', () => {
+    loadingOverlay.style.display = 'none';
+  });
+  
+  // Add custom animation keyframes
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  `;
+  document.head.appendChild(style);
+          // 防止複製
+        document.addEventListener('copy', function(e) {
+        e.preventDefault();
+        return false;
+      });
+  
+      // 防止截圖 (僅適用於部分瀏覽器)
+      document.addEventListener('keyup', function(e) {
+        if (e.key == 'PrintScreen') {
+          navigator.clipboard.writeText('');
+          alert('截圖功能已被禁用');
+        }
+      });
+  
+      // 防止右鍵點擊
+      document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+      });
+  
+      // 防止拖曳選擇文字
+      document.onselectstart = function() {
+        return false;
+      };
+  </script>
+  
+  </body></html>
