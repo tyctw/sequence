@@ -18,7 +18,7 @@
     font-family: 'Noto Sans TC', 'Roboto', sans-serif;
     background: var(--background-color);
     margin: 0;
-    padding: 40px 20px;
+    padding: 0;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -32,10 +32,37 @@
     -ms-user-select: none;
   }
 
+  header {
+    background-color: var(--header-color);
+    width: 100%;
+    padding: 15px 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  nav a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    margin: 5px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+  }
+
+  nav a:hover {
+    background-color: rgba(255,255,255,0.1);
+  }
+
   h1 {
     color: var(--header-color);
     text-align: center;
-    margin-bottom: 40px;
+    margin: 40px 0;
     font-size: 3em;
     font-weight: 700;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
@@ -154,6 +181,7 @@
     transition: all 0.3s ease;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     font-weight: 500;
+    text-decoration: none;
   }
 
   .button:hover {
@@ -217,10 +245,33 @@
     opacity: 1;
   }
 
+  .footer-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  .footer-button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    font-size: 1em;
+    color: white;
+    background-color: var(--secondary-color);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+  }
+
+  .footer-button:hover {
+    background-color: #45b269;
+    transform: translateY(-2px);
+  }
+
   /* 手機版樣式 */
   @media (max-width: 768px) {
     body {
-      padding: 20px 10px;
       font-size: 16px;
     }
     
@@ -264,6 +315,26 @@
       width: 200px;
       margin-left: -100px;
     }
+
+    .footer-buttons {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .footer-button {
+      margin: 10px 0;
+      width: 80%;
+    }
+
+    nav {
+      flex-direction: column;
+    }
+
+    nav a {
+      width: 80%;
+      text-align: center;
+      margin: 5px 0;
+    }
   }
 
   /* 增加響應式設計 */
@@ -292,7 +363,15 @@
 </style>
 </head>
 <body oncontextmenu="return false;">
-  <h1>桃園市高中普通科與職業類科序位</h1>
+  <header>
+    <nav>
+      <a href="https://sites.google.com/view/tyctw/">回到主網頁</a>
+      <a href="https://tyctw.github.io/">落點分析系統</a>
+      <a href="https://tyctw.github.io/Admission/" target="_blank">查看各校完整分數</a>
+      <a href="https://tyctw.github.io/front/" target="_blank">各區放榜網址</a>
+    </nav>
+  </header>
+    <h1>桃園市高中普通科與職業類科序位</h1>
 
   <div class="button-container">
     <button id="normalBtn" class="button">普通科</button>
