@@ -273,6 +273,24 @@
     .table-container {
       max-height: 60vh;
     }
+    
+    /* 手機版特定樣式 */
+    .table-container {
+      overflow-x: auto;
+    }
+    
+    table {
+      min-width: 800px; /* 確保表格內容不會被壓縮 */
+    }
+    
+    .nav-bar {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .nav-bar a {
+      margin: 5px 0;
+    }
   }
   
   .mobile-scroll-hint {
@@ -330,6 +348,9 @@
   top: 0;
   z-index: 1000;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .nav-bar a {
@@ -354,7 +375,7 @@
   
   .nav-bar a {
     padding: 8px 15px;
-    margin: 0 5px;
+    margin: 5px;
     font-size: 14px;
   }
 }
