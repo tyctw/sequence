@@ -1,6 +1,7 @@
 <html><head>
 <title>桃園市高中普通科與職業類科序位</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700&family=Roboto:wght@300;400;700&display=swap');
 
@@ -37,13 +38,28 @@
     width: 100%;
     padding: 15px 0;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+  }
+
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+  }
+
+  .logo {
+    color: white;
+    font-size: 1.5em;
+    font-weight: bold;
   }
 
   nav {
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-wrap: wrap;
   }
 
   nav a {
@@ -59,11 +75,44 @@
     background-color: rgba(255,255,255,0.1);
   }
 
+  .menu-toggle {
+    display: none;
+    color: white;
+    font-size: 1.5em;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background-color: var(--header-color);
+    padding: 20px 0;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+  }
+
+  .mobile-menu a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 15px 20px;
+    text-align: center;
+    transition: background-color 0.3s;
+  }
+
+  .mobile-menu a:hover {
+    background-color: rgba(255,255,255,0.1);
+  }
+
   h1 {
     color: var(--header-color);
     text-align: center;
-    margin: 40px 0;
-    font-size: 3em;
+    margin: 80px 0 40px;
+    font-size: 2.5em;
     font-weight: 700;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
     letter-spacing: 2px;
@@ -276,7 +325,8 @@
     }
     
     h1 {
-      font-size: 2.2em;
+      font-size: 2em;
+      margin: 100px 0 30px;
     }
     
     .container {
@@ -327,13 +377,19 @@
     }
 
     nav {
-      flex-direction: column;
+      display: none;
     }
 
-    nav a {
-      width: 80%;
-      text-align: center;
-      margin: 5px 0;
+    .menu-toggle {
+      display: block;
+    }
+
+    .mobile-menu {
+      display: none;
+    }
+
+    .mobile-menu.active {
+      display: block;
     }
   }
 
@@ -364,13 +420,26 @@
 </head>
 <body oncontextmenu="return false;">
   <header>
-    <nav>
-      <a href="https://sites.google.com/view/tyctw/">回到主網頁</a>
-      <a href="https://tyctw.github.io/">落點分析系統</a>
-      <a href="https://tyctw.github.io/Navigation/" target="_blank">更多資訊</a>
-    </nav>
+    <div class="header-content">
+      <div class="logo">TYCTW 會考分析</div>
+      <nav>
+        <a href="https://sites.google.com/view/tyctw/">回到主網頁</a>
+        <a href="https://tyctw.github.io/">落點分析系統</a>
+        <a href="https://tyctw.github.io/Navigation/" target="_blank">更多資訊</a>
+      </nav>
+      <button class="menu-toggle">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
   </header>
-    <h1>桃園市高中普通科與職業類科序位</h1>
+
+  <div class="mobile-menu">
+    <a href="https://sites.google.com/view/tyctw/">回到主網頁</a>
+    <a href="https://tyctw.github.io/">落點分析系統</a>
+    <a href="https://tyctw.github.io/Navigation/" target="_blank">更多資訊</a>
+  </div>
+
+  <h1>桃園市高中普通科與職業類科序位</h1>
 
   <div class="button-container">
     <button id="normalBtn" class="button">普通科</button>
@@ -397,7 +466,6 @@
     <p>&copy; 2024 TYCTW桃園市高中普通科與職業類科序位. 版權所有。</p>
     <p>以上資料僅供參考</p>
   </footer>
-
 
   <script>
     const normalSchools = [
@@ -532,6 +600,8 @@
     document.addEventListener('DOMContentLoaded', (event) => {
       const normalBtn = document.getElementById('normalBtn');
       const vocationalBtn = document.getElementById('vocationalBtn');
+      const menuToggle = document.querySelector('.menu-toggle');
+      const mobileMenu = document.querySelector('.mobile-menu');
 
       normalBtn.addEventListener('click', () => {
         populateTable(normalSchools);
@@ -545,6 +615,10 @@
         vocationalBtn.classList.add('active');
         normalBtn.classList.remove('active');
         sortTable(2); // 按照序位累積排名排序
+      });
+
+      menuToggle.addEventListener('click', () => {
+        mobileMenu.classList.toggle('active');
       });
 
       // 初始化顯示職業類科資料並排序
