@@ -339,7 +339,7 @@
     color: #2980b9;
     text-decoration: underline;
   }
-  /* 新增導航欄樣式 */
+/* 新增導航欄樣式 */
 .nav-bar {
   background-color: #2c3e50;
   padding: 15px 0;
@@ -349,42 +349,94 @@
   z-index: 1000;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
   flex-wrap: wrap;
 }
 
-.nav-bar a {
+.nav-bar-logo {
+  color: #ecf0f1;
+  font-size: 1.5em;
+  font-weight: bold;
+  text-decoration: none;
+  margin-left: 20px;
+}
+
+.nav-menu {
+  display: flex;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-menu li {
+  margin: 0 10px;
+}
+
+.nav-menu a {
   color: #ecf0f1;
   text-decoration: none;
-  padding: 10px 20px;
-  margin: 0 10px;
+  padding: 10px 15px;
   border-radius: 5px;
   transition: background-color 0.3s ease, color 0.3s ease;
   font-weight: bold;
 }
 
-.nav-bar a:hover {
+.nav-menu a:hover {
   background-color: #ecf0f1;
   color: #2c3e50;
 }
 
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: #ecf0f1;
+  font-size: 1.5em;
+  cursor: pointer;
+  margin-right: 20px;
+}
+
 @media (max-width: 768px) {
   .nav-bar {
-    padding: 10px 0;
+    flex-direction: column;
+    align-items: flex-start;
   }
-  
-  .nav-bar a {
-    padding: 8px 15px;
-    margin: 5px;
-    font-size: 14px;
+
+  .nav-menu {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .nav-menu.active {
+    display: flex;
+  }
+
+  .nav-menu li {
+    margin: 10px 0;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .nav-bar-logo {
+    margin: 10px 0;
   }
 }
   </style></head><body>
   <!-- 新增導航欄 -->
+<!-- 新增導航欄 -->
 <nav class="nav-bar">
-    <a href="https://sites.google.com/view/tyctw/">回到主網頁</a>
-    <a href="https://tyctw.github.io/">落點分析系統</a>
-    <a href="https://tyctw.github.io/Navigation/">更多資訊</a>
+    <a href="https://sites.google.com/view/tyctw/" class="nav-bar-logo">113會考分數序位對照</a>
+    <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+    <ul class="nav-menu">
+      <li><a href="https://sites.google.com/view/tyctw/">回到主網頁</a></li>
+      <li><a href="https://tyctw.github.io/">落點分析系統</a></li>
+      <li><a href="https://tyctw.github.io/Navigation/">更多資訊</a></li>
+    </ul>
   </nav>
   <div class="container">
     <div class="header">
@@ -728,6 +780,18 @@
       document.onselectstart = function() {
         return false;
       };
+
+      // 為菜單切換按鈕添加事件監聽器
+document.querySelector('.menu-toggle').addEventListener('click', function() {
+  document.querySelector('.nav-menu').classList.toggle('active');
+});
+
+// 在視窗調整大小時檢查並調整菜單顯示
+window.addEventListener('resize', function() {
+  if (window.innerWidth > 768) {
+    document.querySelector('.nav-menu').classList.remove('active');
+  }
+});
   </script>
   
   </body></html>
