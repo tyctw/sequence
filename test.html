@@ -250,21 +250,6 @@
     animation: fadeIn 1s;
   }
 
-  @media (max-width: 768px) {
-    #app {
-      padding: 20px;
-      margin: 20px 10px;
-    }
-
-    table {
-      font-size: 14px;
-    }
-
-    th, td {
-      padding: 12px 8px;
-    }
-  }
-
   .modal {
     position: fixed;
     left: 0;
@@ -447,6 +432,96 @@
   .nav-link:hover {
     color: var(--secondary-color);
   }
+
+  /* Mobile styles */
+  @media (max-width: 768px) {
+    #app {
+      padding: 20px;
+      margin: 20px 10px;
+    }
+
+    h1 {
+      font-size: 2em;
+    }
+
+    table {
+      font-size: 14px;
+    }
+
+    th, td {
+      padding: 12px 8px;
+    }
+
+    .header-content {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .nav-links {
+      margin-top: 10px;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    #filterContainer {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .filter-group {
+      margin: 5px 0;
+    }
+
+    select, #resetFilters {
+      width: 100%;
+    }
+
+    .modal-content {
+      padding: 20px;
+    }
+
+    #gradeChart {
+      height: 200px;
+    }
+  }
+
+  /* Responsive table */
+  @media (max-width: 600px) {
+    table, thead, tbody, th, td, tr {
+      display: block;
+    }
+
+    thead tr {
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+    }
+
+    tr {
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    td {
+      border: none;
+      position: relative;
+      padding-left: 50%;
+      text-align: right;
+    }
+
+    td:before {
+      content: attr(data-label);
+      position: absolute;
+      left: 6px;
+      width: 45%;
+      padding-right: 10px;
+      white-space: nowrap;
+      text-align: left;
+      font-weight: bold;
+    }
+  }
 </style>
 </head>
 <body>
@@ -582,7 +657,8 @@ document.addEventListener('DOMContentLoaded', function() {
       headers.forEach((header, i) => {
         const td = document.createElement('td');
         td.textContent = row[i] || '';
-        if (i >= 0 && i <= 4) { // Subject columns (now starting from index 0)
+        td.setAttribute('data-label', header);
+        if (i >= 0 && i <= 4) {
           const grade = td.textContent;
           td.classList.add('grade');
           if (grade.startsWith('A')) {
@@ -606,7 +682,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     table.addEventListener('click', function(e) {
       if (e.target.classList.contains('grade')) {
-        const subject = headers[Array.from(e.target.parentElement.children).indexOf(e.target)];
+        const subject = e.target.getAttribute('data-label');
         const grade = e.target.textContent;
         showModal(subject, grade);
       }
