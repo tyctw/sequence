@@ -1,0 +1,632 @@
+<html><head><base href="https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec" target="_blank">
+<title>桃園市高中普通科與職業類科序位 - App Script 後端版本</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700&family=Roboto:wght@300;400;700&display=swap');
+
+  :root {
+    --primary-color: #4a90e2;
+    --secondary-color: #50c878;
+    --background-color: #f0f4f8;
+    --text-color: #333;
+    --header-color: #2c3e50;
+    --border-color: #e0e0e0;
+    --hover-color: #e8f0fe;
+  }
+
+  body {
+    font-family: 'Noto Sans TC', 'Roboto', sans-serif;
+    background: var(--background-color);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--text-color);
+    line-height: 1.8;
+    font-size: 18px;
+  }
+
+  header {
+    background-color: var(--header-color);
+    width: 100%;
+    padding: 15px 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+  }
+
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+  }
+
+  .logo {
+    color: white;
+    font-size: 1.5em;
+    font-weight: bold;
+  }
+
+  nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  nav a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    margin: 5px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+  }
+
+  nav a:hover {
+    background-color: rgba(255,255,255,0.1);
+  }
+
+  .menu-toggle {
+    display: none;
+    color: white;
+    font-size: 1.5em;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background-color: var(--header-color);
+    padding: 20px 0;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+  }
+
+  .mobile-menu a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 15px 20px;
+    text-align: center;
+    transition: background-color 0.3s;
+  }
+
+  .mobile-menu a:hover {
+    background-color: rgba(255,255,255,0.1);
+  }
+
+  h1 {
+    color: var(--header-color);
+    text-align: center;
+    margin: 80px 0 40px;
+    font-size: 2.5em;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    letter-spacing: 2px;
+  }
+
+  .container {
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    width: 95%;
+    max-width: 1200px;
+    margin-bottom: 40px;
+    transition: all 0.3s ease;
+  }
+
+  .container:hover {
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  th, td {
+    padding: 20px 18px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  th {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    font-size: 1.1em;
+  }
+
+  th:hover {
+    background-color: #3a7bc8;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f8f9fa;
+  }
+
+  tr:hover {
+    background-color: var(--hover-color);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  tr {
+    animation: fadeIn 0.6s ease-in-out;
+  }
+
+  footer {
+    margin-top: auto;
+    text-align: center;
+    padding: 30px;
+    color: var(--text-color);
+    font-size: 1em;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-top: 1px solid var(--border-color);
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+
+  .button {
+    padding: 15px 30px;
+    margin: 0 15px;
+    font-size: 1.2em;
+    color: white;
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .button:hover {
+    background-color: #3a7bc8;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+  }
+
+  .button.active {
+    background-color: var(--secondary-color);
+  }
+
+  .school-name {
+    font-weight: 500;
+    color: #2c3e50;
+    font-size: 1.1em;
+  }
+
+  .rank {
+    font-weight: 700;
+    color: #e74c3c;
+    font-size: 1.2em;
+  }
+
+  .rate {
+    color: #3498db;
+    font-size: 1.1em;
+  }
+
+  #tableBody td:nth-child(2),
+  #tableBody td:nth-child(3) {
+    text-align: center;
+  }
+
+  .tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: help;
+  }
+
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: 240px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 10px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -120px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 0.9em;
+  }
+
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .footer-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  .footer-button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    font-size: 1em;
+    color: white;
+    background-color: var(--secondary-color);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+  }
+
+  .footer-button:hover {
+    background-color: #45b269;
+    transform: translateY(-2px);
+  }
+
+  #loading {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .spinner {
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid var(--primary-color);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* 手機版樣式 */
+  @media (max-width: 768px) {
+    body {
+      font-size: 16px;
+    }
+    
+    h1 {
+      font-size: 2em;
+      margin: 100px 0 30px;
+    }
+    
+    .container {
+      width: 100%;
+      overflow-x: auto;
+    }
+    
+    table {
+      font-size: 0.95em;
+    }
+    
+    th, td {
+      padding: 15px 12px;
+    }
+
+    .button {
+      padding: 12px 24px;
+      font-size: 1em;
+    }
+
+    .button-container {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .button {
+      margin: 8px 0;
+      width: 80%;
+    }
+
+    .tooltip .tooltiptext {
+      width: 200px;
+      margin-left: -100px;
+    }
+
+    .footer-buttons {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .footer-button {
+      margin: 10px 0;
+      width: 80%;
+    }
+
+    nav {
+      display: none;
+    }
+
+    .menu-toggle {
+      display: block;
+    }
+
+    .mobile-menu {
+      display: none;
+    }
+
+    .mobile-menu.active {
+      display: block;
+    }
+  }
+
+  /* 增加響應式設計 */
+  @media (max-width: 480px) {
+    h1 {
+      font-size: 1.8em;
+    }
+
+    table {
+      font-size: 0.9em;
+    }
+
+    th, td {
+      padding: 12px 10px;
+    }
+
+    .button {
+      font-size: 0.9em;
+      padding: 10px 20px;
+    }
+  }
+</style>
+</head>
+<body>
+  <div id="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <header>
+    <div class="header-content">
+      <div class="logo">TYCTW 會考分析</div>
+      <nav>
+        <a href="https://sites.google.com/view/tyctw/">回到主網頁</a>
+        <a href="https://tyctw.github.io/">落點分析系統</a>
+        <a href="https://tyctw.github.io/Navigation/" target="_blank">更多資訊</a>
+      </nav>
+      <button class="menu-toggle">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </header>
+
+  <div class="mobile-menu">
+    <a href="https://sites.google.com/view/tyctw/">回到主網頁</a>
+    <a href="https://tyctw.github.io/">落點分析系統</a>
+    <a href="https://tyctw.github.io/Navigation/" target="_blank">更多資訊</a>
+  </div>
+
+  <h1>桃園市高中普通科與職業類科序位</h1>
+
+  <div class="button-container">
+    <button id="normalBtn" class="button">普通科</button>
+    <button id="vocationalBtn" class="button active">職業類科</button>
+  </div>
+
+  <div class="container">
+    <table id="schoolTable">
+      <thead>
+        <tr>
+          <th onclick="sortTable(0)">學校名稱</th>
+          <th onclick="sortTable(1)">序位累積比率%</th>
+          <th onclick="sortTable(2)">序位累積人數</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <!-- Table content will be dynamically populated here -->
+      </tbody>
+    </table>
+  </div>
+
+  <footer>
+    <p>&copy; 2024 TYCTW桃園市高中普通科與職業類科序位. 版權所有。</p>
+    <p>以上資料僅供參考</p>
+  </footer>
+
+  <script>
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyhTgVSZRz2OBklNDfjBUUoSl_ah6-9-rYe97-XsY7aKW9Dah5k-C-Ffp7tGBt-PnqV/exec';
+
+    async function fetchSchoolData(type) {
+      showLoading();
+      try {
+        const response = await fetch(`${SCRIPT_URL}?type=${type}`);
+        const data = await response.json();
+        hideLoading();
+        return data;
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        hideLoading();
+        return [];
+      }
+    }
+
+    function populateTable(schools) {
+      const tableBody = document.getElementById('tableBody');
+      tableBody.innerHTML = '';
+      schools.forEach(school => {
+        const row = `
+          <tr>
+            <td class="school-name">${school.name}</td>
+            <td class="rate tooltip">${school.rate}<span class="tooltiptext">序位累積比率表示該校在全部學校中的相對位置</span></td>
+            <td class="rank">${school.rank}</td>
+          </tr>
+        `;
+        tableBody.innerHTML += row;
+      });
+    }
+
+    function sortTable(n) {
+      var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+      table = document.getElementById("schoolTable");
+      switching = true;
+      dir = "asc";
+      while (switching) {
+        switching = false;
+        rows = table.rows;
+        for (i = 1; i < (rows.length - 1); i++) {
+          shouldSwitch = false;
+          x = rows[i].getElementsByTagName("TD")[n];
+          y = rows[i + 1].getElementsByTagName("TD")[n];
+          if (dir == "asc") {
+            if (n === 0) {
+              if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                shouldSwitch = true;
+                break;
+              }
+            } else {
+              if (parseFloat(x.innerHTML) > parseFloat(y.innerHTML)) {
+                shouldSwitch = true;
+                break;
+              }
+            }
+          } else if (dir == "desc") {
+            if (n === 0) {
+              if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                shouldSwitch = true;
+                break;
+              }
+            } else {
+              if (parseFloat(x.innerHTML) < parseFloat(y.innerHTML)) {
+                shouldSwitch = true;
+                break;
+              }
+            }
+          }
+        }
+        if (shouldSwitch) {
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          switching = true;
+          switchcount ++;
+        } else {
+          if (switchcount == 0 && dir == "asc") {
+            dir = "desc";
+            switching = true;
+          }
+        }
+      }
+    }
+
+    function showLoading() {
+      document.getElementById('loading').style.display = 'flex';
+    }
+
+    function hideLoading() {
+      document.getElementById('loading').style.display = 'none';
+    }
+
+    document.addEventListener('DOMContentLoaded', async (event) => {
+      const normalBtn = document.getElementById('normalBtn');
+      const vocationalBtn = document.getElementById('vocationalBtn');
+      const menuToggle = document.querySelector('.menu-toggle');
+      const mobileMenu = document.querySelector('.mobile-menu');
+
+      normalBtn.addEventListener('click', async () => {
+        const normalSchools = await fetchSchoolData('normal');
+        populateTable(normalSchools);
+        normalBtn.classList.add('active');
+        vocationalBtn.classList.remove('active');
+        sortTable(2); // 按照序位累積排名排序
+      });
+
+      vocationalBtn.addEventListener('click', async () => {
+        const vocationalSchools = await fetchSchoolData('vocational');
+        populateTable(vocationalSchools);
+        vocationalBtn.classList.add('active');
+        normalBtn.classList.remove('active');
+        sortTable(2); // 按照序位累積排名排序
+      });
+
+      menuToggle.addEventListener('click', () => {
+        mobileMenu.classList.toggle('active');
+      });
+
+      // 初始化顯示職業類科資料並排序
+      const initialVocationalSchools = await fetchSchoolData('vocational');
+      populateTable(initialVocationalSchools);
+      sortTable(2); // 按照序位累積排名從小到大排序
+    });
+
+    // 增加手機版觸控支持
+    document.addEventListener('touchstart', handleTouchStart, false);        
+    document.addEventListener('touchmove', handleTouchMove, false);
+
+    var xDown = null;                                                        
+    var yDown = null;
+
+    function handleTouchStart(evt) {                                         
+        xDown = evt.touches[0].clientX;                                      
+        yDown = evt.touches[0].clientY;                                      
+    };                                                
+
+    function handleTouchMove(evt) {
+        if ( ! xDown || ! yDown ) {
+            return;
+        }
+
+        var xUp = evt.touches[0].clientX;                                    
+        var yUp = evt.touches[0].clientY;
+
+        var xDiff = xDown - xUp;
+        var yDiff = yDown - yUp;
+
+        if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {
+            if ( xDiff > 0 ) {
+                /* left swipe */ 
+            } else {
+                /* right swipe */
+            }                       
+        } else {
+            if ( yDiff > 0 ) {
+                /* up swipe */ 
+            } else { 
+                /* down swipe */
+            }                                                                 
+        }
+        /* reset values */
+        xDown = null;
+        yDown = null;                                             
+    };
+  </script>
+</body></html>
