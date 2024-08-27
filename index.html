@@ -1,5 +1,5 @@
-<html><head><base href="https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec" target="_blank">
-<title>桃園市高中普通科與職業類科序位 - App Script 後端版本</title>
+<html><head>
+<title>桃園市高中普通科與職業類科序位</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <style>
@@ -308,11 +308,11 @@
   }
 
   .spinner {
-    border: 5px solid #f3f3f3;
-    border-top: 5px solid var(--primary-color);
-    border-radius: 50%;
     width: 50px;
     height: 50px;
+    border: 5px solid var(--primary-color);
+    border-top: 5px solid transparent;
+    border-radius: 50%;
     animation: spin 1s linear infinite;
   }
 
@@ -441,8 +441,8 @@
   <h1>桃園市高中普通科與職業類科序位</h1>
 
   <div class="button-container">
-    <button id="normalBtn" class="button">普通科</button>
-    <button id="vocationalBtn" class="button active">職業類科</button>
+    <button id="normalBtn" class="button active">普通科</button>
+    <button id="vocationalBtn" class="button">職業類科</button>
   </div>
 
   <div class="container">
@@ -450,7 +450,7 @@
       <thead>
         <tr>
           <th onclick="sortTable(0)">學校名稱</th>
-          <th onclick="sortTable(1)">序位累積比率%</th>
+          <th onclick="sortTable(1)">序位累積比率</th>
           <th onclick="sortTable(2)">序位累積人數</th>
         </tr>
       </thead>
@@ -582,9 +582,9 @@
         mobileMenu.classList.toggle('active');
       });
 
-      // 初始化顯示職業類科資料並排序
-      const initialVocationalSchools = await fetchSchoolData('vocational');
-      populateTable(initialVocationalSchools);
+      // 初始化顯示普通科資料並排序
+      const initialNormalSchools = await fetchSchoolData('normal');
+      populateTable(initialNormalSchools);
       sortTable(2); // 按照序位累積排名從小到大排序
     });
 
