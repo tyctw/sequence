@@ -1,5 +1,5 @@
 <html><head>
-<title>桃園市高中普通科與職業類科序位 - 手機版</title>
+<title>桃園市高中職序位</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <style>
@@ -58,34 +58,51 @@
     background: none;
     border: none;
     cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+
+  .menu-toggle.active {
+    transform: rotate(90deg);
   }
 
   .mobile-menu {
     display: none;
     position: fixed;
-    top: 60px;
+    top: 0;
     left: 0;
     width: 100%;
+    height: 100%;
     background-color: var(--header-color);
-    padding: 10px 0;
+    padding: 60px 0 0;
     box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 999;
   }
 
   .mobile-menu.active {
     display: block;
+    transform: translateX(0);
   }
 
   .mobile-menu a {
     display: block;
     color: white;
     text-decoration: none;
-    padding: 12px 15px;
+    padding: 20px;
     text-align: center;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.3s;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    font-size: 1.2em;
+  }
+
+  .mobile-menu a:last-child {
+    border-bottom: none;
   }
 
   .mobile-menu a:hover {
     background-color: rgba(255,255,255,0.1);
+    transform: translateX(10px);
   }
 
   h1 {
@@ -129,10 +146,12 @@
 
   .button:hover {
     background-color: #3a7bc8;
+    transform: translateY(-2px);
   }
 
   .button.active {
     background-color: var(--secondary-color);
+    transform: scale(1.05);
   }
 
   table {
@@ -160,6 +179,14 @@
 
   tr:nth-child(even) {
     background-color: #f8f9fa;
+  }
+
+  tr {
+    transition: background-color 0.3s ease;
+  }
+
+  tr:hover {
+    background-color: var(--hover-color);
   }
 
   .school-name {
@@ -234,14 +261,17 @@
     left: 50%;
     margin-left: -100px;
     opacity: 0;
-    transition: opacity 0.3s;
+    transition: opacity 0.3s, transform 0.3s;
     font-size: 0.8em;
+    transform: translateY(10px);
   }
 
   .tooltip:hover .tooltiptext {
     visibility: visible;
     opacity: 1;
+    transform: translateY(0);
   }
+
   #loading {
     display: none;
     position: fixed;
@@ -288,7 +318,6 @@
   .fade-in {
     animation: fadeIn 0.5s ease-in-out;
   }
-
 </style>
 </head>
 <body>
@@ -308,9 +337,15 @@
   </header>
 
   <div class="mobile-menu">
-    <a href="https://sites.google.com/view/tyctw/">回到主網頁</a>
-    <a href="https://tyctw.github.io/">落點分析系統</a>
-    <a href="https://tyctw.github.io/Navigation/" target="_blank">更多資訊</a>
+    <a href="https://sites.google.com/view/tyctw/">
+      <i class="fas fa-home"></i> 回到主網頁
+    </a>
+    <a href="https://tyctw.github.io/">
+      <i class="fas fa-chart-line"></i> 落點分析系統
+    </a>
+    <a href="https://tyctw.github.io/Navigation/" target="_blank">
+      <i class="fas fa-info-circle"></i> 更多資訊
+    </a>
   </div>
 
   <h1>桃園市高中職序位</h1>
@@ -455,6 +490,15 @@
 
       menuToggle.addEventListener('click', () => {
         mobileMenu.classList.toggle('active');
+        menuToggle.classList.toggle('active');
+      });
+
+      // 點擊菜單外區域關閉菜單
+      document.addEventListener('click', (event) => {
+        if (!mobileMenu.contains(event.target) && !menuToggle.contains(event.target)) {
+          mobileMenu.classList.remove('active');
+          menuToggle.classList.remove('active');
+        }
       });
 
       // 初始化顯示普通科資料並排序
