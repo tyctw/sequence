@@ -5,87 +5,106 @@
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
 
+    :root {
+        --primary-color: #3498db;
+        --background-start: #0c1832;
+        --background-end: #1c3a5e;
+        --text-color: #fff;
+        --text-secondary: #bdc3c7;
+    }
+
     body {
         font-family: 'Noto Sans TC', sans-serif;
-        background: linear-gradient(135deg, #0c1832 0%, #1c3a5e 100%);
+        background: linear-gradient(135deg, var(--background-start) 0%, var(--background-end) 100%);
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100vh;
+        min-height: 100vh;
         margin: 0;
-        overflow: hidden;
-        color: #fff;
+        padding: 20px;
+        box-sizing: border-box;
+        color: var(--text-color);
+        overflow-x: hidden;
     }
+
     .container {
         text-align: center;
         background-color: rgba(255, 255, 255, 0.1);
-        padding: 3rem;
+        padding: 2rem;
         border-radius: 20px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         position: relative;
         overflow: hidden;
-        max-width: 80%;
-        width: 500px;
+        width: 90%;
+        max-width: 500px;
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.1);
     }
+
     h1 {
-        font-size: 5rem;
-        color: #fff;
+        font-size: 4rem;
+        color: var(--text-color);
         margin-bottom: 1rem;
         text-shadow: 0 0 10px rgba(255,255,255,0.5);
     }
+
     p {
-        font-size: 1.4rem;
-        color: #bdc3c7;
+        font-size: 1.2rem;
+        color: var(--text-secondary);
         margin-bottom: 2rem;
         line-height: 1.6;
     }
+
     .btn {
         display: inline-block;
-        padding: 1rem 2rem;
-        background-color: #3498db;
-        color: white;
+        padding: 0.8rem 1.5rem;
+        background-color: var(--primary-color);
+        color: var(--text-color);
         text-decoration: none;
         border-radius: 50px;
         transition: all 0.3s ease;
         font-weight: bold;
-        font-size: 1.2rem;
+        font-size: 1rem;
         box-shadow: 0 0 20px rgba(52, 152, 219, 0.5);
     }
+
     .btn:hover {
         background-color: #2980b9;
         transform: translateY(-3px);
         box-shadow: 0 0 30px rgba(52, 152, 219, 0.8);
     }
+
     .error-code {
         position: absolute;
-        top: -80px;
+        top: -60px;
         left: 50%;
         transform: translateX(-50%);
-        font-size: 12rem;
+        font-size: 8rem;
         color: rgba(52, 152, 219, 0.1);
         z-index: -1;
         font-weight: bold;
     }
+
     .astronaut {
         position: absolute;
-        width: 120px;
-        height: 160px;
-        right: -60px;
-        bottom: -80px;
+        width: 80px;
+        height: 120px;
+        right: -40px;
+        bottom: -60px;
         transform: rotate(15deg);
         animation: float 6s ease-in-out infinite;
         filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
     }
+
     @keyframes float {
         0%, 100% {
             transform: rotate(15deg) translate(0, 0);
         }
         50% {
-            transform: rotate(15deg) translate(-20px, -20px);
+            transform: rotate(15deg) translate(-10px, -10px);
         }
     }
+
     .stars {
         position: fixed;
         top: 0;
@@ -93,13 +112,16 @@
         width: 100%;
         height: 100%;
         pointer-events: none;
+        z-index: -1;
     }
+
     .star {
         position: absolute;
         background-color: white;
         border-radius: 50%;
         animation: twinkle 2s infinite;
     }
+
     @keyframes twinkle {
         0%, 100% {
             opacity: 1;
@@ -110,6 +132,7 @@
             transform: scale(0.5);
         }
     }
+
     .shooting-star {
         position: absolute;
         width: 100px;
@@ -117,6 +140,7 @@
         background: linear-gradient(90deg, #fff, transparent);
         animation: shoot 3s linear infinite;
     }
+
     @keyframes shoot {
         0% {
             transform: translateX(-100%) translateY(0);
@@ -125,11 +149,13 @@
             transform: translateX(200%) translateY(100vh);
         }
     }
+
     .planet {
         position: absolute;
         border-radius: 50%;
         opacity: 0.7;
     }
+
     .copyright {
         position: absolute;
         bottom: 10px;
@@ -140,16 +166,86 @@
         text-align: center;
         width: 100%;
     }
+
     .current-time {
         position: absolute;
         top: 20px;
         right: 20px;
-        font-size: 1.2rem;
+        font-size: 1rem;
         color: rgba(255, 255, 255, 0.8);
         background-color: rgba(0, 0, 0, 0.3);
-        padding: 10px;
+        padding: 8px;
         border-radius: 10px;
         backdrop-filter: blur(5px);
+    }
+
+    @media (max-width: 768px) {
+        body {
+            padding: 10px;
+        }
+
+        .container {
+            padding: 1.5rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+        }
+
+        p {
+            font-size: 1rem;
+        }
+
+        .btn {
+            font-size: 0.9rem;
+            padding: 0.7rem 1.2rem;
+        }
+
+        .error-code {
+            font-size: 6rem;
+            top: -40px;
+        }
+
+        .astronaut {
+            width: 60px;
+            height: 90px;
+            right: -30px;
+            bottom: -45px;
+        }
+
+        .current-time {
+            top: 10px;
+            right: 10px;
+            font-size: 0.8rem;
+            padding: 5px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        p {
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            font-size: 0.8rem;
+            padding: 0.6rem 1rem;
+        }
+
+        .error-code {
+            font-size: 5rem;
+            top: -30px;
+        }
+
+        .astronaut {
+            width: 50px;
+            height: 75px;
+            right: -25px;
+            bottom: -37px;
+        }
     }
 </style>
 </head>
@@ -179,12 +275,12 @@
     <script>
         function createStars() {
             const starsContainer = document.getElementById('stars');
-            const numberOfStars = 200;
+            const numberOfStars = 100;
 
             for (let i = 0; i < numberOfStars; i++) {
                 const star = document.createElement('div');
                 star.classList.add('star');
-                star.style.width = `${Math.random() * 3}px`;
+                star.style.width = `${Math.random() * 2}px`;
                 star.style.height = star.style.width;
                 star.style.left = `${Math.random() * 100}%`;
                 star.style.top = `${Math.random() * 100}%`;
@@ -195,7 +291,7 @@
 
         function createShootingStars() {
             const starsContainer = document.getElementById('stars');
-            const numberOfShootingStars = 5;
+            const numberOfShootingStars = 3;
 
             for (let i = 0; i < numberOfShootingStars; i++) {
                 const shootingStar = document.createElement('div');
@@ -210,12 +306,12 @@
         function createPlanets() {
             const starsContainer = document.getElementById('stars');
             const colors = ['#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3', '#54a0ff'];
-            const numberOfPlanets = 3;
+            const numberOfPlanets = 2;
 
             for (let i = 0; i < numberOfPlanets; i++) {
                 const planet = document.createElement('div');
                 planet.classList.add('planet');
-                planet.style.width = `${Math.random() * 50 + 20}px`;
+                planet.style.width = `${Math.random() * 30 + 10}px`;
                 planet.style.height = planet.style.width;
                 planet.style.left = `${Math.random() * 100}%`;
                 planet.style.top = `${Math.random() * 100}%`;
@@ -253,17 +349,34 @@
         // Update time every second
         setInterval(updateCurrentTime, 1000);
 
-        // Add parallax effect
-        document.addEventListener('mousemove', (e) => {
-            const mouseX = e.clientX / window.innerWidth;
-            const mouseY = e.clientY / window.innerHeight;
+        // Add parallax effect for desktop only
+        if (window.innerWidth > 768) {
+            document.addEventListener('mousemove', (e) => {
+                const mouseX = e.clientX / window.innerWidth;
+                const mouseY = e.clientY / window.innerHeight;
 
-            document.querySelectorAll('.star, .planet').forEach((element) => {
-                const speed = element.offsetWidth * 0.05;
-                const x = (window.innerWidth - element.offsetWidth) * mouseX;
-                const y = (window.innerHeight - element.offsetHeight) * mouseY;
-                element.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+                document.querySelectorAll('.star, .planet').forEach((element) => {
+                    const speed = element.offsetWidth * 0.05;
+                    const x = (window.innerWidth - element.offsetWidth) * mouseX;
+                    const y = (window.innerHeight - element.offsetHeight) * mouseY;
+                    element.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+                });
             });
-        });
+        }
+
+        // Add touch-based parallax for mobile devices
+        if ('ontouchstart' in window || navigator.maxTouchPoints) {
+            window.addEventListener('deviceorientation', (e) => {
+                const tiltX = e.gamma / 90; // Range: -1 to 1
+                const tiltY = e.beta / 90;  // Range: -1 to 1
+
+                document.querySelectorAll('.star, .planet').forEach((element) => {
+                    const speed = element.offsetWidth * 0.03;
+                    const x = (window.innerWidth - element.offsetWidth) * (tiltX + 1) / 2;
+                    const y = (window.innerHeight - element.offsetHeight) * (tiltY + 1) / 2;
+                    element.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+                });
+            });
+        }
     </script>
 </body></html>
