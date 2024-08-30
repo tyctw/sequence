@@ -1,0 +1,269 @@
+<html><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 - 頁面未找到</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
+
+    body {
+        font-family: 'Noto Sans TC', sans-serif;
+        background: linear-gradient(135deg, #0c1832 0%, #1c3a5e 100%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        overflow: hidden;
+        color: #fff;
+    }
+    .container {
+        text-align: center;
+        background-color: rgba(255, 255, 255, 0.1);
+        padding: 3rem;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        position: relative;
+        overflow: hidden;
+        max-width: 80%;
+        width: 500px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    h1 {
+        font-size: 5rem;
+        color: #fff;
+        margin-bottom: 1rem;
+        text-shadow: 0 0 10px rgba(255,255,255,0.5);
+    }
+    p {
+        font-size: 1.4rem;
+        color: #bdc3c7;
+        margin-bottom: 2rem;
+        line-height: 1.6;
+    }
+    .btn {
+        display: inline-block;
+        padding: 1rem 2rem;
+        background-color: #3498db;
+        color: white;
+        text-decoration: none;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        font-weight: bold;
+        font-size: 1.2rem;
+        box-shadow: 0 0 20px rgba(52, 152, 219, 0.5);
+    }
+    .btn:hover {
+        background-color: #2980b9;
+        transform: translateY(-3px);
+        box-shadow: 0 0 30px rgba(52, 152, 219, 0.8);
+    }
+    .error-code {
+        position: absolute;
+        top: -80px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 12rem;
+        color: rgba(52, 152, 219, 0.1);
+        z-index: -1;
+        font-weight: bold;
+    }
+    .astronaut {
+        position: absolute;
+        width: 120px;
+        height: 160px;
+        right: -60px;
+        bottom: -80px;
+        transform: rotate(15deg);
+        animation: float 6s ease-in-out infinite;
+        filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+    }
+    @keyframes float {
+        0%, 100% {
+            transform: rotate(15deg) translate(0, 0);
+        }
+        50% {
+            transform: rotate(15deg) translate(-20px, -20px);
+        }
+    }
+    .stars {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+    }
+    .star {
+        position: absolute;
+        background-color: white;
+        border-radius: 50%;
+        animation: twinkle 2s infinite;
+    }
+    @keyframes twinkle {
+        0%, 100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+        50% {
+            opacity: 0.5;
+            transform: scale(0.5);
+        }
+    }
+    .shooting-star {
+        position: absolute;
+        width: 100px;
+        height: 1px;
+        background: linear-gradient(90deg, #fff, transparent);
+        animation: shoot 3s linear infinite;
+    }
+    @keyframes shoot {
+        0% {
+            transform: translateX(-100%) translateY(0);
+        }
+        100% {
+            transform: translateX(200%) translateY(100vh);
+        }
+    }
+    .planet {
+        position: absolute;
+        border-radius: 50%;
+        opacity: 0.7;
+    }
+    .copyright {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.5);
+        text-align: center;
+        width: 100%;
+    }
+    .current-time {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 1.2rem;
+        color: rgba(255, 255, 255, 0.8);
+        background-color: rgba(0, 0, 0, 0.3);
+        padding: 10px;
+        border-radius: 10px;
+        backdrop-filter: blur(5px);
+    }
+</style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+    <div class="container">
+        <div class="error-code">404</div>
+        <h1>哎呀！</h1>
+        <p>看來你迷失在了數字宇宙中。<br>我們找不到你要的頁面。</p>
+        <a href="https://sites.google.com/view/tyctw/" class="btn">返回首頁</a>
+        <svg class="astronaut" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            <path fill="#FFF" d="M256,0C114.6,0,0,114.6,0,256s114.6,256,256,256s256-114.6,256-256S397.4,0,256,0z M256,512
+            C114.8,512,0,397.2,0,256S114.8,0,256,0s256,114.8,256,256S397.2,512,256,512z"/>
+            <path fill="#3498db" d="M256,96c-88.4,0-160,71.6-160,160s71.6,160,160,160s160-71.6,160-160S344.4,96,256,96z M256,384
+            c-70.7,0-128-57.3-128-128s57.3-128,128-128s128,57.3,128,128S326.7,384,256,384z"/>
+            <circle fill="#FFF" cx="256" cy="256" r="64"/>
+            <circle fill="#3498db" cx="256" cy="256" r="32"/>
+        </svg>
+    </div>
+
+    <div class="copyright">
+        © <span id="current-year"></span> TYCTW落點分析平台. 保留所有權利。
+    </div>
+
+    <div class="current-time" id="current-time"></div>
+
+    <script>
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const numberOfStars = 200;
+
+            for (let i = 0; i < numberOfStars; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                star.style.width = `${Math.random() * 3}px`;
+                star.style.height = star.style.width;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.animationDelay = `${Math.random() * 2}s`;
+                starsContainer.appendChild(star);
+            }
+        }
+
+        function createShootingStars() {
+            const starsContainer = document.getElementById('stars');
+            const numberOfShootingStars = 5;
+
+            for (let i = 0; i < numberOfShootingStars; i++) {
+                const shootingStar = document.createElement('div');
+                shootingStar.classList.add('shooting-star');
+                shootingStar.style.left = `${Math.random() * 100}%`;
+                shootingStar.style.top = `${Math.random() * 100}%`;
+                shootingStar.style.animationDelay = `${Math.random() * 5}s`;
+                starsContainer.appendChild(shootingStar);
+            }
+        }
+
+        function createPlanets() {
+            const starsContainer = document.getElementById('stars');
+            const colors = ['#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3', '#54a0ff'];
+            const numberOfPlanets = 3;
+
+            for (let i = 0; i < numberOfPlanets; i++) {
+                const planet = document.createElement('div');
+                planet.classList.add('planet');
+                planet.style.width = `${Math.random() * 50 + 20}px`;
+                planet.style.height = planet.style.width;
+                planet.style.left = `${Math.random() * 100}%`;
+                planet.style.top = `${Math.random() * 100}%`;
+                planet.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                starsContainer.appendChild(planet);
+            }
+        }
+
+        function updateCopyrightYear() {
+            const currentYear = new Date().getFullYear();
+            document.getElementById('current-year').textContent = currentYear;
+        }
+
+        function updateCurrentTime() {
+            const now = new Date();
+            const options = { 
+                year: 'numeric', 
+                month: '2-digit', 
+                day: '2-digit', 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit', 
+                hour12: false 
+            };
+            const formattedTime = now.toLocaleString('zh-TW', options);
+            document.getElementById('current-time').textContent = formattedTime;
+        }
+
+        createStars();
+        createShootingStars();
+        createPlanets();
+        updateCopyrightYear();
+        updateCurrentTime();
+
+        // Update time every second
+        setInterval(updateCurrentTime, 1000);
+
+        // Add parallax effect
+        document.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+
+            document.querySelectorAll('.star, .planet').forEach((element) => {
+                const speed = element.offsetWidth * 0.05;
+                const x = (window.innerWidth - element.offsetWidth) * mouseX;
+                const y = (window.innerHeight - element.offsetHeight) * mouseY;
+                element.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+            });
+        });
+    </script>
+</body></html>
