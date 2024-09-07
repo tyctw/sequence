@@ -13,13 +13,13 @@
     --text-color: #333;
     --light-text-color: #777;
     --table-hover-color: #e6f2ff;
-    --grade-a-plus-plus: #FF4136; /* 鮮紅色 */
-    --grade-a-plus: #FF851B; /* 橙色 */
-    --grade-a: #FFDC00; /* 黃色 */
-    --grade-b-plus-plus: #2ECC40; /* 綠色 */
-    --grade-b-plus: #0074D9; /* 藍色 */
-    --grade-b: #7FDBFF; /* 淺藍色 */
-    --grade-c: #AAAAAA; /* 灰色 */
+    --grade-a-plus-plus: #FF4136;
+    --grade-a-plus: #FF851B;
+    --grade-a: #FFDC00;
+    --grade-b-plus-plus: #2ECC40;
+    --grade-b-plus: #0074D9;
+    --grade-b: #7FDBFF;
+    --grade-c: #AAAAAA;
   }
 
   body {
@@ -298,9 +298,9 @@
 
   /* Header styles */
   .header {
-    background-color: var(--primary-color);
-    padding: 20px 0;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
   }
 
   .header-content {
@@ -309,39 +309,84 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 20px;
+    padding: 15px 20px;
   }
 
   .logo {
     font-size: 24px;
     font-weight: 700;
-    color: white;
+    color: var(--primary-color);
     text-decoration: none;
     display: flex;
     align-items: center;
+    transition: all 0.3s ease;
   }
 
-  .logo i {
-    margin-right: 10px;
-    font-size: 28px;
+  .logo:hover {
+    color: var(--secondary-color);
+    transform: scale(1.05);
   }
 
   .nav-links {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(74,144,226,0.95);
+    z-index: 1000;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transform: translateX(100%);
+  }
+
+  .nav-links.show {
     display: flex;
-    gap: 20px;
+    transform: translateX(0);
   }
 
   .nav-link {
     color: white;
-    text-decoration: none;
-    font-weight: 500;
+    font-size: 24px;
+    margin: 20px 0;
     transition: all 0.3s ease;
-    padding: 8px 12px;
-    border-radius: 20px;
+    position: relative;
+    padding: 10px 20px;
   }
 
-  .nav-link:hover {
-    background-color: rgba(255,255,255,0.2);
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: white;
+    transition: all 0.3s ease;
+  }
+
+  .nav-link:hover::after {
+    width: 100%;
+    left: 0;
+  }
+
+  .close-menu {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .close-menu:hover {
+    transform: rotate(90deg);
   }
 
   /* Mobile menu styles */
@@ -349,9 +394,18 @@
     display: none;
     background: none;
     border: none;
-    color: white;
+    color: var(--primary-color);
     font-size: 24px;
     cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 10px;
+    border-radius: 50%;
+    background-color: rgba(74, 144, 226, 0.1);
+  }
+
+  .menu-toggle:hover {
+    background-color: rgba(74, 144, 226, 0.2);
+    transform: rotate(90deg);
   }
 
   /* Mobile styles */
@@ -378,35 +432,11 @@
       align-items: flex-start;
     }
 
-    .nav-links {
-      display: none;
-      flex-direction: column;
-      width: 100%;
-      margin-top: 20px;
-    }
-
-    .nav-links.show {
-      display: flex;
-    }
-
     .menu-toggle {
       display: block;
       position: absolute;
       top: 20px;
       right: 20px;
-    }
-
-    #filterContainer {
-      flex-direction: column;
-      align-items: stretch;
-    }
-
-    .filter-group {
-      margin: 5px 0;
-    }
-
-    select, #resetFilters {
-      width: 100%;
     }
   }
 
@@ -480,13 +510,17 @@
     <button class="menu-toggle" id="menuToggle">
       <i class="fas fa-bars"></i>
     </button>
-    <nav class="nav-links" id="navLinks">
-      <a href="https://sites.google.com/view/tyctw/" class="nav-link"><i class="fas fa-home"></i> 主頁</a>
-      <a href="https://tyctw.github.io/" class="nav-link"><i class="fas fa-info-circle"></i> 落點分析</a>
-      <a href="https://tyctw.github.io/Navigation/" class="nav-link"><i class="fas fa-envelope"></i> 更多資訊</a>
-    </nav>
   </div>
 </header>
+
+<nav class="nav-links" id="navLinks">
+  <button class="close-menu" id="closeMenu">
+    <i class="fas fa-times"></i>
+  </button>
+  <a href="https://sites.google.com/view/tyctw/" class="nav-link"><i class="fas fa-home"></i> 主頁</a>
+  <a href="https://tyctw.github.io/" class="nav-link"><i class="fas fa-info-circle"></i> 落點分析</a>
+  <a href="https://tyctw.github.io/Navigation/" class="nav-link"><i class="fas fa-envelope"></i> 更多資訊</a>
+</nav>
 
 <div id="particles-js"></div>
 <div id="app">
@@ -559,6 +593,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const resetFilters = document.getElementById('resetFilters');
   const menuToggle = document.getElementById('menuToggle');
   const navLinks = document.getElementById('navLinks');
+  const closeMenu = document.getElementById('closeMenu');
   let allData = [];
 
   particlesJS.load('particles-js', 'https://cdn.jsdelivr.net/particles.js/2.0.0/particles.json', function() {
@@ -656,7 +691,20 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   menuToggle.addEventListener('click', function() {
-    navLinks.classList.toggle('show');
+    navLinks.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  });
+
+  closeMenu.addEventListener('click', function() {
+    navLinks.classList.remove('show');
+    document.body.style.overflow = '';
+  });
+
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', function() {
+      navLinks.classList.remove('show');
+      document.body.style.overflow = '';
+    });
   });
 
   function updateCharts(data) {
@@ -678,13 +726,13 @@ document.addEventListener('DOMContentLoaded', function() {
           label: '成績分佈',
           data: gradeCounts,
           backgroundColor: [
-            'rgba(255, 65, 54, 0.7)',  // A++
-            'rgba(255, 133, 27, 0.7)', // A+
-            'rgba(255, 220, 0, 0.7)',  // A
-            'rgba(46, 204, 64, 0.7)',  // B++
-            'rgba(0, 116, 217, 0.7)',  // B+
-            'rgba(127, 219, 255, 0.7)',// B
-            'rgba(170, 170, 170, 0.7)' // C
+            'rgba(255, 65, 54, 0.7)',
+            'rgba(255, 133, 27, 0.7)',
+            'rgba(255, 220, 0, 0.7)',
+            'rgba(46, 204, 64, 0.7)',
+            'rgba(0, 116, 217, 0.7)',
+            'rgba(127, 219, 255, 0.7)',
+            'rgba(170, 170, 170, 0.7)'
           ],
           borderColor: [
             'rgba(255, 65, 54, 1)',
@@ -729,29 +777,51 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-            // 防止複製
-        document.addEventListener('copy', function(e) {
-        e.preventDefault();
-        return false;
-      });
-  
-      // 防止截圖 (僅適用於部分瀏覽器)
-      document.addEventListener('keyup', function(e) {
-        if (e.key == 'PrintScreen') {
-          navigator.clipboard.writeText('');
-          alert('截圖功能已被禁用');
-        }
-      });
-  
-      // 防止右鍵點擊
-      document.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
-      });
-  
-      // 防止拖曳選擇文字
-      document.onselectstart = function() {
-        return false;
-      };
+// Smooth scrolling for internal links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function (e) {
+    e.preventDefault();
+    document.querySelector(this.getAttribute('href')).scrollIntoView({
+      behavior: 'smooth'
+    });
+  });
+});
+
+// Change header appearance on scroll
+window.addEventListener('scroll', function() {
+  const header = document.querySelector('.header');
+  if (window.scrollY > 50) {
+    header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+    header.style.backgroundColor = 'rgba(255, 255, 255, 0.98)';
+  } else {
+    header.style.boxShadow = 'none';
+    header.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+  }
+});
+
+// Prevent copying
+document.addEventListener('copy', function(e) {
+  e.preventDefault();
+  return false;
+});
+
+// Prevent screenshot (only in some browsers)
+document.addEventListener('keyup', function(e) {
+  if (e.key == 'PrintScreen') {
+    navigator.clipboard.writeText('');
+    alert('截圖功能已被禁用');
+  }
+});
+
+// Prevent right-click
+document.addEventListener('contextmenu', function(e) {
+  e.preventDefault();
+});
+
+// Prevent drag selecting text
+document.onselectstart = function() {
+  return false;
+};
 
 </script>
 </body>
