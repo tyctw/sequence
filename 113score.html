@@ -354,6 +354,28 @@
     transform: scale(1.05);
   }
 
+  .header-buttons {
+    display: flex;
+    align-items: center;
+  }
+
+  .menu-toggle,
+  .dark-mode-toggle {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 10px;
+    margin-left: 10px;
+  }
+
+  .menu-toggle:hover,
+  .dark-mode-toggle:hover {
+    color: var(--secondary-color);
+  }
+
   .nav-links {
     display: none;
     position: fixed;
@@ -449,17 +471,20 @@
     }
 
     .header-content {
-      flex-direction: column;
-      align-items: flex-start;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    .menu-toggle {
-      display: block;
-      position: absolute;
-      top: 20px;
-      right: 20px;
+    .header-buttons {
+      display: flex;
     }
 
+    .menu-toggle,
+    .dark-mode-toggle {
+      position: static;
+    }
+    
     #filterContainer {
       flex-direction: column;
     }
@@ -643,12 +668,14 @@
       <i class="fas fa-chart-line"></i>
       113會考序位資料
     </a>
-    <button class="menu-toggle" id="menuToggle">
-      <i class="fas fa-bars"></i>
-    </button>
-    <button id="darkModeToggle" class="dark-mode-toggle">
-      <i class="fas fa-moon"></i>
-    </button>
+    <div class="header-buttons">
+      <button class="menu-toggle" id="menuToggle">
+        <i class="fas fa-bars"></i>
+      </button>
+      <button id="darkModeToggle" class="dark-mode-toggle">
+        <i class="fas fa-moon"></i>
+      </button>
+    </div>
   </div>
 </header>
 
