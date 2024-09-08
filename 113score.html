@@ -32,6 +32,28 @@
     overflow-x: hidden;
   }
 
+  body::before {
+    content: "113會考序位資料";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.1;
+    font-size: 2rem;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: rotate(-45deg);
+    pointer-events: none;
+    z-index: -1;
+    color: var(--primary-color);
+    overflow: hidden;
+    white-space: nowrap;
+    line-height: 100vh;
+  }
+
   #app {
     max-width: 1200px;
     margin: 40px auto;
@@ -357,26 +379,21 @@
     color: white;
     font-size: 24px;
     margin: 20px 0;
-    transition: all 0.3s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease;
     position: relative;
     padding: 10px 20px;
+    opacity: 0;
+    transform: translateY(20px);
   }
 
-  .nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    width: 0;
-    height: 2px;
-    background-color: white;
-    transition: all 0.3s ease;
+  .nav-links.show .nav-link {
+    opacity: 1;
+    transform: translateY(0);
   }
 
-  .nav-link:hover::after {
-    width: 100%;
-    left: 0;
-  }
+  .nav-link:nth-child(1) { transition-delay: 0.1s; }
+  .nav-link:nth-child(2) { transition-delay: 0.2s; }
+  .nav-link:nth-child(3) { transition-delay: 0.3s; }
 
   .close-menu {
     position: absolute;
@@ -441,6 +458,28 @@
       position: absolute;
       top: 20px;
       right: 20px;
+    }
+
+    #filterContainer {
+      flex-direction: column;
+    }
+
+    .filter-group {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    select, #searchInput {
+      width: 100%;
+    }
+
+    .button {
+      width: 100%;
+      margin: 5px 0;
+    }
+
+    .chart-container {
+      height: 250px;
     }
   }
 
@@ -508,6 +547,93 @@
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     animation: headerSlideDown 0.5s ease-out;
   }
+
+  /* Search input styles */
+  #searchInput {
+    padding: 10px 15px;
+    border-radius: 25px;
+    border: 2px solid var(--primary-color);
+    font-size: 16px;
+    transition: all 0.3s ease;
+  }
+
+  #searchInput:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 3px rgba(74,144,226,0.2);
+  }
+
+  /* Back to Top button styles */
+  .back-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .back-to-top.show {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .back-to-top:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-5px);
+  }
+
+  /* Dark mode toggle styles */
+  .dark-mode-toggle {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .dark-mode-toggle:hover {
+    color: var(--secondary-color);
+  }
+
+  /* Dark mode styles */
+  body.dark-mode {
+    background-color: #1a1a1a;
+    color: #f0f0f0;
+  }
+
+  body.dark-mode #app {
+    background-color: #2a2a2a;
+  }
+
+  body.dark-mode .header {
+    background: linear-gradient(to right, rgba(26, 26, 26, 0.95), rgba(74, 144, 226, 0.1));
+  }
+
+  body.dark-mode .card {
+    background-color: #3a3a3a;
+  }
+
+  body.dark-mode th {
+    background-color: #4a4a4a;
+  }
+
+  body.dark-mode tr:nth-child(even) {
+    background-color: #333;
+  }
+
+  body.dark-mode tr:hover {
+    background-color: #444;
+  }
 </style>
 </head>
 <body>
@@ -519,6 +645,9 @@
     </a>
     <button class="menu-toggle" id="menuToggle">
       <i class="fas fa-bars"></i>
+    </button>
+    <button id="darkModeToggle" class="dark-mode-toggle">
+      <i class="fas fa-moon"></i>
     </button>
   </div>
 </header>
@@ -561,6 +690,10 @@
           <option value="C">C</option>
         </select>
       </div>
+      <div class="filter-group">
+        <label for="searchInput">搜尋：</label>
+        <input type="text" id="searchInput" placeholder="輸入關鍵字...">
+      </div>
       <button id="resetFilters" class="button">重置篩選</button>
     </div>
   </div>
@@ -589,6 +722,10 @@
   </div>
 </div>
 
+<button id="backToTop" class="back-to-top hidden">
+  <i class="fas fa-chevron-up"></i>
+</button>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -600,10 +737,13 @@ document.addEventListener('DOMContentLoaded', function() {
   const tableContainer = document.getElementById('tableContainer');
   const subjectFilter = document.getElementById('subjectFilter');
   const gradeFilter = document.getElementById('gradeFilter');
+  const searchInput = document.getElementById('searchInput');
   const resetFilters = document.getElementById('resetFilters');
+  const backToTopButton = document.getElementById('backToTop');
   const menuToggle = document.getElementById('menuToggle');
   const navLinks = document.getElementById('navLinks');
   const closeMenu = document.getElementById('closeMenu');
+  const darkModeToggle = document.getElementById('darkModeToggle');
   let allData = [];
 
   particlesJS.load('particles-js', 'https://cdn.jsdelivr.net/particles.js/2.0.0/particles.json', function() {
@@ -676,28 +816,47 @@ document.addEventListener('DOMContentLoaded', function() {
     tableContainer.appendChild(table);
   }
 
-  function applyFilters() {
+  function getFilteredData() {
     const subjectIndex = parseInt(subjectFilter.value);
     const grade = gradeFilter.value;
+    const searchTerm = searchInput.value.toLowerCase();
 
-    const filteredData = allData.filter(row => {
+    return allData.filter(row => {
       const subjectMatch = subjectFilter.value === '' || (row[subjectIndex] && row[subjectIndex] === grade);
       const gradeMatch = !grade || row.slice(0, 5).some(g => g === grade);
-      return subjectMatch && gradeMatch;
+      const searchMatch = row.some(cell => cell.toString().toLowerCase().includes(searchTerm));
+      return subjectMatch && gradeMatch && searchMatch;
     });
+  }
 
+  function applyFilters() {
+    const filteredData = getFilteredData();
     renderTable(filteredData);
     updateCharts(filteredData);
   }
 
+  searchInput.addEventListener('input', applyFilters);
   subjectFilter.addEventListener('change', applyFilters);
   gradeFilter.addEventListener('change', applyFilters);
 
   resetFilters.addEventListener('click', function() {
     subjectFilter.value = '';
     gradeFilter.value = '';
+    searchInput.value = '';
     renderTable(allData);
     updateCharts(allData);
+  });
+
+  window.addEventListener('scroll', function() {
+    if (window.pageYOffset > 300) {
+      backToTopButton.classList.add('show');
+    } else {
+      backToTopButton.classList.remove('show');
+    }
+  });
+
+  backToTopButton.addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
   menuToggle.addEventListener('click', function() {
@@ -709,6 +868,18 @@ document.addEventListener('DOMContentLoaded', function() {
     navLinks.classList.remove('show');
     document.body.style.overflow = '';
   });
+
+  darkModeToggle.addEventListener('click', function() {
+    document.body.classList.toggle('dark-mode');
+    const isDarkMode = document.body.classList.contains('dark-mode');
+    localStorage.setItem('darkMode', isDarkMode);
+    darkModeToggle.innerHTML = isDarkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+  });
+
+  if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+    darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+  }
 
   document.querySelectorAll('.nav-link').forEach(link => {
     link.addEventListener('click', function() {
