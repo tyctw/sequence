@@ -1,8 +1,8 @@
 <html lang="zh-TW">
 <head>
-  <title>桃園市高中職序位</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>桃園市高中職序位</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <script type="module" src="app.js" defer></script>
@@ -17,7 +17,10 @@
 
   <header>
     <div class="header-content">
-      <div class="logo">TYCTW 會考分析</div>
+      <div class="logo">
+        <i class="fas fa-chart-bar"></i>
+        TYCTW 會考分析
+      </div>
       <button class="menu-toggle">
         <i class="fas fa-bars"></i>
       </button>
@@ -36,20 +39,33 @@
     </a>
   </div>
 
-  <h1>桃園市高中職序位</h1>
+  <h1>
+    <i class="fas fa-school"></i>
+    桃園市高中職序位
+  </h1>
 
   <div class="button-container">
-    <button id="normalBtn" class="button active">普通科</button>
-    <button id="vocationalBtn" class="button">職業類科</button>
+    <button id="normalBtn" class="button active">
+      <i class="fas fa-graduation-cap"></i> 普通科
+    </button>
+    <button id="vocationalBtn" class="button">
+      <i class="fas fa-tools"></i> 職業類科
+    </button>
   </div>
 
   <div class="container">
     <table id="schoolTable">
       <thead>
         <tr>
-          <th onclick="sortTable(0)">學校名稱</th>
-          <th onclick="sortTable(1)">序位累積比率</th>
-          <th onclick="sortTable(2)">序位累積人數</th>
+          <th onclick="sortTable(0)">
+            <i class="fas fa-sort"></i> 學校名稱
+          </th>
+          <th onclick="sortTable(1)">
+            <i class="fas fa-sort"></i> 序位累積比率
+          </th>
+          <th onclick="sortTable(2)">
+            <i class="fas fa-sort"></i> 序位累積人數
+          </th>
         </tr>
       </thead>
       <tbody id="tableBody">
@@ -58,8 +74,12 @@
   </div>
 
   <footer>
-    <p>&copy; 2025 TYCTW桃園市高中普通科與職業類科序位. 版權所有。</p>
-    <p>以上資料僅供參考</p>
+    <p>
+      <i class="far fa-copyright"></i> 2025 TYCTW桃園市高中普通科與職業類科序位. 版權所有。
+    </p>
+    <p>
+      <i class="fas fa-info-circle"></i> 以上資料僅供參考
+    </p>
   </footer>
 </body>
 </html>
