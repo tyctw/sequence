@@ -393,7 +393,6 @@ footer {
 .tooltip:hover .tooltiptext {
   visibility: visible;
   opacity: 1;
-  transform: translateY(0);
 }
 
 @keyframes spin {
@@ -665,9 +664,16 @@ footer {
 
 @media (max-width: 480px) {
   .button-container {
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: center;
     align-items: center;
     gap: 10px;
+  }
+  
+  .button {
+    padding: 10px 15px;
+    width: auto;
+    font-size: 0.9em;
   }
   
   .view-toggle {
