@@ -102,8 +102,9 @@ header {
   transform: translateX(-10px);
 }
 
-.mobile-menu a:last-child {
-  border-bottom: none;
+.mobile-menu a .fa-external-link-alt {
+  margin-left: 5px;
+  font-size: 0.8em;
 }
 
 h1 {
@@ -604,6 +605,10 @@ footer {
   transform: translateY(-2px);
 }
 
+.seo-structured-data {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .search-container {
     display: none;
@@ -723,6 +728,12 @@ footer {
   .table-view, .chart-view {
     display: block !important;
     opacity: 1 !important;
+  }
+  
+  .rank {
+    background: none !important;
+    -webkit-background-clip: initial !important;
+    -webkit-text-fill-color: #e74c3c !important;
   }
   
   .data-summary {

@@ -4,39 +4,7 @@ let currentView = 'table';
 let currentSchools = [];
 let schoolChart = null;
 
-async function fetchSchoolData(type) {
-  showLoading();
-  try {
-    const response = await fetch(`${SCRIPT_URL}?type=${type}`);
-    const data = await response.json();
-    hideLoading();
-    return data;
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    hideLoading();
-    return [];
-  }
-}
-
-function populateTable(schools) {
-  const tableBody = document.getElementById('tableBody');
-  tableBody.innerHTML = '';
-  schools.forEach((school, index) => {
-    const row = document.createElement('tr');
-    row.className = 'fade-in';
-    row.style.animationDelay = `${index * 0.05}s`;
-    
-    // Add data-attributes for mobile view
-    row.innerHTML = `
-      <td class="school-name" data-label="學校名稱">${school.name}</td>
-      <td class="rate tooltip" data-label="序位累積比率">${school.rate}<span class="tooltiptext">序位累積比率表示該校在全部學校中的相對位置</span></td>
-      <td class="rank" data-label="序位累積人數">${school.rank}</td>
-    `;
-    tableBody.appendChild(row);
-  });
-}
-
-function sortTable(n) {
+window.sortTable = function(n) {
   var table = document.getElementById("schoolTable");
   var switching = true;
   var dir = "asc";
@@ -72,6 +40,38 @@ function sortTable(n) {
       switching = true;
     }
   }
+}
+
+async function fetchSchoolData(type) {
+  showLoading();
+  try {
+    const response = await fetch(`${SCRIPT_URL}?type=${type}`);
+    const data = await response.json();
+    hideLoading();
+    return data;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    hideLoading();
+    return [];
+  }
+}
+
+function populateTable(schools) {
+  const tableBody = document.getElementById('tableBody');
+  tableBody.innerHTML = '';
+  schools.forEach((school, index) => {
+    const row = document.createElement('tr');
+    row.className = 'fade-in';
+    row.style.animationDelay = `${index * 0.05}s`;
+    
+    // Add data-attributes for mobile view
+    row.innerHTML = `
+      <td class="school-name" data-label="學校名稱">${school.name}</td>
+      <td class="rate tooltip" data-label="序位累積比率">${school.rate}<span class="tooltiptext">序位累積比率表示該校在全部學校中的相對位置</span></td>
+      <td class="rank" data-label="序位累積人數">${school.rank}</td>
+    `;
+    tableBody.appendChild(row);
+  });
 }
 
 function showLoading() {
@@ -174,7 +174,7 @@ function printData() {
   printHeader.innerHTML = `
     <h2>桃園市高中職序位報表</h2>
     <p>產生日期: ${dateString}</p>
-    <p>資料類型: ${document.getElementById('normalBtn').classList.contains('active') ? '普通科' : '職業類科'}</p>
+    <p>資料類型: ${document.getElementById('normalBtn').classList.contains('active') ? '普通科' : 'izerssion類科'}</p>
     <p class="watermark">Data Source: https://rcpett.vercel.app/</p>
   `;
   
@@ -305,6 +305,12 @@ function initializeEventListeners() {
       }
     }
   }
+
+  window.addEventListener('appLoaded', function(e) {
+    if (currentSchools.length > 0) {
+      document.title = `桃園市高中職序位 - ${currentSchools.length}所學校資料分析 | TYCTW`;
+    }
+  });
 }
 
 async function fetchAndDisplayData(type) {
@@ -315,6 +321,18 @@ async function fetchAndDisplayData(type) {
     initializeChart(schools);
   }
   updateDataSummary(schools);
+  
+  // Update meta description with current data
+  const typeText = type === 'normal' ? '普通科' : '職業類科';
+  const metaDescription = document.querySelector('meta[name="description"]');
+  if (metaDescription) {
+    metaDescription.setAttribute('content', 
+      `桃園市高中職${typeText}會考序位分析平台，顯示${schools.length}所學校的最新排名與序位數據。更新日期：${new Date().toLocaleDateString('zh-TW')}`);
+  }
+  
+  // Dispatch event that app is loaded with data
+  window.dispatchEvent(new CustomEvent('appLoaded'));
+  
   return schools;
 }
 
