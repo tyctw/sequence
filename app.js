@@ -25,10 +25,12 @@ function populateTable(schools) {
     const row = document.createElement('tr');
     row.className = 'fade-in';
     row.style.animationDelay = `${index * 0.05}s`;
+    
+    // Add data-attributes for mobile view
     row.innerHTML = `
-      <td class="school-name">${school.name}</td>
-      <td class="rate tooltip">${school.rate}<span class="tooltiptext">序位累積比率表示該校在全部學校中的相對位置</span></td>
-      <td class="rank">${school.rank}</td>
+      <td class="school-name" data-label="學校名稱">${school.name}</td>
+      <td class="rate tooltip" data-label="序位累積比率">${school.rate}<span class="tooltiptext">序位累積比率表示該校在全部學校中的相對位置</span></td>
+      <td class="rank" data-label="序位累積人數">${school.rank}</td>
     `;
     tableBody.appendChild(row);
   });
@@ -142,17 +144,51 @@ function showNotification(message) {
 
 function exportToCSV(schools) {
   const headers = ['學校名稱', '序位累積比率', '序位累積人數'];
+  const watermark = 'Data Source: https://rcpett.vercel.app/';
   const csvContent = [
+    watermark,
     headers.join(','),
     ...schools.map(school => `${school.name},${school.rate},${school.rank}`)
   ].join('\n');
 
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  // Add UTF-8 BOM to ensure correct Chinese character display
+  const BOM = '\uFEFF';
+  const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
   link.download = '學校序位資料.csv';
   link.click();
   showNotification('已成功匯出 CSV 檔案');
+}
+
+function printData() {
+  // Add print header with date and watermark
+  const printHeader = document.createElement('div');
+  printHeader.className = 'printHeader';
+  const now = new Date();
+  const dateString = now.toLocaleDateString('zh-TW', {
+    year: 'numeric', month: 'long', day: 'numeric',
+    hour: '2-digit', minute: '2-digit'
+  });
+  
+  printHeader.innerHTML = `
+    <h2>桃園市高中職序位報表</h2>
+    <p>產生日期: ${dateString}</p>
+    <p>資料類型: ${document.getElementById('normalBtn').classList.contains('active') ? '普通科' : '職業類科'}</p>
+    <p class="watermark">Data Source: https://rcpett.vercel.app/</p>
+  `;
+  
+  document.body.prepend(printHeader);
+  
+  // Print the page
+  window.print();
+  
+  // Remove the header after printing
+  setTimeout(() => {
+    document.body.removeChild(printHeader);
+  }, 100);
+  
+  showNotification('正在準備列印...');
 }
 
 function initializeEventListeners() {
@@ -219,6 +255,8 @@ function initializeEventListeners() {
   document.getElementById('exportPDF').addEventListener('click', () => {
     showNotification('PDF 匯出功能即將推出');
   });
+  
+  document.getElementById('printButton').addEventListener('click', printData);
 
   document.addEventListener('copy', (e) => e.preventDefault());
   document.addEventListener('keyup', (e) => {
@@ -229,6 +267,44 @@ function initializeEventListeners() {
   });
   document.addEventListener('contextmenu', (e) => e.preventDefault());
   document.onselectstart = () => false;
+
+  // Add touch event handling for mobile swipe
+  let touchStartX = 0;
+  let touchEndX = 0;
+  
+  const container = document.querySelector('.container');
+  
+  container.addEventListener('touchstart', e => {
+    touchStartX = e.changedTouches[0].screenX;
+  });
+  
+  container.addEventListener('touchend', e => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe();
+  });
+  
+  function handleSwipe() {
+    if (touchEndX - touchStartX > 100) {
+      // Swipe right - show table view
+      if (currentView !== 'table') {
+        currentView = 'table';
+        tableView.classList.add('active');
+        chartView.classList.remove('active');
+        tableViewBtn.classList.add('active');
+        chartViewBtn.classList.remove('active');
+      }
+    } else if (touchStartX - touchEndX > 100) {
+      // Swipe left - show chart view
+      if (currentView !== 'chart') {
+        currentView = 'chart';
+        chartView.classList.add('active');
+        tableView.classList.remove('active');
+        chartViewBtn.classList.add('active');
+        tableViewBtn.classList.remove('active');
+        initializeChart(currentSchools);
+      }
+    }
+  }
 }
 
 async function fetchAndDisplayData(type) {
