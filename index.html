@@ -144,31 +144,37 @@
     <span id="notificationText"></span>
   </div>
 
-  <div class="seo-structured-data" aria-hidden="true">
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "EducationalOrganization",
-      "name": "桃園市高中職序位分析平台",
-      "url": "https://rcpett.vercel.app/",
-"description": "提供桃園市高中職普通科與職業類科的會考序位分析數據，協助國中學生了解各校分發概況。"
-      "email": "tyctw.analyze@gmail.com"
+<div class="seo-structured-data" aria-hidden="true">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "EducationalOrganization",
+    "name": "桃園市高中職序位分析平台",
+    "url": "https://rcpett.vercel.app/",
+    "description": "提供桃園市高中職普通科與職業類科的會考序位分析數據，協助國中學生了解各校分發概況。",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "email": "tyctw.analyze@gmail.com",
+      "contactType": "customer service"
     }
-    </script>
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Dataset",
-      "name": "桃園市高中職序位數據",
-      "description": "桃園市各高中職的會考序位數據，包含序位累積人數和序位累積比率。",
-      "keywords": ["桃園市", "高中", "高職", "會考", "序位", "排名", "升學資訊"],
-      "creator": {
-        "@type": "Organization",
-        "name": "TYCTW"
-      },
-      "license": "https://creativecommons.org/licenses/by-nc/4.0/"
-    }
-    </script>
-  </div>
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    "name": "桃園市高中職序位數據",
+    "description": "桃園市各高中職的會考序位數據，包含序位累積人數、序位累積比率，以及近年來的分發趨勢分析，幫助學生與家長做出更好的升學選擇。",
+    "keywords": ["桃園市", "高中", "高職", "會考", "序位", "排名", "升學資訊"],
+    "creator": {
+      "@type": "Organization",
+      "name": "TYCTW"
+    },
+    "license": "https://creativecommons.org/licenses/by-nc/4.0/"
+  }
+  </script>
+</div>
+
 </body>
 </html>
