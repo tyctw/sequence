@@ -91,6 +91,7 @@ header {
   transform: translateX(100%);
   transition: transform 0.3s ease-in-out;
   z-index: 999;
+  overflow-y: auto;
 }
 
 .mobile-menu.active {
@@ -416,36 +417,6 @@ footer {
   align-items: center;
 }
 
-.loading-content {
-  background: rgba(255, 255, 255, 0.95);
-  padding: 40px;
-  border-radius: 20px;
-  box-shadow: 
-    0 15px 30px rgba(0,0,0,0.15),
-    0 5px 15px rgba(0,0,0,0.1);
-  backdrop-filter: blur(10px);
-  text-align: center;
-}
-
-.spinner {
-  width: 50px;
-  height: 50px;
-  border: 5px solid var(--primary-color);
-  border-top: 5px solid transparent;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 0 auto 20px;
-  box-shadow: 
-    0 0 20px rgba(74, 144, 226, 0.4),
-    0 0 40px rgba(74, 144, 226, 0.2);
-}
-
-.loading-text {
-  font-size: 1.2em;
-  color: var(--primary-color);
-  font-weight: bold;
-}
-
 .tooltip {
   position: relative;
   display: inline-block;
@@ -725,6 +696,98 @@ footer {
   animation: modalFadeIn 0.4s ease;
 }
 
+.guide-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid var(--primary-color);
+}
+
+.guide-header i {
+  font-size: 2.5em;
+  color: var(--primary-color);
+  margin-right: 15px;
+}
+
+.guide-header h2 {
+  margin: 0;
+  color: var(--header-color);
+  font-size: 2em;
+}
+
+.guide-sections-container {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.guide-section {
+  display: flex;
+  gap: 20px;
+  margin: 0;
+  padding-bottom: 25px;
+  border-bottom: 1px solid var(--border-color);
+  transition: transform 0.3s ease;
+}
+
+.guide-section:hover {
+  transform: translateX(5px);
+}
+
+.guide-section:last-child {
+  border-bottom: none;
+}
+
+.guide-icon {
+  flex: 0 0 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-color), var(--gradient-end));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3);
+}
+
+.guide-icon i {
+  font-size: 1.8em;
+  color: white;
+}
+
+.guide-text {
+  flex: 1;
+}
+
+.guide-text h3 {
+  color: var(--primary-color);
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.guide-text p, .guide-text ul {
+  margin: 10px 0;
+  line-height: 1.6;
+  color: var(--text-color);
+}
+
+.guide-text ul {
+  padding-left: 20px;
+}
+
+.guide-text li {
+  margin: 8px 0;
+  position: relative;
+  padding-left: 5px;
+}
+
+.guide-text li i {
+  color: var(--primary-color);
+  margin-right: 8px;
+}
+
 @keyframes modalFadeIn {
   from {
     opacity: 0;
@@ -749,39 +812,6 @@ footer {
 
 .close-btn:hover {
   color: var(--primary-color);
-}
-
-.guide-section {
-  margin: 25px 0;
-  padding-bottom: 15px;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.guide-section:last-child {
-  border-bottom: none;
-}
-
-.guide-section h3 {
-  color: var(--primary-color);
-  margin-bottom: 15px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.guide-section p {
-  margin: 10px 0;
-  line-height: 1.6;
-}
-
-.guide-section ul {
-  margin: 10px 0;
-  padding-left: 20px;
-}
-
-.guide-section li {
-  margin: 8px 0;
-  line-height: 1.5;
 }
 
 @media (max-width: 768px) {
@@ -844,17 +874,32 @@ footer {
 
   .modal-content {
     width: 90%;
-    padding: 15px;
+    padding: 20px 15px;
     margin: 10% auto;
   }
   
   .guide-section {
-    margin: 15px 0;
-    padding-bottom: 10px;
+    flex-direction: column;
+    gap: 15px;
+    padding-bottom: 20px;
   }
   
-  .guide-section h3 {
-    font-size: 1.1em;
+  .guide-icon {
+    margin: 0 auto;
+  }
+  
+  .guide-text h3 {
+    text-align: center;
+  }
+  
+  .guide-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .guide-header i {
+    margin-right: 0;
+    margin-bottom: 10px;
   }
 }
 

@@ -1,95 +1,115 @@
-/**
- * User Guide Modal functionality
- * Extracted from app.js to reduce file size
- */
+// guide.js - Handles the user guide modal functionality
 
 document.addEventListener('DOMContentLoaded', () => {
-  initializeGuideModal();
-});
-
-function initializeGuideModal() {
+  // Get modal elements
+  const userGuideModal = document.getElementById('userGuideModal');
   const helpBtn = document.getElementById('helpBtn');
   const menuHelpBtn = document.getElementById('menuHelpBtn');
-  const userGuideModal = document.getElementById('userGuideModal');
   const closeBtn = document.querySelector('.close-btn');
   const guideCloseBtn = document.querySelector('.guide-close-btn');
-  const mobileMenu = document.querySelector('.mobile-menu');
-  const menuToggle = document.querySelector('.menu-toggle');
-  
-  // Show help guide on first visit
-  if (!localStorage.getItem('visitedBefore')) {
-    setTimeout(() => {
-      showGuideModal();
-      localStorage.setItem('visitedBefore', 'true');
-    }, 2000);
-  }
-  
-  // Open modal from header button
-  helpBtn.addEventListener('click', () => {
-    showGuideModal();
-  });
-  
-  // Open modal from mobile menu
-  menuHelpBtn.addEventListener('click', () => {
-    mobileMenu.classList.remove('active');
-    menuToggle.classList.remove('active');
-    showGuideModal();
-  });
-  
-  // Close modal with X button
-  closeBtn.addEventListener('click', () => {
-    hideGuideModal();
-  });
-  
-  // Close modal with footer button
-  if (guideCloseBtn) {
-    guideCloseBtn.addEventListener('click', () => {
-      hideGuideModal();
-    });
-  }
-  
-  // Close modal when clicking outside
-  window.addEventListener('click', (event) => {
-    if (event.target === userGuideModal) {
-      hideGuideModal();
-    }
-  });
-  
-  // Add animations on modal open
-  userGuideModal.addEventListener('animationend', (e) => {
-    if (e.target.classList.contains('modal-content')) {
-      const sections = document.querySelectorAll('.guide-section');
-      sections.forEach(section => {
+  const dontShowAgain = document.getElementById('dontShowAgain');
+  const guideTabs = document.querySelector('.guide-tabs');
+  const tabButtons = document.querySelectorAll('.guide-tab-btn');
+  const tabContents = document.querySelectorAll('.guide-tab-content');
+
+  // Open modal function
+  function openGuideModal() {
+    userGuideModal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+
+    // Add animation to guide sections
+    const sections = document.querySelectorAll('.guide-section');
+    sections.forEach((section, index) => {
+      section.style.opacity = '0';
+      section.style.transform = 'translateY(20px)';
+
+      // Staggered animation
+      setTimeout(() => {
+        section.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
         section.style.opacity = '1';
         section.style.transform = 'translateY(0)';
-      });
+      }, 100 * index);
+    });
+  }
+
+  // Close modal function
+  function closeGuideModal() {
+    userGuideModal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+
+    // Save preference if checked
+    if (dontShowAgain && dontShowAgain.checked) {
+      localStorage.setItem('dontShowGuide', 'true');
+    }
+  }
+
+  // Tab switching functionality
+  function switchTab(tabId) {
+    // Update active tab button
+    tabButtons.forEach(btn => {
+      btn.classList.remove('active');
+      if (btn.dataset.tab === tabId) {
+        btn.classList.add('active');
+      }
+    });
+
+    // Update active tab content
+    tabContents.forEach(content => {
+      content.classList.remove('active');
+      if (content.id === `${tabId}-tab`) {
+        content.classList.add('active');
+      }
+    });
+
+    // Update the indicator position
+    guideTabs.dataset.activeTab = tabId;
+  }
+
+  // Event listeners
+  helpBtn.addEventListener('click', openGuideModal);
+
+  menuHelpBtn.addEventListener('click', () => {
+    // First close the mobile menu
+    const mobileMenu = document.querySelector('.mobile-menu');
+    const menuToggle = document.querySelector('.menu-toggle');
+    mobileMenu.classList.remove('active');
+    menuToggle.classList.remove('active');
+
+    // Then open modal
+    openGuideModal();
+  });
+
+  closeBtn.addEventListener('click', closeGuideModal);
+  guideCloseBtn.addEventListener('click', closeGuideModal);
+
+  window.addEventListener('click', (event) => {
+    if (event.target === userGuideModal) {
+      closeGuideModal();
     }
   });
-  
-  // Add keyboard navigation
+
+  // Tab switching
+  tabButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const tabId = button.dataset.tab;
+      switchTab(tabId);
+    });
+  });
+
+  // Show help guide on first visit unless opted out
+  window.addEventListener('DOMContentLoaded', () => {
+    if (!localStorage.getItem('dontShowGuide') && !localStorage.getItem('visitedBefore')) {
+      setTimeout(() => {
+        openGuideModal();
+        localStorage.setItem('visitedBefore', 'true');
+      }, 2000);
+    }
+  });
+
+  // Add keyboard support
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && userGuideModal.style.display === 'block') {
-      hideGuideModal();
+      closeGuideModal();
     }
   });
-}
-
-function showGuideModal() {
-  const userGuideModal = document.getElementById('userGuideModal');
-  userGuideModal.style.display = 'block';
-  document.body.style.overflow = 'hidden';
-  
-  // Reset section animations
-  const sections = document.querySelectorAll('.guide-section');
-  sections.forEach((section, index) => {
-    section.style.opacity = '0';
-    section.style.transform = 'translateY(20px)';
-    section.style.animationDelay = `${0.1 * (index + 1)}s`;
-  });
-}
-
-function hideGuideModal() {
-  const userGuideModal = document.getElementById('userGuideModal');
-  userGuideModal.style.display = 'none';
-  document.body.style.overflow = 'auto';
-}
+});

@@ -76,10 +76,27 @@ function populateTable(schools) {
 
 function showLoading() {
   document.getElementById('loading').style.display = 'flex';
+  
+  // Add staggered animation to loader text
+  const loaderTextSpans = document.querySelectorAll('.loader-text span');
+  loaderTextSpans.forEach((span, index) => {
+    span.style.opacity = '0';
+    setTimeout(() => {
+      span.style.opacity = '1';
+    }, 150 * index);
+  });
 }
 
 function hideLoading() {
-  document.getElementById('loading').style.display = 'none';
+  // Fade out effect
+  const loader = document.getElementById('loading');
+  loader.style.opacity = '0';
+  loader.style.transition = 'opacity 0.5s ease';
+  
+  setTimeout(() => {
+    loader.style.display = 'none';
+    loader.style.opacity = '1';
+  }, 500);
 }
 
 function initializeChart(schools) {
@@ -383,60 +400,42 @@ function initializeEventListeners() {
   const menuToggle = document.querySelector('.menu-toggle');
   const mobileMenu = document.querySelector('.mobile-menu');
   const menuCloseBtn = document.querySelector('.menu-close');
-  const helpBtn = document.getElementById('helpBtn');
-  const menuHelpBtn = document.getElementById('menuHelpBtn');
-  const userGuideModal = document.getElementById('userGuideModal');
-  const closeBtn = document.querySelector('.close-btn');
+  const menuExportCSV = document.getElementById('menuExportCSV');
+  const menuExportPDF = document.getElementById('menuExportPDF');
+  const menuPrintButton = document.getElementById('menuPrintButton');
+  const tableViewBtn = document.getElementById('tableViewBtn');
+  const chartViewBtn = document.getElementById('chartViewBtn');
+  const tableView = document.getElementById('tableView');
+  const chartView = document.getElementById('chartView');
+  const exportCSV = document.getElementById('exportCSV');
+  const exportPDF = document.getElementById('exportPDF');
+  const printButton = document.getElementById('printButton');
+  const searchInput = document.getElementById('searchInput');
 
   // Mobile menu close button
   menuCloseBtn.addEventListener('click', () => {
     mobileMenu.classList.remove('active');
     menuToggle.classList.remove('active');
+    document.body.style.overflow = ''; // Restore body scrolling
   });
   
   // Menu export buttons
-  document.getElementById('menuExportCSV').addEventListener('click', () => {
+  menuExportCSV.addEventListener('click', () => {
     mobileMenu.classList.remove('active');
     menuToggle.classList.remove('active');
     exportToCSV(currentSchools);
   });
   
-  document.getElementById('menuExportPDF').addEventListener('click', () => {
+  menuExportPDF.addEventListener('click', () => {
     mobileMenu.classList.remove('active');
     menuToggle.classList.remove('active');
     exportToPDF();
   });
   
-  document.getElementById('menuPrintButton').addEventListener('click', () => {
+  menuPrintButton.addEventListener('click', () => {
     mobileMenu.classList.remove('active');
     menuToggle.classList.remove('active');
     printData();
-  });
-  
-  // Menu help button
-  menuHelpBtn.addEventListener('click', () => {
-    mobileMenu.classList.remove('active');
-    menuToggle.classList.remove('active');
-    userGuideModal.style.display = 'block';
-    document.body.style.overflow = 'hidden';
-  });
-
-  // Help button and modal functionality
-  helpBtn.addEventListener('click', () => {
-    userGuideModal.style.display = 'block';
-    document.body.style.overflow = 'hidden';
-  });
-  
-  closeBtn.addEventListener('click', () => {
-    userGuideModal.style.display = 'none';
-    document.body.style.overflow = 'auto';
-  });
-  
-  window.addEventListener('click', (event) => {
-    if (event.target === userGuideModal) {
-      userGuideModal.style.display = 'none';
-      document.body.style.overflow = 'auto';
-    }
   });
 
   normalBtn.addEventListener('click', async () => {
@@ -456,22 +455,24 @@ function initializeEventListeners() {
   menuToggle.addEventListener('click', () => {
     mobileMenu.classList.toggle('active');
     menuToggle.classList.toggle('active');
+    
+    // Toggle body scrolling
+    if (mobileMenu.classList.contains('active')) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
   });
 
   document.addEventListener('click', (event) => {
     if (!mobileMenu.contains(event.target) && !menuToggle.contains(event.target)) {
       mobileMenu.classList.remove('active');
       menuToggle.classList.remove('active');
+      document.body.style.overflow = ''; // Restore body scrolling
     }
   });
 
-  const searchInput = document.getElementById('searchInput');
   searchInput.addEventListener('input', (e) => filterSchools(e.target.value));
-
-  const tableViewBtn = document.getElementById('tableViewBtn');
-  const chartViewBtn = document.getElementById('chartViewBtn');
-  const tableView = document.getElementById('tableView');
-  const chartView = document.getElementById('chartView');
 
   tableViewBtn.addEventListener('click', () => {
     currentView = 'table';
@@ -490,15 +491,15 @@ function initializeEventListeners() {
     initializeChart(currentSchools);
   });
 
-  document.getElementById('exportCSV').addEventListener('click', () => {
+  exportCSV.addEventListener('click', () => {
     exportToCSV(currentSchools);
   });
 
-  document.getElementById('exportPDF').addEventListener('click', () => {
+  exportPDF.addEventListener('click', () => {
     exportToPDF();
   });
   
-  document.getElementById('printButton').addEventListener('click', printData);
+  printButton.addEventListener('click', printData);
 
   document.addEventListener('copy', (e) => e.preventDefault());
   document.addEventListener('keyup', (e) => {
@@ -563,15 +564,6 @@ async function fetchAndDisplayData(type) {
     initializeChart(schools);
   }
   updateDataSummary(schools);
-  
-  // Show help guide on first visit
-  if (!localStorage.getItem('visitedBefore')) {
-    setTimeout(() => {
-      document.getElementById('userGuideModal').style.display = 'block';
-      document.body.style.overflow = 'hidden';
-      localStorage.setItem('visitedBefore', 'true');
-    }, 2000);
-  }
   
   // Update meta description with current data
   const typeText = type === 'normal' ? '普通科' : '職業類科';

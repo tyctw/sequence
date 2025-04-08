@@ -1,0 +1,21 @@
+/* Menu-specific styles to reduce CSS file size */
+.mobile-menu-scroll {
+  max-height: 100vh;
+  overflow-y: auto;
+  padding-bottom: 80px; /* Extra padding at bottom for better scrolling */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling for iOS */
+}
+
+.menu-category {
+  margin: 20px 0;
+  padding: 0 20px;
+}
+
+.menu-category-title {
+  color: rgba(255,255,255,0.6);
+  font-size: 0.85em;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  padding-left: 12px;
+}
