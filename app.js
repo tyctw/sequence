@@ -360,7 +360,7 @@ function printData() {
   printHeader.innerHTML = `
     <h2>桃園市高中職序位報表</h2>
     <p>產生日期: ${dateString}</p>
-    <p>資料類型: ${document.getElementById('normalBtn').classList.contains('active') ? '普通科' : 'izerssion類科'}</p>
+    <p>資料類型: ${document.getElementById('normalBtn').classList.contains('active') ? '普通科' : '職業類科'}</p>
     <p class="watermark">Data Source: https://rcpett.vercel.app/</p>
   `;
   
@@ -382,18 +382,37 @@ function initializeEventListeners() {
   const vocationalBtn = document.getElementById('vocationalBtn');
   const menuToggle = document.querySelector('.menu-toggle');
   const mobileMenu = document.querySelector('.mobile-menu');
-
+  const menuCloseBtn = document.querySelector('.menu-close');
+  
+  // Mobile menu close button
+  menuCloseBtn.addEventListener('click', () => {
+    mobileMenu.classList.remove('active');
+    menuToggle.classList.remove('active');
+  });
+  
+  // Menu export buttons
+  document.getElementById('menuExportCSV').addEventListener('click', () => {
+    mobileMenu.classList.remove('active');
+    menuToggle.classList.remove('active');
+    exportToCSV(currentSchools);
+  });
+  
+  document.getElementById('menuExportPDF').addEventListener('click', () => {
+    mobileMenu.classList.remove('active');
+    menuToggle.classList.remove('active');
+    exportToPDF();
+  });
+  
+  document.getElementById('menuPrintButton').addEventListener('click', () => {
+    mobileMenu.classList.remove('active');
+    menuToggle.classList.remove('active');
+    printData();
+  });
+  
   normalBtn.addEventListener('click', async () => {
     const normalSchools = await fetchAndDisplayData('normal');
     normalBtn.classList.add('active');
     vocationalBtn.classList.remove('active');
-    sortTable(2);
-  });
-
-  vocationalBtn.addEventListener('click', async () => {
-    const vocationalSchools = await fetchAndDisplayData('vocational');
-    vocationalBtn.classList.add('active');
-    normalBtn.classList.remove('active');
     sortTable(2);
   });
 
@@ -507,6 +526,15 @@ async function fetchAndDisplayData(type) {
     initializeChart(schools);
   }
   updateDataSummary(schools);
+  
+  // Show help guide on first visit
+  if (!localStorage.getItem('visitedBefore')) {
+    setTimeout(() => {
+      document.getElementById('userGuideModal').style.display = 'block';
+      document.body.style.overflow = 'hidden';
+      localStorage.setItem('visitedBefore', 'true');
+    }, 2000);
+  }
   
   // Update meta description with current data
   const typeText = type === 'normal' ? '普通科' : '職業類科';

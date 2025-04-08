@@ -49,6 +49,21 @@ header {
   font-weight: bold;
 }
 
+.help-button {
+  color: white;
+  font-size: 1.5em;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: transform 0.3s ease;
+}
+
+.help-button:hover {
+  transform: scale(1.1);
+  color: var(--secondary-color);
+}
+
 .menu-toggle {
   color: white;
   font-size: 1.5em;
@@ -76,6 +91,7 @@ header {
   transform: translateX(100%);
   transition: transform 0.3s ease-in-out;
   z-index: 999;
+  overflow-y: auto;
 }
 
 .mobile-menu.active {
@@ -90,21 +106,91 @@ header {
   background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
   border: 1px solid rgba(255,255,255,0.1);
   backdrop-filter: blur(10px);
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 12px;
   color: white;
   text-decoration: none;
-  text-align: center;
-  transition: background-color 0.3s, transform 0.3s;
+  text-align: left;
+  transition: all 0.3s;
+  font-weight: 500;
+  position: relative;
+  overflow: hidden;
+}
+
+.mobile-menu a::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    rgba(255,255,255,0), 
+    rgba(255,255,255,0.1), 
+    rgba(255,255,255,0));
+  transition: left 0.8s ease;
 }
 
 .mobile-menu a:hover {
-  background-color: rgba(255,255,255,0.1);
-  transform: translateX(-10px);
+  background-color: rgba(255,255,255,0.15);
+  transform: translateX(-5px) scale(1.03);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
-.mobile-menu a .fa-external-link-alt {
-  margin-left: 5px;
-  font-size: 0.8em;
+.mobile-menu a:hover::before {
+  left: 100%;
+}
+
+.mobile-menu a i {
+  font-size: 1.2em;
+  min-width: 25px;
+  text-align: center;
+}
+
+.mobile-menu-header {
+  display: flex;
+  align-items: center;
+  padding: 0 20px 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.mobile-menu-header .logo {
+  color: white;
+  font-size: 1.3em;
+  font-weight: bold;
+}
+
+.menu-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: white;
+  background: none;
+  border: none;
+  font-size: 1.5em;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.menu-close:hover {
+  transform: rotate(90deg);
+  color: var(--secondary-color);
+}
+
+.menu-category {
+  margin: 20px 0;
+  padding: 0 20px;
+}
+
+.menu-category-title {
+  color: rgba(255,255,255,0.6);
+  font-size: 0.85em;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  padding-left: 12px;
 }
 
 h1 {
@@ -614,8 +700,252 @@ footer {
   margin-top: 5px;
 }
 
-.seo-structured-data {
+.modal {
   display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.7);
+  z-index: 2000;
+  overflow-y: auto;
+  backdrop-filter: blur(5px);
+}
+
+.modal-content {
+  background: linear-gradient(to bottom, #ffffff, #f9f9f9);
+  margin: 5% auto;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 
+    0 10px 40px rgba(0,0,0,0.3),
+    0 0 100px rgba(74, 144, 226, 0.2);
+  width: 80%;
+  max-width: 800px;
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+  animation: modalFadeIn 0.5s ease;
+  border: 1px solid rgba(74, 144, 226, 0.2);
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-60px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  color: #888;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.close-btn:hover {
+  color: var(--primary-color);
+  background-color: rgba(74, 144, 226, 0.1);
+  transform: rotate(90deg);
+}
+
+.modal-content h2 {
+  color: var(--header-color);
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid rgba(74, 144, 226, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 1.8em;
+}
+
+.modal-content h2 i {
+  color: var(--primary-color);
+}
+
+.guide-content {
+  padding: 0 10px;
+}
+
+.guide-section {
+  margin: 25px 0;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
+  animation: sectionFadeIn 0.5s ease forwards;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+@keyframes sectionFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.guide-section:nth-child(1) { animation-delay: 0.1s; }
+.guide-section:nth-child(2) { animation-delay: 0.2s; }
+.guide-section:nth-child(3) { animation-delay: 0.3s; }
+.guide-section:nth-child(4) { animation-delay: 0.4s; }
+.guide-section:nth-child(5) { animation-delay: 0.5s; }
+.guide-section:nth-child(6) { animation-delay: 0.6s; }
+.guide-section:nth-child(7) { animation-delay: 0.7s; }
+
+.guide-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.guide-section h3 {
+  color: var(--primary-color);
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.3em;
+}
+
+.guide-section h3 i {
+  background: linear-gradient(135deg, var(--primary-color), var(--gradient-end));
+  color: white;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 0.9em;
+  box-shadow: 0 3px 8px rgba(74, 144, 226, 0.3);
+}
+
+.guide-section p {
+  margin: 10px 0;
+  line-height: 1.7;
+  color: #444;
+}
+
+.guide-section ul {
+  margin: 15px 0;
+  padding-left: 10px;
+  list-style-type: none;
+}
+
+.guide-section li {
+  margin: 12px 0;
+  line-height: 1.6;
+  position: relative;
+  padding-left: 30px;
+}
+
+.guide-section li:before {
+  content: "•";
+  color: var(--primary-color);
+  font-weight: bold;
+  font-size: 1.5em;
+  position: absolute;
+  left: 10px;
+  top: -2px;
+}
+
+.highlight {
+  background: linear-gradient(120deg, rgba(74, 144, 226, 0.15), rgba(74, 144, 226, 0.05));
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+  color: var(--primary-color);
+}
+
+.data-explanation {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin: 15px 0;
+}
+
+.data-item {
+  background: white;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.data-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
+.data-title {
+  font-weight: 600;
+  color: var(--header-color);
+  margin-bottom: 8px;
+  font-size: 1.1em;
+  border-left: 4px solid var(--primary-color);
+  padding-left: 10px;
+}
+
+.data-desc {
+  color: #666;
+  line-height: 1.5;
+}
+
+.mobile-tips {
+  background: linear-gradient(to right, rgba(80, 200, 120, 0.1), rgba(80, 200, 120, 0.05));
+  border-radius: 10px;
+  padding: 15px 20px;
+}
+
+.mobile-tips li {
+  display: flex;
+  align-items: center;
+}
+
+.mobile-tips li i {
+  color: var(--secondary-color);
+  margin-right: 10px;
+  font-size: 1.2em;
+}
+
+.guide-footer {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.guide-close-btn {
+  background: linear-gradient(135deg, var(--primary-color), var(--gradient-end));
+  color: white;
+  border: none;
+  border-radius: 30px;
+  padding: 12px 30px;
+  font-size: 1.1em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+  box-shadow: 0 5px 15px rgba(74, 144, 226, 0.3);
+}
+
+.guide-close-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(74, 144, 226, 0.4);
 }
 
 @media (max-width: 768px) {
@@ -651,9 +981,14 @@ footer {
 
   .mobile-menu a {
     margin: 8px 15px;
-    padding: 12px;
+    padding: 12px 15px;
   }
 
+  .menu-category-title {
+    font-size: 0.75em;
+    padding-left: 8px;
+  }
+  
   h1 {
     font-size: 1.5em;
     margin: 70px 0 15px;
@@ -669,6 +1004,33 @@ footer {
     right: 10px;
     font-size: 0.9em;
     padding: 12px 15px;
+  }
+
+  .modal-content {
+    width: 90%;
+    padding: 20px 15px;
+    margin: 10% auto;
+  }
+  
+  .guide-section {
+    margin: 15px 0;
+    padding-bottom: 15px;
+  }
+  
+  .guide-section h3 {
+    font-size: 1.2em;
+  }
+  
+  .mobile-tips {
+    padding: 10px 15px;
+  }
+  
+  .data-explanation {
+    gap: 10px;
+  }
+  
+  .data-item {
+    padding: 12px;
   }
 }
 

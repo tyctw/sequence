@@ -1,0 +1,141 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700&family=Roboto:wght@300;400;700&display=swap');
+
+/* Mobile menu specific styles */
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 100%;
+  backdrop-filter: blur(10px);
+  background-color: rgba(44, 62, 80, 0.95);
+  padding: 60px 0 0;
+  box-shadow: -5px 0 10px rgba(0,0,0,0.1);
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 999;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+}
+
+.mobile-menu.active {
+  display: block;
+  transform: translateX(0);
+}
+
+.mobile-menu-content {
+  padding-bottom: 50px;
+  min-height: 101%; /* Ensure content is scrollable even if it's short */
+}
+
+.mobile-menu a {
+  margin: 10px 20px;
+  padding: 15px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+  border: 1px solid rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: white;
+  text-decoration: none;
+  text-align: left;
+  transition: all 0.3s;
+  font-weight: 500;
+  position: relative;
+  overflow: hidden;
+}
+
+.mobile-menu a::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    rgba(255,255,255,0), 
+    rgba(255,255,255,0.1), 
+    rgba(255,255,255,0));
+  transition: left 0.8s ease;
+}
+
+.mobile-menu a:hover {
+  background-color: rgba(255,255,255,0.15);
+  transform: translateX(-5px) scale(1.03);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.mobile-menu a:hover::before {
+  left: 100%;
+}
+
+.mobile-menu a i {
+  font-size: 1.2em;
+  min-width: 25px;
+  text-align: center;
+}
+
+.mobile-menu-header {
+  display: flex;
+  align-items: center;
+  padding: 0 20px 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.mobile-menu-header .logo {
+  color: white;
+  font-size: 1.3em;
+  font-weight: bold;
+}
+
+.menu-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: white;
+  background: none;
+  border: none;
+  font-size: 1.5em;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  z-index: 1;
+}
+
+.menu-close:hover {
+  transform: rotate(90deg);
+  color: #50c878;
+}
+
+.menu-category {
+  margin: 20px 0;
+  padding: 0 20px;
+}
+
+.menu-category-title {
+  color: rgba(255,255,255,0.6);
+  font-size: 0.85em;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  padding-left: 12px;
+}
+
+@media (max-width: 768px) {
+  .mobile-menu {
+    width: 280px;
+  }
+  
+  .mobile-menu a {
+    margin: 8px 15px;
+    padding: 12px 15px;
+  }
+
+  .menu-category-title {
+    font-size: 0.75em;
+    padding-left: 8px;
+  }
+}
