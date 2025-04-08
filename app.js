@@ -474,6 +474,19 @@ function initializeEventListeners() {
 
   searchInput.addEventListener('input', (e) => filterSchools(e.target.value));
 
+  // Mobile search focus behavior
+  if (searchInput) {
+    searchInput.addEventListener('focus', (e) => {
+      if (window.innerWidth <= 480) {
+        document.querySelector('.search-container').classList.add('active');
+      }
+    });
+    
+    searchInput.addEventListener('blur', (e) => {
+      document.querySelector('.search-container').classList.remove('active');
+    });
+  }
+  
   tableViewBtn.addEventListener('click', () => {
     currentView = 'table';
     tableView.classList.add('active');
@@ -548,6 +561,34 @@ function initializeEventListeners() {
       }
     }
   }
+
+  // Add touch event for mobile scrolling hint
+  const mobileHint = document.querySelector('.mobile-swipe-hint');
+  if (mobileHint) {
+    const tableResponsive = document.querySelector('.table-responsive');
+    if (tableResponsive) {
+      tableResponsive.addEventListener('scroll', () => {
+        // Hide hint when user has scrolled
+        if (mobileHint.style.opacity !== '0') {
+          mobileHint.style.opacity = '0';
+          mobileHint.style.transition = 'opacity 0.5s ease';
+          
+          setTimeout(() => {
+            mobileHint.style.display = 'none';
+          }, 500);
+        }
+      });
+    }
+  }
+  
+  // Handle orientation change to refresh layout
+  window.addEventListener('orientationchange', () => {
+    setTimeout(() => {
+      if (currentView === 'chart' && schoolChart) {
+        schoolChart.resize();
+      }
+    }, 300);
+  });
 
   window.addEventListener('appLoaded', function(e) {
     if (currentSchools.length > 0) {

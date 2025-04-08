@@ -1,0 +1,179 @@
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+  .container {
+    width: 98%;
+    padding: 10px 5px;
+    border-radius: 15px;
+  }
+  
+  .header-content {
+    padding: 0 10px;
+  }
+  
+  h1 {
+    font-size: 1.5em;
+    margin: 70px 0 15px;
+    padding: 0 10px;
+  }
+  
+  .view-controls {
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 10px;
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+    width: 100%;
+  }
+  
+  .table-responsive::after {
+    content: '← 左右滑動查看更多 →';
+    position: absolute;
+    bottom: -25px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 0.8em;
+    color: #666;
+    opacity: 0.8;
+  }
+  
+  table {
+    min-width: 550px;
+  }
+  
+  .data-summary {
+    padding: 15px 10px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  
+  .summary-card {
+    padding: 10px;
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .summary-card h3 {
+    font-size: 0.9em;
+    margin-top: 5px;
+  }
+  
+  .summary-card p {
+    font-size: 1.2em;
+    margin: 5px 0;
+  }
+  
+  .summary-card i {
+    font-size: 1.5em;
+  }
+  
+  .export-buttons {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0 10px;
+  }
+  
+  .export-button, .print-button {
+    padding: 8px 15px;
+    font-size: 0.9em;
+    flex: 1 0 auto;
+    min-width: 120px;
+    margin: 5px;
+  }
+  
+  .notification {
+    width: 90%;
+    left: 5%;
+    right: 5%;
+    bottom: 15px;
+    font-size: 0.9em;
+    padding: 10px 15px;
+  }
+  
+  /* Better touch targets */
+  th, td {
+    padding: 12px 10px;
+  }
+  
+  .button {
+    padding: 12px 20px;
+    min-width: 120px;
+  }
+  
+  .mobile-swipe-hint {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    color: #666;
+    font-size: 0.85em;
+    animation: fadeInOut 2s infinite;
+  }
+  
+  .mobile-swipe-hint i {
+    margin: 0 5px;
+  }
+  
+  @keyframes fadeInOut {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+}
+
+@media (max-width: 480px) {
+  .button-container {
+    flex-wrap: wrap;
+  }
+  
+  .button {
+    margin: 5px;
+    padding: 10px 15px;
+    min-width: 110px;
+    font-size: 0.85em;
+  }
+  
+  .summary-card h3 {
+    font-size: 0.8em;
+  }
+  
+  .summary-card p {
+    font-size: 1.1em;
+  }
+  
+  .summary-card i {
+    font-size: 1.3em;
+  }
+  
+  /* Stack footer buttons on very small screens */
+  .export-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .export-button, .print-button {
+    margin: 5px 0;
+    width: 100%;
+  }
+  
+  /* Full width search on focus */
+  .search-container.active {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    right: 0;
+    top: 0;
+    padding: 15px;
+    background: var(--header-color);
+    z-index: 1001;
+  }
+  
+  .search-container.active input {
+    width: 100%;
+  }
+}

@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="menu-styles.css">
   <link rel="stylesheet" href="guide-styles.css">
   <link rel="stylesheet" href="loading-animation.css">
+  <link rel="stylesheet" href="mobile-styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script type="module" src="app.js" defer></script>
@@ -130,23 +131,30 @@
   </div>
 
   <div class="container table-view active" id="tableView">
-    <table id="schoolTable">
-      <thead>
-        <tr>
-          <th onclick="sortTable(0)">
-            <i class="fas fa-sort"></i> 學校名稱
-          </th>
-          <th onclick="sortTable(1)">
-            <i class="fas fa-sort"></i> 序位累積比率
-          </th>
-          <th onclick="sortTable(2)">
-            <i class="fas fa-sort"></i> 序位累積人數
-          </th>
-        </tr>
-      </thead>
-      <tbody id="tableBody">
-      </tbody>
-    </table>
+    <div class="table-responsive">
+      <table id="schoolTable">
+        <thead>
+          <tr>
+            <th onclick="sortTable(0)">
+              <i class="fas fa-sort"></i> 學校名稱
+            </th>
+            <th onclick="sortTable(1)">
+              <i class="fas fa-sort"></i> 序位累積比率
+            </th>
+            <th onclick="sortTable(2)">
+              <i class="fas fa-sort"></i> 序位累積人數
+            </th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+        </tbody>
+      </table>
+    </div>
+    <div class="mobile-swipe-hint">
+      <i class="fas fa-chevron-left"></i>
+      左右滑動查看更多
+      <i class="fas fa-chevron-right"></i>
+    </div>
   </div>
 
   <div class="container chart-view" id="chartView">
