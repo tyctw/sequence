@@ -383,7 +383,11 @@ function initializeEventListeners() {
   const menuToggle = document.querySelector('.menu-toggle');
   const mobileMenu = document.querySelector('.mobile-menu');
   const menuCloseBtn = document.querySelector('.menu-close');
-  
+  const helpBtn = document.getElementById('helpBtn');
+  const menuHelpBtn = document.getElementById('menuHelpBtn');
+  const userGuideModal = document.getElementById('userGuideModal');
+  const closeBtn = document.querySelector('.close-btn');
+
   // Mobile menu close button
   menuCloseBtn.addEventListener('click', () => {
     mobileMenu.classList.remove('active');
@@ -409,10 +413,43 @@ function initializeEventListeners() {
     printData();
   });
   
+  // Menu help button
+  menuHelpBtn.addEventListener('click', () => {
+    mobileMenu.classList.remove('active');
+    menuToggle.classList.remove('active');
+    userGuideModal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+  });
+
+  // Help button and modal functionality
+  helpBtn.addEventListener('click', () => {
+    userGuideModal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+  });
+  
+  closeBtn.addEventListener('click', () => {
+    userGuideModal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+  });
+  
+  window.addEventListener('click', (event) => {
+    if (event.target === userGuideModal) {
+      userGuideModal.style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+  });
+
   normalBtn.addEventListener('click', async () => {
     const normalSchools = await fetchAndDisplayData('normal');
     normalBtn.classList.add('active');
     vocationalBtn.classList.remove('active');
+    sortTable(2);
+  });
+
+  vocationalBtn.addEventListener('click', async () => {
+    const vocationalSchools = await fetchAndDisplayData('vocational');
+    vocationalBtn.classList.add('active');
+    normalBtn.classList.remove('active');
     sortTable(2);
   });
 

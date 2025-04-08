@@ -91,7 +91,6 @@ header {
   transform: translateX(100%);
   transition: transform 0.3s ease-in-out;
   z-index: 999;
-  overflow-y: auto;
 }
 
 .mobile-menu.active {
@@ -710,106 +709,56 @@ footer {
   background-color: rgba(0,0,0,0.7);
   z-index: 2000;
   overflow-y: auto;
-  backdrop-filter: blur(5px);
 }
 
 .modal-content {
-  background: linear-gradient(to bottom, #ffffff, #f9f9f9);
+  background: white;
   margin: 5% auto;
-  padding: 30px;
-  border-radius: 20px;
-  box-shadow: 
-    0 10px 40px rgba(0,0,0,0.3),
-    0 0 100px rgba(74, 144, 226, 0.2);
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 5px 30px rgba(0,0,0,0.3);
   width: 80%;
   max-width: 800px;
-  max-height: 85vh;
+  max-height: 90vh;
   overflow-y: auto;
   position: relative;
-  animation: modalFadeIn 0.5s ease;
-  border: 1px solid rgba(74, 144, 226, 0.2);
+  animation: modalFadeIn 0.4s ease;
 }
 
 @keyframes modalFadeIn {
   from {
     opacity: 0;
-    transform: translateY(-60px) scale(0.9);
+    transform: translateY(-50px);
   }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.close-btn {
-  position: absolute;
-  top: 20px;
-  right: 25px;
-  color: #888;
-  font-size: 28px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-}
-
-.close-btn:hover {
-  color: var(--primary-color);
-  background-color: rgba(74, 144, 226, 0.1);
-  transform: rotate(90deg);
-}
-
-.modal-content h2 {
-  color: var(--header-color);
-  margin-bottom: 25px;
-  padding-bottom: 15px;
-  border-bottom: 2px solid rgba(74, 144, 226, 0.2);
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  font-size: 1.8em;
-}
-
-.modal-content h2 i {
-  color: var(--primary-color);
-}
-
-.guide-content {
-  padding: 0 10px;
-}
-
-.guide-section {
-  margin: 25px 0;
-  padding-bottom: 20px;
-  border-bottom: 1px solid var(--border-color);
-  animation: sectionFadeIn 0.5s ease forwards;
-  opacity: 0;
-  transform: translateY(20px);
-}
-
-@keyframes sectionFadeIn {
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-.guide-section:nth-child(1) { animation-delay: 0.1s; }
-.guide-section:nth-child(2) { animation-delay: 0.2s; }
-.guide-section:nth-child(3) { animation-delay: 0.3s; }
-.guide-section:nth-child(4) { animation-delay: 0.4s; }
-.guide-section:nth-child(5) { animation-delay: 0.5s; }
-.guide-section:nth-child(6) { animation-delay: 0.6s; }
-.guide-section:nth-child(7) { animation-delay: 0.7s; }
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 25px;
+  color: #aaa;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+  color: var(--primary-color);
+}
+
+.guide-section {
+  margin: 25px 0;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--border-color);
+}
 
 .guide-section:last-child {
   border-bottom: none;
-  margin-bottom: 0;
 }
 
 .guide-section h3 {
@@ -817,135 +766,22 @@ footer {
   margin-bottom: 15px;
   display: flex;
   align-items: center;
-  gap: 12px;
-  font-size: 1.3em;
-}
-
-.guide-section h3 i {
-  background: linear-gradient(135deg, var(--primary-color), var(--gradient-end));
-  color: white;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  font-size: 0.9em;
-  box-shadow: 0 3px 8px rgba(74, 144, 226, 0.3);
+  gap: 10px;
 }
 
 .guide-section p {
   margin: 10px 0;
-  line-height: 1.7;
-  color: #444;
+  line-height: 1.6;
 }
 
 .guide-section ul {
-  margin: 15px 0;
-  padding-left: 10px;
-  list-style-type: none;
+  margin: 10px 0;
+  padding-left: 20px;
 }
 
 .guide-section li {
-  margin: 12px 0;
-  line-height: 1.6;
-  position: relative;
-  padding-left: 30px;
-}
-
-.guide-section li:before {
-  content: "•";
-  color: var(--primary-color);
-  font-weight: bold;
-  font-size: 1.5em;
-  position: absolute;
-  left: 10px;
-  top: -2px;
-}
-
-.highlight {
-  background: linear-gradient(120deg, rgba(74, 144, 226, 0.15), rgba(74, 144, 226, 0.05));
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-weight: 500;
-  color: var(--primary-color);
-}
-
-.data-explanation {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin: 15px 0;
-}
-
-.data-item {
-  background: white;
-  border-radius: 10px;
-  padding: 15px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.data-item:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-}
-
-.data-title {
-  font-weight: 600;
-  color: var(--header-color);
-  margin-bottom: 8px;
-  font-size: 1.1em;
-  border-left: 4px solid var(--primary-color);
-  padding-left: 10px;
-}
-
-.data-desc {
-  color: #666;
+  margin: 8px 0;
   line-height: 1.5;
-}
-
-.mobile-tips {
-  background: linear-gradient(to right, rgba(80, 200, 120, 0.1), rgba(80, 200, 120, 0.05));
-  border-radius: 10px;
-  padding: 15px 20px;
-}
-
-.mobile-tips li {
-  display: flex;
-  align-items: center;
-}
-
-.mobile-tips li i {
-  color: var(--secondary-color);
-  margin-right: 10px;
-  font-size: 1.2em;
-}
-
-.guide-footer {
-  margin-top: 30px;
-  text-align: center;
-}
-
-.guide-close-btn {
-  background: linear-gradient(135deg, var(--primary-color), var(--gradient-end));
-  color: white;
-  border: none;
-  border-radius: 30px;
-  padding: 12px 30px;
-  font-size: 1.1em;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 500;
-  box-shadow: 0 5px 15px rgba(74, 144, 226, 0.3);
-}
-
-.guide-close-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(74, 144, 226, 0.4);
 }
 
 @media (max-width: 768px) {
@@ -1008,29 +844,17 @@ footer {
 
   .modal-content {
     width: 90%;
-    padding: 20px 15px;
+    padding: 15px;
     margin: 10% auto;
   }
   
   .guide-section {
     margin: 15px 0;
-    padding-bottom: 15px;
+    padding-bottom: 10px;
   }
   
   .guide-section h3 {
-    font-size: 1.2em;
-  }
-  
-  .mobile-tips {
-    padding: 10px 15px;
-  }
-  
-  .data-explanation {
-    gap: 10px;
-  }
-  
-  .data-item {
-    padding: 12px;
+    font-size: 1.1em;
   }
 }
 
