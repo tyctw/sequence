@@ -145,10 +145,15 @@ function showNotification(message) {
 function exportToCSV(schools) {
   const headers = ['學校名稱', '序位累積比率', '序位累積人數'];
   const watermark = 'Data Source: https://rcpett.vercel.app/';
+  const title = document.getElementById('normalBtn').classList.contains('active') ? '桃園市高中普通科序位資料' : '桃園市高職職業類科序位資料';
+  const dateString = new Date().toLocaleDateString('zh-TW');
+  
   const csvContent = [
     watermark,
+    `${title} - 產生日期: ${dateString}`,
+    '',
     headers.join(','),
-    ...schools.map(school => `${school.name},${school.rate},${school.rank}`)
+    ...schools.map(school => `"${school.name}",${school.rate},${school.rank}`)
   ].join('\n');
 
   // Add UTF-8 BOM to ensure correct Chinese character display
@@ -156,9 +161,190 @@ function exportToCSV(schools) {
   const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
-  link.download = '學校序位資料.csv';
+  link.download = `${title}_${dateString}.csv`;
   link.click();
   showNotification('已成功匯出 CSV 檔案');
+}
+
+function exportToPDF() {
+  const isPrintSaveAsPDF = window.confirm('請使用瀏覽器的列印功能，選擇「另存為 PDF」來完成匯出。按確定繼續。');
+  
+  if (!isPrintSaveAsPDF) {
+    showNotification('已取消 PDF 匯出');
+    return;
+  }
+  
+  // Create a styled version for PDF export
+  const printContent = document.createElement('div');
+  printContent.className = 'pdf-export-content';
+  
+  // Add header with logo and title
+  const header = document.createElement('div');
+  header.className = 'pdf-header';
+  const title = document.getElementById('normalBtn').classList.contains('active') ? '桃園市高中普通科序位資料' : '桃園市高職職業類科序位資料';
+  const dateString = new Date().toLocaleDateString('zh-TW');
+  
+  header.innerHTML = `
+    <div class="pdf-logo"><i class="fas fa-chart-bar"></i> TYCTW 會考分析</div>
+    <h1>${title}</h1>
+    <p>產生日期: ${dateString}</p>
+  `;
+  
+  // Create styled table
+  const table = document.createElement('table');
+  table.className = 'pdf-table';
+  table.innerHTML = `
+    <thead>
+      <tr>
+        <th>學校名稱</th>
+        <th>序位累積比率</th>
+        <th>序位累積人數</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${currentSchools.map(school => `
+        <tr>
+          <td>${school.name}</td>
+          <td>${school.rate}%</td>
+          <td>${school.rank}</td>
+        </tr>
+      `).join('')}
+    </tbody>
+  `;
+  
+  // Add footer with watermark
+  const footer = document.createElement('div');
+  footer.className = 'pdf-footer';
+  footer.innerHTML = `
+    <p>資料來源: https://rcpett.vercel.app/</p>
+    <p>  ${new Date().getFullYear()} TYCTW 桃園市高中職序位分析</p>
+  `;
+  
+  // Add summary info
+  const summary = document.createElement('div');
+  summary.className = 'pdf-summary';
+  summary.innerHTML = `
+    <div class="summary-item">
+      <h3>總學校數</h3>
+      <p>${currentSchools.length}</p>
+    </div>
+    <div class="summary-item">
+      <h3>平均序位人數</h3>
+      <p>${(currentSchools.reduce((sum, school) => sum + parseFloat(school.rank), 0) / currentSchools.length).toFixed(0)}</p>
+    </div>
+    <div class="summary-item">
+      <h3>平均比率</h3>
+      <p>${(currentSchools.reduce((sum, school) => sum + parseFloat(school.rate), 0) / currentSchools.length).toFixed(2)}%</p>
+    </div>
+  `;
+  
+  // Assemble all parts
+  printContent.appendChild(header);
+  printContent.appendChild(table);
+  printContent.appendChild(summary);
+  printContent.appendChild(footer);
+  
+  // Add styles for PDF export
+  const style = document.createElement('style');
+  style.textContent = `
+    .pdf-export-content {
+      font-family: 'Noto Sans TC', sans-serif;
+      padding: 20px;
+      color: #333;
+    }
+    .pdf-header {
+      text-align: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #4a90e2;
+    }
+    .pdf-logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: #4a90e2;
+      margin-bottom: 10px;
+    }
+    .pdf-header h1 {
+      margin: 10px 0;
+      color: #2c3e50;
+    }
+    .pdf-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    .pdf-table th {
+      background-color: #4a90e2;
+      color: white;
+      padding: 12px;
+      text-align: left;
+    }
+    .pdf-table td {
+      padding: 10px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    .pdf-table tr:nth-child(even) {
+      background-color: #f8f9fa;
+    }
+    .pdf-summary {
+      display: flex;
+      justify-content: space-around;
+      margin: 30px 0;
+    }
+    .summary-item {
+      text-align: center;
+      padding: 15px;
+      background-color: #f0f4f8;
+      border-radius: 8px;
+      min-width: 150px;
+    }
+    .summary-item h3 {
+      margin: 0 0 10px 0;
+      color: #2c3e50;
+    }
+    .summary-item p {
+      font-size: 24px;
+      font-weight: bold;
+      color: #4a90e2;
+      margin: 0;
+    }
+    .pdf-footer {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 12px;
+      color: #666;
+      border-top: 1px solid #e0e0e0;
+      padding-top: 15px;
+    }
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      .pdf-export-content, .pdf-export-content * {
+        visibility: visible;
+      }
+      .pdf-export-content {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+      }
+    }
+  `;
+  
+  // Append to body, print, then remove
+  document.body.appendChild(style);
+  document.body.appendChild(printContent);
+  
+  setTimeout(() => {
+    window.print();
+    
+    // Clean up after printing
+    document.body.removeChild(printContent);
+    document.body.removeChild(style);
+    
+    showNotification('PDF 匯出完成');
+  }, 300);
 }
 
 function printData() {
@@ -253,7 +439,7 @@ function initializeEventListeners() {
   });
 
   document.getElementById('exportPDF').addEventListener('click', () => {
-    showNotification('PDF 匯出功能即將推出');
+    exportToPDF();
   });
   
   document.getElementById('printButton').addEventListener('click', printData);
