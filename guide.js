@@ -30,6 +30,18 @@ document.addEventListener('DOMContentLoaded', () => {
         section.style.transform = 'translateY(0)';
       }, 100 * index);
     });
+    
+    // Adjust for mobile
+    if (window.innerWidth <= 768) {
+      const guideIcons = document.querySelectorAll('.guide-icon');
+      guideIcons.forEach((icon, index) => {
+        icon.style.transform = 'scale(0.8)';
+        setTimeout(() => {
+          icon.style.transition = 'transform 0.5s ease';
+          icon.style.transform = 'scale(1)';
+        }, 200 + (100 * index));
+      });
+    }
   }
 
   // Close modal function

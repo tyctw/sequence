@@ -4,6 +4,21 @@
   overflow-y: auto;
   padding-bottom: 80px; /* Extra padding at bottom for better scrolling */
   -webkit-overflow-scrolling: touch; /* Smooth scrolling for iOS */
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: rgba(255,255,255,0.3) transparent; /* Firefox */
+}
+
+.mobile-menu-scroll::-webkit-scrollbar {
+  width: 5px;
+}
+
+.mobile-menu-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.mobile-menu-scroll::-webkit-scrollbar-thumb {
+  background-color: rgba(255,255,255,0.3);
+  border-radius: 10px;
 }
 
 .menu-category {
