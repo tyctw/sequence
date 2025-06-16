@@ -221,44 +221,36 @@
         <div class="guide-tab-content active" id="basics-tab">
           <div class="guide-section">
             <div class="guide-icon">
-              <i class="fas fa-graduation-cap"></i>
-            </div>
-            <div class="guide-text">
-              <h3>資料選擇</h3>
-              <p>您可以在頁面上方選擇查看「普通科」或「職業類科」的數據。點擊對應按鈕即可切換。</p>
-              <div class="guide-demo">
-                <button class="demo-btn"><i class="fas fa-graduation-cap"></i> 普通科</button>
-                <button class="demo-btn"><i class="fas fa-tools"></i> 職業類科</button>
-              </div>
-            </div>
-          </div>
-          <div class="guide-section">
-            <div class="guide-icon">
               <i class="fas fa-search"></i>
             </div>
             <div class="guide-text">
-              <h3>搜尋功能</h3>
-              <p>使用頁面上方的搜尋框可以快速找到特定學校的資料。</p>
+              <h3>快速搜尋</h3>
+              <p>使用頁面上方的搜尋框，輸入學校名稱即可快速找到相關資訊：</p>
+              <ul>
+                <li><i class="fas fa-keyboard"></i> 支援模糊搜尋</li>
+                <li><i class="fas fa-filter"></i> 即時過濾結果</li>
+                <li><i class="fas fa-history"></i> 搜尋結果即時更新</li>
+              </ul>
               <div class="guide-demo">
                 <div class="search-demo">
-                  <input type="text" placeholder="搜尋學校..." disabled />
+                  <input type="text" placeholder="輸入學校名稱..." disabled />
                   <i class="fas fa-search"></i>
                 </div>
               </div>
             </div>
           </div>
+
           <div class="guide-section">
             <div class="guide-icon">
               <i class="fas fa-table"></i>
             </div>
             <div class="guide-text">
-              <h3>表格檢視 / 圖表檢視</h3>
-              <p>可以切換不同的資料呈現方式：</p>
+              <h3>資料檢視模式</h3>
+              <p>提供兩種資料呈現方式，滿足不同需求：</p>
               <ul>
-                <li><i class="fas fa-table"></i> <b>表格檢視：</b>以表格形式展示所有學校資料</li>
-                <li><i class="fas fa-chart-bar"></i> <b>圖表檢視：</b>以視覺化圖表展示數據</li>
+                <li><i class="fas fa-table"></i> <b>表格檢視：</b>詳細的數據資料，支援排序功能</li>
+                <li><i class="fas fa-chart-bar"></i> <b>圖表檢視：</b>視覺化呈現，直觀比較各校數據</li>
               </ul>
-              <p>在手機上，您也可以左右滑動進行檢視模式切換。</p>
               <div class="guide-demo">
                 <div class="tab-demo">
                   <button class="tab-demo-btn active"><i class="fas fa-table"></i> 表格檢視</button>
@@ -267,22 +259,21 @@
               </div>
             </div>
           </div>
+
           <div class="guide-section">
             <div class="guide-icon">
-              <i class="fas fa-sort"></i>
+              <i class="fas fa-graduation-cap"></i>
             </div>
             <div class="guide-text">
-              <h3>排序功能</h3>
-              <p>在表格檢視中，點擊表頭可以按照不同條件對學校進行排序。</p>
+              <h3>類科切換</h3>
+              <p>依照您的需求選擇查看不同類科的資料：</p>
+              <ul>
+                <li><i class="fas fa-graduation-cap"></i> <b>普通科：</b>高中普通科的序位資料</li>
+                <li><i class="fas fa-tools"></i> <b>職業類科：</b>高職各科別的序位資料</li>
+              </ul>
               <div class="guide-demo">
-                <table class="sort-demo">
-                  <thead>
-                    <tr>
-                      <th><i class="fas fa-sort"></i> 學校名稱</th>
-                      <th><i class="fas fa-sort"></i> 序位比率</th>
-                    </tr>
-                  </thead>
-                </table>
+                <button class="demo-btn active"><i class="fas fa-graduation-cap"></i> 普通科</button>
+                <button class="demo-btn"><i class="fas fa-tools"></i> 職業類科</button>
               </div>
             </div>
           </div>
@@ -291,34 +282,26 @@
         <div class="guide-tab-content" id="data-tab">
           <div class="guide-section">
             <div class="guide-icon">
-              <i class="fas fa-exclamation-circle"></i>
-            </div>
-            <div class="guide-text">
-              <h3>資料說明</h3>
-              <p class="highlight">序位累積比率：表示該校在全部學校中的相對位置百分比</p>
-              <p class="highlight">序位累積人數：代表會考達該校入學標準的學生數量</p>
-              <div class="data-info-box">
-                <h4><i class="fas fa-info-circle"></i> 數據來源與更新</h4>
-                <p>本平台的數據每年根據最新會考結果更新，提供桃園市各高中職的入學門檻參考。</p>
-                <p>請注意，序位資訊僅供參考，實際錄取標準可能因各校政策及該年度報名情況而有所調整。</p>
-              </div>
-            </div>
-          </div>
-          <div class="guide-section">
-            <div class="guide-icon">
               <i class="fas fa-chart-line"></i>
             </div>
             <div class="guide-text">
-              <h3>數據解讀</h3>
+              <h3>序位資料解讀</h3>
+              <p>了解如何解讀各項數據指標：</p>
+              <div class="data-info-box">
+                <h4><i class="fas fa-percentage"></i> 序位累積比率</h4>
+                <p>代表該校在所有考生中的相對位置，數值越高表示入學門檻越高。</p>
+                <h4><i class="fas fa-users"></i> 序位累積人數</h4>
+                <p>顯示會考成績達到該校標準的學生總人數。</p>
+              </div>
               <div class="guide-demo">
                 <div class="data-example">
                   <div class="example-item">
-                    <span class="example-name">某高中</span>
+                    <span class="example-name">範例高中</span>
                     <span class="example-rate">85%</span>
                     <span class="example-rank">4,250人</span>
                   </div>
                   <div class="example-explanation">
-                    <p>表示有4,250名學生的會考成績達到或超過該校的錄取標準，此數字在全部考生中排名前85%。</p>
+                    <p>解讀：有4,250名學生的會考成績達到或超過該校標準，位於全體考生的前85%。</p>
                   </div>
                 </div>
               </div>
@@ -332,12 +315,12 @@
               <i class="fas fa-mobile-alt"></i>
             </div>
             <div class="guide-text">
-              <h3>行動裝置提示</h3>
-              <p>在手機上瀏覽時，可以：</p>
+              <h3>行動裝置使用技巧</h3>
+              <p>在手機或平板上使用時的特殊功能：</p>
               <ul class="feature-list">
-                <li><i class="fas fa-bars"></i> 點擊右上角選單按鈕查看更多選項</li>
-                <li><i class="fas fa-hand-point-right"></i> 左右滑動切換表格/圖表檢視</li>
-                <li><i class="fas fa-arrows-alt-h"></i> 橫向滑動表格以查看更多欄位</li>
+                <li><i class="fas fa-arrows-alt-h"></i> 左右滑動查看完整表格</li>
+                <li><i class="fas fa-sync"></i> 雙指縮放調整圖表大小</li>
+                <li><i class="fas fa-hand-point-up"></i> 點擊圖表數據查看詳細資訊</li>
               </ul>
               <div class="mobile-demo">
                 <div class="phone-outline">
@@ -349,7 +332,7 @@
                     <div class="phone-content">
                       <div class="swipe-indicator">
                         <i class="fas fa-chevron-left"></i>
-                        <span>左右滑動</span>
+                        <span>左右滑動查看更多</span>
                         <i class="fas fa-chevron-right"></i>
                       </div>
                     </div>
@@ -366,17 +349,17 @@
               <i class="fas fa-file-export"></i>
             </div>
             <div class="guide-text">
-              <h3>匯出功能</h3>
-              <p>頁面底部有三種匯出選項：</p>
+              <h3>資料匯出選項</h3>
+              <p>提供多種資料匯出格式，方便後續使用：</p>
               <div class="export-options">
                 <div class="export-option">
                   <div class="export-icon">
                     <i class="fas fa-file-csv"></i>
                   </div>
                   <div class="export-info">
-                    <h4>匯出CSV</h4>
-                    <p>保存為Excel可讀取的表格文件</p>
-                    <span class="export-tag">適合數據分析</span>
+                    <h4>CSV 格式</h4>
+                    <p>適合用Excel進行進階分析</p>
+                    <span class="export-tag">可編輯</span>
                   </div>
                 </div>
                 <div class="export-option">
@@ -384,9 +367,9 @@
                     <i class="fas fa-file-pdf"></i>
                   </div>
                   <div class="export-info">
-                    <h4>匯出PDF</h4>
-                    <p>生成高品質PDF報告</p>
-                    <span class="export-tag">適合分享與存檔</span>
+                    <h4>PDF 格式</h4>
+                    <p>適合保存與分享</p>
+                    <span class="export-tag">高品質</span>
                   </div>
                 </div>
                 <div class="export-option">
@@ -394,9 +377,9 @@
                     <i class="fas fa-print"></i>
                   </div>
                   <div class="export-info">
-                    <h4>列印資料</h4>
-                    <p>直接列印當前數據</p>
-                    <span class="export-tag">適合紙本閱讀</span>
+                    <h4>列印功能</h4>
+                    <p>支援客製化列印選項</p>
+                    <span class="export-tag">可自訂</span>
                   </div>
                 </div>
               </div>
@@ -408,7 +391,7 @@
         <button class="guide-close-btn">我已了解</button>
         <label class="dont-show-again">
           <input type="checkbox" id="dontShowAgain">
-          <span>不再顯示</span>
+          <span>不再顯示此說明</span>
         </label>
       </div>
     </div>
