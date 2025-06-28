@@ -208,8 +208,8 @@
     <div class="modal-content">
       <span class="close-btn">&times;</span>
       <div class="guide-header">
-        <i class="fas fa-book"></i>
-        <h2>使用說明</h2>
+        <i class="fas fa-book-open"></i>
+        <h2>使用說明指南</h2>
       </div>
       <div class="guide-tabs">
         <button class="guide-tab-btn active" data-tab="basics">基本功能</button>
@@ -224,12 +224,12 @@
               <i class="fas fa-search"></i>
             </div>
             <div class="guide-text">
-              <h3>快速搜尋</h3>
+              <h3>快速搜尋功能</h3>
               <p>使用頁面上方的搜尋框，輸入學校名稱即可快速找到相關資訊：</p>
               <ul>
-                <li><i class="fas fa-keyboard"></i> 支援模糊搜尋</li>
-                <li><i class="fas fa-filter"></i> 即時過濾結果</li>
-                <li><i class="fas fa-history"></i> 搜尋結果即時更新</li>
+                <li><i class="fas fa-keyboard"></i> 支援模糊搜尋，輸入部分名稱即可</li>
+                <li><i class="fas fa-filter"></i> 即時過濾結果，立即顯示符合項目</li>
+                <li><i class="fas fa-history"></i> 搜尋結果即時更新，無需重新載入</li>
               </ul>
               <div class="guide-demo">
                 <div class="search-demo">
@@ -265,11 +265,11 @@
               <i class="fas fa-graduation-cap"></i>
             </div>
             <div class="guide-text">
-              <h3>類科切換</h3>
+              <h3>類科切換功能</h3>
               <p>依照您的需求選擇查看不同類科的資料：</p>
               <ul>
-                <li><i class="fas fa-graduation-cap"></i> <b>普通科：</b>高中普通科的序位資料</li>
-                <li><i class="fas fa-tools"></i> <b>職業類科：</b>高職各科別的序位資料</li>
+                <li><i class="fas fa-graduation-cap"></i> <b>普通科：</b>高中普通科的序位資料與分析</li>
+                <li><i class="fas fa-tools"></i> <b>職業類科：</b>高職各科別的序位資料與分析</li>
               </ul>
               <div class="guide-demo">
                 <button class="demo-btn active"><i class="fas fa-graduation-cap"></i> 普通科</button>
@@ -286,7 +286,7 @@
             </div>
             <div class="guide-text">
               <h3>序位資料解讀</h3>
-              <p>了解如何解讀各項數據指標：</p>
+              <p>了解如何解讀各項數據指標，幫助您做出更明智的選擇：</p>
               <div class="data-info-box">
                 <h4><i class="fas fa-percentage"></i> 序位累積比率</h4>
                 <p>代表該校在所有考生中的相對位置，數值越高表示入學門檻越高。</p>
@@ -307,6 +307,24 @@
               </div>
             </div>
           </div>
+
+          <div class="guide-section">
+            <div class="guide-icon">
+              <i class="fas fa-sort-amount-down"></i>
+            </div>
+            <div class="guide-text">
+              <h3>資料排序功能</h3>
+              <p>點擊表格標題可依照不同條件排序：</p>
+              <ul>
+                <li><i class="fas fa-sort-alpha-down"></i> 學校名稱：依學校名稱字母順序排列</li>
+                <li><i class="fas fa-sort-numeric-down"></i> 序位比率：依序位累積比率高低排列</li>
+                <li><i class="fas fa-sort-numeric-down-alt"></i> 序位人數：依序位累積人數多寡排列</li>
+              </ul>
+              <div class="highlight">
+                提示：點擊同一欄位兩次可切換升序/降序排列。
+              </div>
+            </div>
+          </div>
         </div>
         
         <div class="guide-tab-content" id="mobile-tab">
@@ -316,11 +334,12 @@
             </div>
             <div class="guide-text">
               <h3>行動裝置使用技巧</h3>
-              <p>在手機或平板上使用時的特殊功能：</p>
+              <p>在手機或平板上使用時的特殊功能與操作方式：</p>
               <ul class="feature-list">
-                <li><i class="fas fa-arrows-alt-h"></i> 左右滑動查看完整表格</li>
-                <li><i class="fas fa-sync"></i> 雙指縮放調整圖表大小</li>
-                <li><i class="fas fa-hand-point-up"></i> 點擊圖表數據查看詳細資訊</li>
+                <li><i class="fas fa-arrows-alt-h"></i> 左右滑動查看完整表格內容</li>
+                <li><i class="fas fa-sync"></i> 雙指縮放調整圖表大小與細節</li>
+                <li><i class="fas fa-hand-point-up"></i> 點擊圖表數據點查看詳細資訊</li>
+                <li><i class="fas fa-bars"></i> 使用側邊選單快速存取所有功能</li>
               </ul>
               <div class="mobile-demo">
                 <div class="phone-outline">
@@ -341,6 +360,24 @@
               </div>
             </div>
           </div>
+
+          <div class="guide-section">
+            <div class="guide-icon">
+              <i class="fas fa-tablet-alt"></i>
+            </div>
+            <div class="guide-text">
+              <h3>響應式設計</h3>
+              <p>系統會根據您的裝置自動調整版面配置：</p>
+              <ul>
+                <li><i class="fas fa-desktop"></i> 桌面版：完整功能，多欄位並排顯示</li>
+                <li><i class="fas fa-tablet-alt"></i> 平板版：優化觸控體驗，簡化部分版面</li>
+                <li><i class="fas fa-mobile-alt"></i> 手機版：單欄顯示，專為小螢幕優化</li>
+              </ul>
+              <div class="highlight">
+                無論使用何種裝置，都能獲得最佳的使用體驗！
+              </div>
+            </div>
+          </div>
         </div>
         
         <div class="guide-tab-content" id="export-tab">
@@ -350,7 +387,7 @@
             </div>
             <div class="guide-text">
               <h3>資料匯出選項</h3>
-              <p>提供多種資料匯出格式，方便後續使用：</p>
+              <p>提供多種資料匯出格式，方便後續使用與分享：</p>
               <div class="export-options">
                 <div class="export-option">
                   <div class="export-icon">
@@ -358,7 +395,7 @@
                   </div>
                   <div class="export-info">
                     <h4>CSV 格式</h4>
-                    <p>適合用Excel進行進階分析</p>
+                    <p>適合用Excel進行進階分析與處理</p>
                     <span class="export-tag">可編輯</span>
                   </div>
                 </div>
@@ -368,7 +405,7 @@
                   </div>
                   <div class="export-info">
                     <h4>PDF 格式</h4>
-                    <p>適合保存與分享</p>
+                    <p>適合保存與分享，保持原始排版</p>
                     <span class="export-tag">高品質</span>
                   </div>
                 </div>
@@ -378,10 +415,28 @@
                   </div>
                   <div class="export-info">
                     <h4>列印功能</h4>
-                    <p>支援客製化列印選項</p>
+                    <p>支援客製化列印選項與預覽</p>
                     <span class="export-tag">可自訂</span>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="guide-section">
+            <div class="guide-icon">
+              <i class="fas fa-share-alt"></i>
+            </div>
+            <div class="guide-text">
+              <h3>分享與保存</h3>
+              <p>將資料分享給他人或保存以供日後參考：</p>
+              <ul>
+                <li><i class="fas fa-link"></i> 複製連結：分享特定學校的資料頁面</li>
+                <li><i class="fas fa-save"></i> 儲存資料：將查詢結果保存到本機</li>
+                <li><i class="fas fa-history"></i> 瀏覽紀錄：系統會記住您最近查看的學校</li>
+              </ul>
+              <div class="highlight">
+                匯出的資料包含查詢時間，方便追蹤資料更新狀態。
               </div>
             </div>
           </div>
