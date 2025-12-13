@@ -50,155 +50,73 @@
         margin: 1cm;
         size: portrait;
     }
-    
     body {
-        background: white !important;
-        font-size: 10pt;
+        background-color: white !important;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
+        font-size: 12px;
     }
-
-    /* Hide Web UI Elements */
-    .no-print, 
-    header, 
-    footer,
-    #sidebar-panel, 
-    #sidebar-overlay,
-    .glass-nav,
-    #advanced-filters-panel,
-    #mobile-cards-container,
-    .md\:hidden,
-    #chart-view-container {
+    
+    .no-print, header button, .shadow-xl, .bg-amber-50\/80, #sidebar-panel, #sidebar-overlay {
         display: none !important;
     }
 
-    /* Show Print Specifics */
     .print-only {
         display: block !important;
     }
-
-    /* Watermark Styling - Fixed position to repeat on every page */
-    .tyctw-watermark {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) rotate(-45deg);
-        font-size: 8vw; /* Dynamic size based on page width */
-        font-weight: 900;
-        color: rgba(0, 0, 0, 0.08) !important; /* Visible faint grey */
-        white-space: nowrap;
-        pointer-events: none;
-        z-index: 1000;
-        display: flex !important;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 100%;
-    }
-
-    /* Layout Reset */
+    
     main {
         margin: 0 !important;
         padding: 0 !important;
         max-width: none !important;
-        width: 100% !important;
     }
-
-    /* List Container */
+    
     #list-view-container {
         display: block !important;
     }
     
-    /* Header Row (Hide web header, we want clean list) */
-    #list-view-container > div.hidden.md\:block > div.grid {
+    .md\:block {
+        display: block !important;
+    }
+    .md\:hidden {
         display: none !important;
-    }
-
-    /* The rows container - Dual Column Layout */
-    #table-body {
-        column-count: 2;
-        column-gap: 2rem;
-        width: 100%;
-    }
-
-    /* Row Styling */
-    #table-body > div {
-        break-inside: avoid;
-        page-break-inside: avoid;
-        display: flex !important;
-        flex-direction: row;
-        align-items: flex-start;
-        border: none !important;
-        border-bottom: 1px solid #e2e8f0 !important;
-        box-shadow: none !important;
-        background: transparent !important;
-        padding: 0.4rem 0 !important;
-        margin: 0 !important;
-        border-radius: 0 !important;
-        animation: none !important;
-    }
-
-    /* Hide Favorite Button Column */
-    #table-body > div > div:first-child { 
-        display: none !important; 
-    }
-
-    /* Grid inside Row -> Flex conversion */
-    #table-body > div > div.grid {
-        display: flex !important;
-        width: 100%;
-        gap: 0.5rem;
-        align-items: baseline;
-    }
-
-    /* Name Column */
-    #table-body > div > div.grid > div:nth-child(1) {
-        flex: 2;
-    }
-    #table-body > div > div.grid > div:nth-child(1) h4 {
-        font-size: 10pt !important;
-        font-weight: 700 !important;
-        color: #1e293b !important;
-    }
-    #table-body > div > div.grid > div:nth-child(1) span {
-        font-size: 8pt !important;
-        color: #64748b !important;
-    }
-
-    /* Percent Column */
-    #table-body > div > div.grid > div:nth-child(2) {
-        flex: 1;
-        text-align: right;
-        font-size: 9pt !important;
-        font-weight: bold;
-    }
-    #table-body > div > div.grid > div:nth-child(2) .text-lg {
-        font-size: 10pt !important;
     }
     
-    /* Progress bar hiding to save ink/space */
-    #table-body > div > div.grid > div:nth-child(2) .w-full.bg-slate-100 {
+    #chart-view-container {
         display: none !important;
     }
 
-    /* Count Column */
-    #table-body > div > div.grid > div:nth-child(3) {
-        flex: 1;
-        text-align: right;
-        font-family: monospace;
-        font-size: 9pt;
+    table {
+        width: 100% !important;
+        border-collapse: collapse;
     }
-    /* Hide icon in count */
-    #table-body > div > div.grid > div:nth-child(3) .bg-slate-50 {
-        display: none !important;
+    thead {
+        display: table-header-group;
     }
-
-    /* Actions Column (Hide) */
-    #table-body > div > div.grid > div:nth-child(4) {
-        display: none !important;
+    tr {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        background: transparent !important;
+        box-shadow: none !important;
+        border-bottom: 1px solid #ddd !important;
+        margin: 0 !important;
     }
-
-    .sort-icon { display: none !important; }
+    th, td {
+        padding: 8px 4px !important;
+    }
+    
+    .tyctw-watermark {
+        position: fixed;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-30deg);
+        font-size: 5rem;
+        font-weight: 900;
+        color: rgba(0, 0, 0, 0.03) !important;
+        white-space: nowrap;
+        pointer-events: none;
+        z-index: 0;
+    }
 }
 
 .print-only {
