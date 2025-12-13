@@ -1,627 +1,748 @@
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyhTgVSZRz2OBklNDfjBUUoSl_ah6-9-rYe97-XsY7aKW9Dah5k-C-Ffp7tGBt-PnqV/exec';
+const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbyhTgVSZRz2OBklNDfjBUUoSl_ah6-9-rYe97-XsY7aKW9Dah5k-C-Ffp7tGBt-PnqV/exec';
 
-let currentView = 'table';
-let currentSchools = [];
-let schoolChart = null;
+// State Management
+const state = {
+    schools: [],
+    loading: true,
+    error: '',
+    searchTerm: '',
+    sortField: 'percent',
+    sortDirection: 'asc',
+    viewMode: 'list', // 'list' or 'chart'
+    filterType: 'all', // 'all', 'general', 'vocational'
+    onlyFavorites: false,
+    minPercent: '',
+    maxPercent: '',
+    favorites: new Set(),
+    chartInstance: null
+};
 
-window.sortTable = function(n) {
-  var table = document.getElementById("schoolTable");
-  var switching = true;
-  var dir = "asc";
-  var switchcount = 0;
-
-  while (switching) {
-    switching = false;
-    var rows = table.rows;
-
-    for (var i = 1; i < (rows.length - 1); i++) {
-      var shouldSwitch = false;
-      var x = rows[i].getElementsByTagName("TD")[n];
-      var y = rows[i + 1].getElementsByTagName("TD")[n];
-
-      var comparison = dir === "asc" ? 
-        (n === 0 ? x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase() : 
-                   parseFloat(x.innerHTML) > parseFloat(y.innerHTML)) :
-        (n === 0 ? x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase() : 
-                   parseFloat(x.innerHTML) < parseFloat(y.innerHTML));
-
-      if (comparison) {
-        shouldSwitch = true;
-        break;
-      }
+// Initialization
+document.addEventListener('DOMContentLoaded', () => {
+    // Load favorites
+    const savedFavs = localStorage.getItem('school_favorites');
+    if (savedFavs) {
+        state.favorites = new Set(JSON.parse(savedFavs));
     }
 
-    if (shouldSwitch) {
-      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-      switching = true;
-      switchcount++;
-    } else if (switchcount === 0 && dir === "asc") {
-      dir = "desc";
-      switching = true;
-    }
-  }
-}
-
-async function fetchSchoolData(type) {
-  showLoading();
-  try {
-    const response = await fetch(`${SCRIPT_URL}?type=${type}`);
-    const data = await response.json();
-    hideLoading();
-    return data;
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    hideLoading();
-    return [];
-  }
-}
-
-function populateTable(schools) {
-  const tableBody = document.getElementById('tableBody');
-  tableBody.innerHTML = '';
-  schools.forEach((school, index) => {
-    const row = document.createElement('tr');
-    row.className = 'fade-in';
-    row.style.animationDelay = `${index * 0.05}s`;
+    // Set Date
+    const dateEl = document.getElementById('print-date');
+    if(dateEl) dateEl.textContent = new Date().toLocaleDateString();
     
-    // Add data-attributes for mobile view
-    row.innerHTML = `
-      <td class="school-name" data-label="學校名稱">${school.name}</td>
-      <td class="rate tooltip" data-label="序位累積比率">${school.rate}<span class="tooltiptext">序位累積比率表示該校在全部學校中的相對位置</span></td>
-      <td class="rank" data-label="序位累積人數">${school.rank}</td>
-    `;
-    tableBody.appendChild(row);
-  });
-}
+    const yearEl = document.getElementById('copyright-year');
+    if(yearEl) yearEl.textContent = new Date().getFullYear();
 
-function showLoading() {
-  document.getElementById('loading').style.display = 'flex';
-  
-  // Add staggered animation to loader text
-  const loaderTextSpans = document.querySelectorAll('.loader-text span');
-  loaderTextSpans.forEach((span, index) => {
-    span.style.opacity = '0';
-    setTimeout(() => {
-      span.style.opacity = '1';
-    }, 150 * index);
-  });
-}
+    // Attach Event Listeners
+    attachEventListeners();
 
-function hideLoading() {
-  // Fade out effect
-  const loader = document.getElementById('loading');
-  loader.style.opacity = '0';
-  loader.style.transition = 'opacity 0.5s ease';
-  
-  setTimeout(() => {
-    loader.style.display = 'none';
-    loader.style.opacity = '1';
-  }, 500);
-}
-
-function initializeChart(schools) {
-  const ctx = document.getElementById('schoolChart').getContext('2d');
-  if (schoolChart) {
-    schoolChart.destroy();
-  }
-  
-  schoolChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: schools.map(school => school.name),
-      datasets: [{
-        label: '序位累積人數',
-        data: schools.map(school => school.rank),
-        backgroundColor: 'rgba(74, 144, 226, 0.6)',
-        borderColor: 'rgba(74, 144, 226, 1)',
-        borderWidth: 1
-      }]
-    },
-    options: {
-      responsive: true,
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
-  });
-}
-
-function updateDataSummary(schools) {
-  const totalSchools = schools.length;
-  const averageRank = (schools.reduce((sum, school) => sum + parseFloat(school.rank), 0) / totalSchools).toFixed(0);
-  const averageRate = (schools.reduce((sum, school) => sum + parseFloat(school.rate), 0) / totalSchools).toFixed(2);
-
-  document.getElementById('totalSchools').textContent = totalSchools;
-  document.getElementById('averageRank').textContent = averageRank;
-  document.getElementById('averageRate').textContent = `${averageRate}%`;
-}
-
-function filterSchools(searchText) {
-  const filteredSchools = currentSchools.filter(school => 
-    school.name.toLowerCase().includes(searchText.toLowerCase())
-  );
-  populateTable(filteredSchools);
-  if (currentView === 'chart') {
-    initializeChart(filteredSchools);
-  }
-  updateDataSummary(filteredSchools);
-}
-
-function showNotification(message) {
-  const notification = document.getElementById('notification');
-  const notificationText = document.getElementById('notificationText');
-  notificationText.textContent = message;
-  notification.classList.add('show');
-  setTimeout(() => {
-    notification.classList.remove('show');
-  }, 3000);
-}
-
-function exportToCSV(schools) {
-  const headers = ['學校名稱', '序位累積比率', '序位累積人數'];
-  const watermark = 'Data Source: https://rcpett.vercel.app/';
-  const title = document.getElementById('normalBtn').classList.contains('active') ? '桃園市高中普通科序位資料' : '桃園市高職職業類科序位資料';
-  const dateString = new Date().toLocaleDateString('zh-TW');
-  
-  const csvContent = [
-    watermark,
-    `${title} - 產生日期: ${dateString}`,
-    '',
-    headers.join(','),
-    ...schools.map(school => `"${school.name}",${school.rate},${school.rank}`)
-  ].join('\n');
-
-  // Add UTF-8 BOM to ensure correct Chinese character display
-  const BOM = '\uFEFF';
-  const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = `${title}_${dateString}.csv`;
-  link.click();
-  showNotification('已成功匯出 CSV 檔案');
-}
-
-function exportToPDF() {
-  const isPrintSaveAsPDF = window.confirm('請使用瀏覽器的列印功能，選擇「另存為 PDF」來完成匯出。按確定繼續。');
-  
-  if (!isPrintSaveAsPDF) {
-    showNotification('已取消 PDF 匯出');
-    return;
-  }
-  
-  // Create a styled version for PDF export
-  const printContent = document.createElement('div');
-  printContent.className = 'pdf-export-content';
-  
-  // Add header with logo and title
-  const header = document.createElement('div');
-  header.className = 'pdf-header';
-  const title = document.getElementById('normalBtn').classList.contains('active') ? '桃園市高中普通科序位資料' : '桃園市高職職業類科序位資料';
-  const dateString = new Date().toLocaleDateString('zh-TW');
-  
-  header.innerHTML = `
-    <div class="pdf-logo"><i class="fas fa-chart-bar"></i> TYCTW 會考分析</div>
-    <h1>${title}</h1>
-    <p>產生日期: ${dateString}</p>
-  `;
-  
-  // Create styled table
-  const table = document.createElement('table');
-  table.className = 'pdf-table';
-  table.innerHTML = `
-    <thead>
-      <tr>
-        <th>學校名稱</th>
-        <th>序位累積比率</th>
-        <th>序位累積人數</th>
-      </tr>
-    </thead>
-    <tbody>
-      ${currentSchools.map(school => `
-        <tr>
-          <td>${school.name}</td>
-          <td>${school.rate}%</td>
-          <td>${school.rank}</td>
-        </tr>
-      `).join('')}
-    </tbody>
-  `;
-  
-  // Add footer with watermark
-  const footer = document.createElement('div');
-  footer.className = 'pdf-footer';
-  footer.innerHTML = `
-    <p>資料來源: https://rcpett.vercel.app/</p>
-    <p>  ${new Date().getFullYear()} TYCTW 桃園市高中職序位分析</p>
-  `;
-  
-  // Add summary info
-  const summary = document.createElement('div');
-  summary.className = 'pdf-summary';
-  summary.innerHTML = `
-    <div class="summary-item">
-      <h3>總學校數</h3>
-      <p>${currentSchools.length}</p>
-    </div>
-    <div class="summary-item">
-      <h3>平均序位人數</h3>
-      <p>${(currentSchools.reduce((sum, school) => sum + parseFloat(school.rank), 0) / currentSchools.length).toFixed(0)}</p>
-    </div>
-    <div class="summary-item">
-      <h3>平均比率</h3>
-      <p>${(currentSchools.reduce((sum, school) => sum + parseFloat(school.rate), 0) / currentSchools.length).toFixed(2)}%</p>
-    </div>
-  `;
-  
-  // Assemble all parts
-  printContent.appendChild(header);
-  printContent.appendChild(table);
-  printContent.appendChild(summary);
-  printContent.appendChild(footer);
-  
-  // Add styles for PDF export
-  const style = document.createElement('style');
-  style.textContent = `
-    .pdf-export-content {
-      font-family: 'Noto Sans TC', sans-serif;
-      padding: 20px;
-      color: #333;
-    }
-    .pdf-header {
-      text-align: center;
-      margin-bottom: 20px;
-      padding-bottom: 15px;
-      border-bottom: 2px solid #4a90e2;
-    }
-    .pdf-logo {
-      font-size: 24px;
-      font-weight: bold;
-      color: #4a90e2;
-      margin-bottom: 10px;
-    }
-    .pdf-header h1 {
-      margin: 10px 0;
-      color: #2c3e50;
-    }
-    .pdf-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 20px 0;
-    }
-    .pdf-table th {
-      background-color: #4a90e2;
-      color: white;
-      padding: 12px;
-      text-align: left;
-    }
-    .pdf-table td {
-      padding: 10px;
-      border-bottom: 1px solid #e0e0e0;
-    }
-    .pdf-table tr:nth-child(even) {
-      background-color: #f8f9fa;
-    }
-    .pdf-summary {
-      display: flex;
-      justify-content: space-around;
-      margin: 30px 0;
-    }
-    .summary-item {
-      text-align: center;
-      padding: 15px;
-      background-color: #f0f4f8;
-      border-radius: 8px;
-      min-width: 150px;
-    }
-    .summary-item h3 {
-      margin: 0 0 10px 0;
-      color: #2c3e50;
-    }
-    .summary-item p {
-      font-size: 24px;
-      font-weight: bold;
-      color: #4a90e2;
-      margin: 0;
-    }
-    .pdf-footer {
-      margin-top: 30px;
-      text-align: center;
-      font-size: 12px;
-      color: #666;
-      border-top: 1px solid #e0e0e0;
-      padding-top: 15px;
-    }
-    @media print {
-      body * {
-        visibility: hidden;
-      }
-      .pdf-export-content, .pdf-export-content * {
-        visibility: visible;
-      }
-      .pdf-export-content {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-      }
-    }
-  `;
-  
-  // Append to body, print, then remove
-  document.body.appendChild(style);
-  document.body.appendChild(printContent);
-  
-  setTimeout(() => {
-    window.print();
-    
-    // Clean up after printing
-    document.body.removeChild(printContent);
-    document.body.removeChild(style);
-    
-    showNotification('PDF 匯出完成');
-  }, 300);
-}
-
-function printData() {
-  // Add print header with date and watermark
-  const printHeader = document.createElement('div');
-  printHeader.className = 'printHeader';
-  const now = new Date();
-  const dateString = now.toLocaleDateString('zh-TW', {
-    year: 'numeric', month: 'long', day: 'numeric',
-    hour: '2-digit', minute: '2-digit'
-  });
-  
-  printHeader.innerHTML = `
-    <h2>桃園市高中職序位報表</h2>
-    <p>產生日期: ${dateString}</p>
-    <p>資料類型: ${document.getElementById('normalBtn').classList.contains('active') ? '普通科' : '職業類科'}</p>
-    <p class="watermark">Data Source: https://rcpett.vercel.app/</p>
-  `;
-  
-  document.body.prepend(printHeader);
-  
-  // Print the page
-  window.print();
-  
-  // Remove the header after printing
-  setTimeout(() => {
-    document.body.removeChild(printHeader);
-  }, 100);
-  
-  showNotification('正在準備列印...');
-}
-
-function initializeEventListeners() {
-  const normalBtn = document.getElementById('normalBtn');
-  const vocationalBtn = document.getElementById('vocationalBtn');
-  const menuToggle = document.querySelector('.menu-toggle');
-  const mobileMenu = document.querySelector('.mobile-menu');
-  const menuCloseBtn = document.querySelector('.menu-close');
-  const menuExportCSV = document.getElementById('menuExportCSV');
-  const menuExportPDF = document.getElementById('menuExportPDF');
-  const menuPrintButton = document.getElementById('menuPrintButton');
-  const tableViewBtn = document.getElementById('tableViewBtn');
-  const chartViewBtn = document.getElementById('chartViewBtn');
-  const tableView = document.getElementById('tableView');
-  const chartView = document.getElementById('chartView');
-  const exportCSV = document.getElementById('exportCSV');
-  const exportPDF = document.getElementById('exportPDF');
-  const printButton = document.getElementById('printButton');
-  const searchInput = document.getElementById('searchInput');
-
-  // Mobile menu close button
-  menuCloseBtn.addEventListener('click', () => {
-    mobileMenu.classList.remove('active');
-    menuToggle.classList.remove('active');
-    document.body.style.overflow = ''; // Restore body scrolling
-  });
-  
-  // Menu export buttons
-  menuExportCSV.addEventListener('click', () => {
-    mobileMenu.classList.remove('active');
-    menuToggle.classList.remove('active');
-    exportToCSV(currentSchools);
-  });
-  
-  menuExportPDF.addEventListener('click', () => {
-    mobileMenu.classList.remove('active');
-    menuToggle.classList.remove('active');
-    exportToPDF();
-  });
-  
-  menuPrintButton.addEventListener('click', () => {
-    mobileMenu.classList.remove('active');
-    menuToggle.classList.remove('active');
-    printData();
-  });
-
-  normalBtn.addEventListener('click', async () => {
-    const normalSchools = await fetchAndDisplayData('normal');
-    normalBtn.classList.add('active');
-    vocationalBtn.classList.remove('active');
-    sortTable(2);
-  });
-
-  vocationalBtn.addEventListener('click', async () => {
-    const vocationalSchools = await fetchAndDisplayData('vocational');
-    vocationalBtn.classList.add('active');
-    normalBtn.classList.remove('active');
-    sortTable(2);
-  });
-
-  menuToggle.addEventListener('click', () => {
-    mobileMenu.classList.toggle('active');
-    menuToggle.classList.toggle('active');
-    
-    // Toggle body scrolling
-    if (mobileMenu.classList.contains('active')) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-  });
-
-  document.addEventListener('click', (event) => {
-    if (!mobileMenu.contains(event.target) && !menuToggle.contains(event.target)) {
-      mobileMenu.classList.remove('active');
-      menuToggle.classList.remove('active');
-      document.body.style.overflow = ''; // Restore body scrolling
-    }
-  });
-
-  searchInput.addEventListener('input', (e) => filterSchools(e.target.value));
-
-  // Mobile search focus behavior
-  if (searchInput) {
-    searchInput.addEventListener('focus', (e) => {
-      if (window.innerWidth <= 480) {
-        document.querySelector('.search-container').classList.add('active');
-      }
-    });
-    
-    searchInput.addEventListener('blur', (e) => {
-      document.querySelector('.search-container').classList.remove('active');
-    });
-  }
-  
-  tableViewBtn.addEventListener('click', () => {
-    currentView = 'table';
-    tableView.classList.add('active');
-    chartView.classList.remove('active');
-    tableViewBtn.classList.add('active');
-    chartViewBtn.classList.remove('active');
-  });
-
-  chartViewBtn.addEventListener('click', () => {
-    currentView = 'chart';
-    chartView.classList.add('active');
-    tableView.classList.remove('active');
-    chartViewBtn.classList.add('active');
-    tableViewBtn.classList.remove('active');
-    initializeChart(currentSchools);
-  });
-
-  exportCSV.addEventListener('click', () => {
-    exportToCSV(currentSchools);
-  });
-
-  exportPDF.addEventListener('click', () => {
-    exportToPDF();
-  });
-  
-  printButton.addEventListener('click', printData);
-
-  document.addEventListener('copy', (e) => e.preventDefault());
-  document.addEventListener('keyup', (e) => {
-    if (e.key === 'PrintScreen') {
-      navigator.clipboard.writeText('');
-      alert('截圖功能已被禁用');
-    }
-  });
-  document.addEventListener('contextmenu', (e) => e.preventDefault());
-  document.onselectstart = () => false;
-
-  // Add touch event handling for mobile swipe
-  let touchStartX = 0;
-  let touchEndX = 0;
-  
-  const container = document.querySelector('.container');
-  
-  container.addEventListener('touchstart', e => {
-    touchStartX = e.changedTouches[0].screenX;
-  });
-  
-  container.addEventListener('touchend', e => {
-    touchEndX = e.changedTouches[0].screenX;
-    handleSwipe();
-  });
-  
-  function handleSwipe() {
-    if (touchEndX - touchStartX > 100) {
-      // Swipe right - show table view
-      if (currentView !== 'table') {
-        currentView = 'table';
-        tableView.classList.add('active');
-        chartView.classList.remove('active');
-        tableViewBtn.classList.add('active');
-        chartViewBtn.classList.remove('active');
-      }
-    } else if (touchStartX - touchEndX > 100) {
-      // Swipe left - show chart view
-      if (currentView !== 'chart') {
-        currentView = 'chart';
-        chartView.classList.add('active');
-        tableView.classList.remove('active');
-        chartViewBtn.classList.add('active');
-        tableViewBtn.classList.remove('active');
-        initializeChart(currentSchools);
-      }
-    }
-  }
-
-  // Add touch event for mobile scrolling hint
-  const mobileHint = document.querySelector('.mobile-swipe-hint');
-  if (mobileHint) {
-    const tableResponsive = document.querySelector('.table-responsive');
-    if (tableResponsive) {
-      tableResponsive.addEventListener('scroll', () => {
-        // Hide hint when user has scrolled
-        if (mobileHint.style.opacity !== '0') {
-          mobileHint.style.opacity = '0';
-          mobileHint.style.transition = 'opacity 0.5s ease';
-          
-          setTimeout(() => {
-            mobileHint.style.display = 'none';
-          }, 500);
-        }
-      });
-    }
-  }
-  
-  // Handle orientation change to refresh layout
-  window.addEventListener('orientationchange', () => {
-    setTimeout(() => {
-      if (currentView === 'chart' && schoolChart) {
-        schoolChart.resize();
-      }
-    }, 300);
-  });
-
-  window.addEventListener('appLoaded', function(e) {
-    if (currentSchools.length > 0) {
-      document.title = `桃園市高中職序位 - ${currentSchools.length}所學校資料分析 | TYCTW`;
-    }
-  });
-}
-
-async function fetchAndDisplayData(type) {
-  const schools = await fetchSchoolData(type);
-  currentSchools = schools;
-  populateTable(schools);
-  if (currentView === 'chart') {
-    initializeChart(schools);
-  }
-  updateDataSummary(schools);
-  
-  // Update meta description with current data
-  const typeText = type === 'normal' ? '普通科' : '職業類科';
-  const metaDescription = document.querySelector('meta[name="description"]');
-  if (metaDescription) {
-    metaDescription.setAttribute('content', 
-      `桃園市高中職${typeText}會考序位分析平台，顯示${schools.length}所學校的最新排名與序位數據。更新日期：${new Date().toLocaleDateString('zh-TW')}`);
-  }
-  
-  // Dispatch event that app is loaded with data
-  window.dispatchEvent(new CustomEvent('appLoaded'));
-  
-  return schools;
-}
-
-document.addEventListener('DOMContentLoaded', async () => {
-  initializeEventListeners();
-  const initialNormalSchools = await fetchAndDisplayData('normal');
-  sortTable(2);
+    // Fetch Data
+    fetchData();
 });
+
+// Fetch Data
+async function fetchData() {
+    if (!GAS_API_URL) {
+        showError('系統設定錯誤：未設定資料來源網址。');
+        return;
+    }
+
+    try {
+        const [normalResponse, vocationalResponse] = await Promise.all([
+            fetch(`${GAS_API_URL}?type=normal`),
+            fetch(`${GAS_API_URL}?type=vocational`)
+        ]);
+
+        if (!normalResponse.ok || !vocationalResponse.ok) {
+            throw new Error(`HTTP error! status: ${normalResponse.status} / ${vocationalResponse.status}`);
+        }
+
+        const normalJson = await normalResponse.json();
+        const vocationalJson = await vocationalResponse.json();
+
+        if (normalJson.error || vocationalJson.error) {
+            throw new Error(normalJson.error || vocationalJson.error);
+        }
+
+        const processApiItem = (item, index, category) => {
+            const parts = item.name.split('(');
+            const schoolName = parts[0];
+            let department = parts[1] ? parts[1].replace(')', '') : '';
+            if (!department) {
+                department = category === 'general' ? '普通科' : '職業類科';
+            }
+
+            return {
+                id: `${category}-${index}`,
+                name: item.name,
+                schoolName,
+                department,
+                percent: item.rate,
+                count: item.rank,
+                category: category
+            };
+        };
+
+        const normalSchools = Array.isArray(normalJson) 
+            ? normalJson.map((item, i) => processApiItem(item, i, 'general')) 
+            : [];
+            
+        const vocationalSchools = Array.isArray(vocationalJson) 
+            ? vocationalJson.map((item, i) => processApiItem(item, i, 'vocational')) 
+            : [];
+
+        state.schools = [...normalSchools, ...vocationalSchools];
+        state.loading = false;
+        
+        updateUI();
+
+    } catch (err) {
+        console.error("Fetch error:", err);
+        showError('無法取得資料，請檢查網路連線或稍後再試。');
+    }
+}
+
+// UI Updates
+function updateUI() {
+    const loadingState = document.getElementById('loading-state');
+    const errorState = document.getElementById('error-state');
+    const contentArea = document.getElementById('content-area');
+
+    if (state.loading) {
+        loadingState.classList.remove('hidden');
+        errorState.classList.add('hidden');
+        contentArea.classList.add('hidden');
+        return;
+    }
+
+    if (state.error) {
+        loadingState.classList.add('hidden');
+        errorState.classList.remove('hidden');
+        contentArea.classList.add('hidden');
+        document.getElementById('error-message').textContent = state.error;
+        return;
+    }
+
+    loadingState.classList.add('hidden');
+    errorState.classList.add('hidden');
+    contentArea.classList.remove('hidden');
+
+    const processedData = getProcessedData();
+
+    // Render Data content
+    renderListView(processedData);
+    renderMobileCards(processedData);
+    renderSortIcons();
+    updateFilterButtons();
+
+    // Handle View Mode Switching
+    const listViewContainer = document.getElementById('list-view-container');
+    const chartViewContainer = document.getElementById('chart-view-container');
+
+    if (state.viewMode === 'list') {
+        listViewContainer.classList.remove('hidden');
+        chartViewContainer.classList.add('hidden');
+    } else {
+        listViewContainer.classList.add('hidden');
+        chartViewContainer.classList.remove('hidden');
+        // Small timeout to ensure container is visible before rendering chart
+        setTimeout(() => renderChart(processedData), 0);
+    }
+
+    // Update View Buttons State (Desktop & Mobile)
+    const updateBtnState = (btnId, isActive, isMobile) => {
+        const btn = document.getElementById(btnId);
+        if (!btn) return;
+
+        if (isMobile) {
+            // Mobile Styles
+            if (isActive) {
+                btn.className = 'p-2.5 rounded-lg transition-all bg-white shadow-sm text-indigo-600';
+            } else {
+                btn.className = 'p-2.5 rounded-lg transition-all text-slate-400';
+            }
+        } else {
+            // Desktop Styles
+            if (isActive) {
+                btn.className = 'view-toggle-btn flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 bg-indigo-600 text-white shadow-md shadow-indigo-500/20';
+            } else {
+                btn.className = 'view-toggle-btn flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 bg-transparent text-slate-600 hover:bg-white/50';
+            }
+        }
+    };
+
+    updateBtnState('view-list', state.viewMode === 'list', false);
+    updateBtnState('mobile-view-list', state.viewMode === 'list', true);
+    updateBtnState('view-chart', state.viewMode === 'chart', false);
+    updateBtnState('mobile-view-chart', state.viewMode === 'chart', true);
+
+
+    // Empty State visibility
+    const emptyState = document.getElementById('empty-state');
+    if (processedData.length === 0 && state.viewMode === 'list') {
+        emptyState.classList.remove('hidden');
+    } else {
+        emptyState.classList.add('hidden');
+    }
+
+    // Re-init icons
+    if (window.lucide) {
+        lucide.createIcons();
+    }
+}
+
+function getProcessedData() {
+    let data = [...state.schools];
+
+    if (state.searchTerm) {
+        const term = state.searchTerm.toLowerCase();
+        data = data.filter(s => s.name.toLowerCase().includes(term));
+    }
+
+    if (state.filterType !== 'all') {
+        data = data.filter(s => s.category === state.filterType);
+    }
+
+    if (state.onlyFavorites) {
+        data = data.filter(s => state.favorites.has(s.id));
+    }
+
+    if (state.minPercent) {
+        const min = parseFloat(state.minPercent);
+        if (!isNaN(min)) data = data.filter(s => s.percent >= min);
+    }
+    if (state.maxPercent) {
+        const max = parseFloat(state.maxPercent);
+        if (!isNaN(max)) data = data.filter(s => s.percent <= max);
+    }
+
+    data.sort((a, b) => {
+        let valA = a[state.sortField];
+        let valB = b[state.sortField];
+        
+        if (state.sortField === 'name') {
+            return state.sortDirection === 'asc' 
+                ? valA.localeCompare(valB) 
+                : valB.localeCompare(valA);
+        }
+
+        if (valA > valB) return state.sortDirection === 'asc' ? 1 : -1;
+        if (valA < valB) return state.sortDirection === 'asc' ? -1 : 1;
+        return 0;
+    });
+
+    return data;
+}
+
+function renderListView(data) {
+    const container = document.getElementById('table-body');
+    if (!container) return;
+    container.innerHTML = '';
+
+    data.forEach((school, index) => {
+        const isFav = state.favorites.has(school.id);
+        
+        // Progress Bar & Colors
+        let progressGradient = 'from-emerald-400 to-teal-500';
+        let progressShadow = 'shadow-teal-500/20';
+        let percentColor = 'text-emerald-600';
+        
+        if (school.percent < 20) {
+            progressGradient = 'from-rose-400 to-red-500';
+            progressShadow = 'shadow-rose-500/20';
+            percentColor = 'text-rose-600';
+        } else if (school.percent < 50) {
+            progressGradient = 'from-amber-400 to-orange-500';
+            progressShadow = 'shadow-orange-500/20';
+            percentColor = 'text-amber-600';
+        }
+        const width = Math.min(school.percent, 100);
+
+        const badgeClass = school.category === 'general' 
+            ? 'bg-indigo-50 text-indigo-600 border-indigo-100 ring-indigo-500/10'
+            : 'bg-emerald-50 text-emerald-600 border-emerald-100 ring-emerald-500/10';
+        const categoryText = school.category === 'general' ? '普通科' : '職業類科';
+
+        // Create a Div for "Floating Row"
+        const rowDiv = document.createElement('div');
+        rowDiv.className = `glass-card rounded-2xl p-4 flex items-center gap-4 hover:-translate-y-1 transition-all duration-300 hover:shadow-lg hover:shadow-indigo-500/5 group animate-fade-in`;
+        rowDiv.style.animationDelay = `${Math.min(index * 0.05, 1)}s`;
+
+        rowDiv.innerHTML = `
+            <!-- Favorite -->
+            <div class="w-12 flex justify-center shrink-0">
+                <button onclick="toggleFavorite('${school.id}')" class="p-2.5 rounded-full transition-all duration-300 transform active:scale-90 ${isFav ? 'bg-amber-50 text-amber-400 shadow-sm ring-2 ring-amber-100' : 'text-slate-300 hover:text-amber-400 hover:bg-slate-50'}">
+                    <i data-lucide="star" class="w-5 h-5 ${isFav ? 'fill-amber-400' : ''}"></i>
+                </button>
+            </div>
+
+            <!-- Name -->
+            <div class="flex-1 min-w-0 grid grid-cols-12 gap-4 items-center">
+                <div class="col-span-3">
+                    <h4 class="font-bold text-slate-800 text-base leading-tight group-hover:text-indigo-600 transition-colors">${school.schoolName}</h4>
+                    <span class="text-xs font-semibold text-slate-400 mt-1 inline-block bg-slate-100 px-2 py-0.5 rounded-md">${school.department}</span>
+                </div>
+
+                <!-- Percent Bar -->
+                <div class="col-span-3">
+                    <div class="flex flex-col gap-1.5">
+                        <div class="flex items-center gap-2">
+                            <span class="font-extrabold text-lg ${percentColor} tabular-nums">${school.percent}</span>
+                            <span class="text-xs font-bold text-slate-400">%</span>
+                        </div>
+                        <div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden shadow-inner">
+                            <div class="h-full rounded-full bg-gradient-to-r shadow-lg ${progressGradient} ${progressShadow} progress-stripes" style="width: ${width}%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Count -->
+                <div class="col-span-2 flex items-center gap-2">
+                    <div class="p-1.5 bg-slate-50 rounded-lg text-slate-400">
+                        <i data-lucide="users" class="w-4 h-4"></i>
+                    </div>
+                    <span class="font-mono font-bold text-slate-600 tabular-nums">${school.count.toLocaleString()}</span>
+                </div>
+
+                <!-- Actions -->
+                <div class="col-span-4 flex items-center justify-end gap-3">
+                    <span class="inline-flex px-3 py-1 rounded-full text-xs font-extrabold border ring-1 ring-inset ${badgeClass}">
+                        ${categoryText}
+                    </span>
+                    <div class="h-8 w-px bg-slate-200 mx-1 no-print"></div>
+                    <div class="flex gap-1 no-print">
+                        <button onclick="openGoogleSearch('${school.name}')" class="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all" title="Google 搜尋">
+                            <i data-lucide="search" class="w-4 h-4"></i>
+                        </button>
+                        <button onclick="openGoogleMaps('${school.schoolName}')" class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all" title="Google 地圖">
+                            <i data-lucide="map-pin" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        container.appendChild(rowDiv);
+    });
+}
+
+function renderMobileCards(data) {
+    const container = document.getElementById('mobile-cards-container');
+    if (!container) return;
+    container.innerHTML = '';
+
+    data.forEach((school, index) => {
+        const isFav = state.favorites.has(school.id);
+        
+        let progressGradient = 'from-emerald-400 to-teal-500';
+        let percentColor = 'text-emerald-600';
+        
+        if (school.percent < 20) {
+            progressGradient = 'from-rose-400 to-red-500';
+            percentColor = 'text-rose-600';
+        } else if (school.percent < 50) {
+            progressGradient = 'from-amber-400 to-orange-500';
+            percentColor = 'text-amber-600';
+        }
+
+        const badgeClass = school.category === 'general' 
+            ? 'bg-indigo-50 text-indigo-600 border-indigo-100'
+            : 'bg-emerald-50 text-emerald-600 border-emerald-100';
+        const categoryText = school.category === 'general' ? '普通' : '職科';
+
+        const div = document.createElement('div');
+        div.className = `glass-card rounded-[1.5rem] p-5 relative overflow-hidden active:scale-[0.99] transition-all duration-300 animate-fade-in shadow-sm hover:shadow-md border border-white/60`;
+        div.style.animationDelay = `${Math.min(index * 0.05, 1)}s`;
+
+        div.innerHTML = `
+            <div class="absolute top-0 right-0 p-20 bg-gradient-to-br ${school.category === 'general' ? 'from-indigo-50/50 to-blue-50/20' : 'from-emerald-50/50 to-teal-50/20'} rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div>
+
+            <div class="relative z-10">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="flex gap-3">
+                         <button onclick="toggleFavorite('${school.id}')" class="mt-1 p-2 h-fit rounded-full transition-all ${isFav ? 'bg-amber-50 text-amber-400 shadow-sm ring-1 ring-amber-100' : 'text-slate-300 bg-slate-50'}">
+                            <i data-lucide="star" class="w-5 h-5 ${isFav ? 'fill-amber-400' : ''}"></i>
+                        </button>
+                        <div>
+                            <h3 class="text-lg font-extrabold text-slate-800 leading-tight">${school.schoolName}</h3>
+                            <span class="text-xs font-bold text-slate-500 mt-1 inline-block bg-slate-100/80 px-2 py-0.5 rounded-md">${school.department}</span>
+                        </div>
+                    </div>
+                    <span class="px-2.5 py-1 rounded-lg text-[10px] font-extrabold border shadow-sm ${badgeClass}">
+                        ${categoryText}
+                    </span>
+                </div>
+
+                <div class="space-y-3">
+                    <!-- Stats Block -->
+                    <div class="bg-slate-50/50 rounded-2xl p-4 border border-slate-100 flex items-center justify-between">
+                         <div class="flex flex-col gap-1">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">錄取比率</span>
+                            <div class="flex items-baseline gap-1">
+                                <span class="text-2xl font-black ${percentColor} tracking-tight">${school.percent}</span>
+                                <span class="text-xs font-bold text-slate-400">%</span>
+                            </div>
+                         </div>
+                         <div class="h-10 w-px bg-slate-200"></div>
+                         <div class="flex flex-col gap-1 text-right">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">累積人數</span>
+                            <div class="flex items-baseline gap-1 justify-end">
+                                <span class="text-xl font-bold text-slate-700 tracking-tight font-mono">${school.count.toLocaleString()}</span>
+                            </div>
+                         </div>
+                    </div>
+                    
+                    <!-- Progress -->
+                    <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                        <div class="h-full bg-gradient-to-r ${progressGradient} progress-stripes" style="width: ${Math.min(school.percent, 100)}%"></div>
+                    </div>
+                </div>
+
+                <div class="flex gap-2 mt-4 pt-4 border-t border-slate-100/80 no-print">
+                    <button onclick="openGoogleSearch('${school.name}')" class="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-600 text-xs font-bold hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-100 transition-all shadow-sm">
+                        <i data-lucide="search" class="w-3.5 h-3.5"></i>
+                        搜尋
+                    </button>
+                    <button onclick="openGoogleMaps('${school.schoolName}')" class="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-600 text-xs font-bold hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-100 transition-all shadow-sm">
+                        <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+                        地圖
+                    </button>
+                </div>
+            </div>
+        `;
+        container.appendChild(div);
+    });
+}
+
+function renderChart(data) {
+    const ctx = document.getElementById('statsChart');
+    if (!ctx) {
+        console.warn("Chart canvas not found");
+        return;
+    }
+
+    try {
+        if (state.chartInstance) {
+            state.chartInstance.destroy();
+        }
+
+        const chartData = data.slice(0, 30);
+        const labels = chartData.map(d => d.name);
+        const percents = chartData.map(d => d.percent);
+        // Modern Chart Colors
+        const colors = chartData.map(d => d.category === 'general' ? '#6366f1' : '#10b981'); // Indigo-500 & Emerald-500
+
+        // Set font defaults
+        if (typeof Chart !== 'undefined') {
+            Chart.defaults.font.family = "'Inter', sans-serif";
+            Chart.defaults.color = '#64748b';
+
+            state.chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: '累積比率 (%)',
+                        data: percents,
+                        backgroundColor: colors,
+                        borderRadius: 8,
+                        barPercentage: 0.6,
+                        categoryPercentage: 0.8
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                            titleColor: '#1e293b',
+                            bodyColor: '#475569',
+                            borderColor: '#e2e8f0',
+                            borderWidth: 1,
+                            padding: 16,
+                            cornerRadius: 16,
+                            titleFont: { size: 13, weight: 'bold' },
+                            bodyFont: { size: 12 },
+                            displayColors: true,
+                            boxPadding: 4,
+                            callbacks: {
+                                label: function(context) {
+                                    return ` 累積比率: ${context.raw}%`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            min: 0,
+                            max: 100,
+                            grid: { color: '#f1f5f9', drawBorder: false },
+                            ticks: { font: { size: 11, weight: '500' }, color: '#94a3b8' },
+                            border: { display: false }
+                        },
+                        y: {
+                            grid: { display: false, drawBorder: false },
+                            ticks: { font: { size: 12, weight: '600' }, color: '#475569' },
+                            border: { display: false }
+                        }
+                    },
+                    animation: {
+                        duration: 1000,
+                        easing: 'easeOutQuart'
+                    }
+                }
+            });
+        }
+    } catch (e) {
+        console.error("Failed to render chart:", e);
+    }
+}
+
+function renderSortIcons() {
+    document.querySelectorAll('.sort-icon').forEach(el => el.innerHTML = '<i data-lucide="chevrons-up-down" class="w-3 h-3 text-slate-300 ml-1"></i>');
+    document.querySelectorAll('.mobile-sort-btn').forEach(el => el.classList.remove('bg-indigo-50', 'text-indigo-600', 'ring-1', 'ring-indigo-100', 'shadow-sm'));
+
+    const iconContainer = document.getElementById(`sort-icon-${state.sortField}`);
+    const headerText = document.getElementById(`header-${state.sortField}`);
+    
+    // Reset Header colors
+    document.querySelectorAll('[id^="header-"]').forEach(el => el.classList.remove('text-indigo-600'));
+
+    if (iconContainer) {
+        const iconName = state.sortDirection === 'asc' ? 'chevron-up' : 'chevron-down';
+        iconContainer.innerHTML = `<i data-lucide="${iconName}" class="w-3.5 h-3.5 text-indigo-600 ml-1 stroke-[3px]"></i>`;
+        if(headerText) headerText.classList.add('text-indigo-600');
+    }
+
+    const activeMobileBtn = document.querySelector(`.mobile-sort-btn[data-sort="${state.sortField}"]`);
+    if (activeMobileBtn) {
+        activeMobileBtn.classList.add('bg-indigo-50', 'text-indigo-600', 'ring-1', 'ring-indigo-100', 'shadow-sm');
+    }
+}
+
+function updateFilterButtons() {
+    const advBtn = document.getElementById('btn-advanced-filter');
+    const panel = document.getElementById('advanced-filters-panel');
+    const btnReset = document.getElementById('btn-reset-empty'); // The one in empty state
+    
+    if (advBtn && panel) {
+        // Logic to highlight advanced filter button
+        if (!panel.classList.contains('hidden')) {
+            advBtn.classList.add('bg-indigo-600', 'text-white', 'border-indigo-600', 'shadow-lg', 'shadow-indigo-500/30');
+            advBtn.classList.remove('bg-white', 'text-slate-600', 'border-slate-200');
+        } else if (state.minPercent || state.maxPercent) {
+            advBtn.classList.add('bg-indigo-50', 'text-indigo-600', 'border-indigo-200', 'ring-2', 'ring-indigo-100');
+            advBtn.classList.remove('bg-white', 'text-slate-600', 'border-slate-200', 'bg-indigo-600', 'text-white');
+        } else {
+            advBtn.classList.remove('bg-indigo-600', 'text-white', 'border-indigo-600', 'shadow-lg', 'bg-indigo-50', 'text-indigo-600', 'ring-2', 'ring-indigo-100');
+            advBtn.classList.add('bg-white', 'text-slate-600', 'border-slate-200');
+        }
+    }
+
+    // Favorites Button
+    const favBtn = document.getElementById('btn-favorites');
+    if (favBtn) {
+        if (state.onlyFavorites) {
+            favBtn.classList.add('bg-amber-50', 'text-amber-600', 'border-amber-200', 'ring-2', 'ring-amber-100', 'shadow-sm');
+            favBtn.classList.remove('bg-white', 'text-slate-600', 'border-slate-200');
+            const icon = favBtn.querySelector('i');
+            if(icon) icon.classList.add('fill-amber-500', 'text-amber-500');
+        } else {
+            favBtn.classList.remove('bg-amber-50', 'text-amber-600', 'border-amber-200', 'ring-2', 'ring-amber-100', 'shadow-sm');
+            favBtn.classList.add('bg-white', 'text-slate-600', 'border-slate-200');
+            const icon = favBtn.querySelector('i');
+            if(icon) icon.classList.remove('fill-amber-500', 'text-amber-500');
+        }
+    }
+
+    // Type Buttons
+    document.querySelectorAll('.filter-type-btn').forEach(btn => {
+        const type = btn.getAttribute('data-type');
+        if (type === state.filterType) {
+            btn.classList.add('bg-slate-800', 'text-white', 'shadow-lg', 'shadow-slate-500/30');
+            btn.classList.remove('text-slate-500', 'hover:text-slate-700');
+        } else {
+            btn.classList.remove('bg-slate-800', 'text-white', 'shadow-lg', 'shadow-slate-500/30');
+            btn.classList.add('text-slate-500', 'hover:text-slate-700');
+        }
+    });
+
+    // Handle Reset Button inside Empty State
+    if(btnReset) {
+        btnReset.onclick = () => {
+             const mainReset = document.getElementById('btn-reset');
+             if(mainReset) mainReset.click();
+        }
+    }
+}
+
+// Global Helpers (exposed to window for onclick)
+window.toggleFavorite = (id) => {
+    if (state.favorites.has(id)) {
+        state.favorites.delete(id);
+    } else {
+        state.favorites.add(id);
+    }
+    localStorage.setItem('school_favorites', JSON.stringify([...state.favorites]));
+    updateUI();
+};
+
+window.openGoogleSearch = (query) => {
+    window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank');
+};
+
+window.openGoogleMaps = (query) => {
+    window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`, '_blank');
+};
+
+window.closeGuide = () => {
+    const modal = document.getElementById('guide-modal');
+    if(modal) modal.classList.add('hidden');
+    document.body.style.overflow = 'unset';
+};
+
+window.openSidebar = () => {
+    const overlay = document.getElementById('sidebar-overlay');
+    const panel = document.getElementById('sidebar-panel');
+    
+    if (overlay && panel) {
+        overlay.classList.remove('hidden');
+        setTimeout(() => {
+            overlay.classList.remove('opacity-0');
+            panel.classList.remove('translate-x-full');
+        }, 10);
+        document.body.style.overflow = 'hidden';
+    }
+    if(window.lucide) lucide.createIcons();
+};
+
+window.closeSidebar = () => {
+    const overlay = document.getElementById('sidebar-overlay');
+    const panel = document.getElementById('sidebar-panel');
+    
+    if (overlay && panel) {
+        overlay.classList.add('opacity-0');
+        panel.classList.add('translate-x-full');
+        
+        setTimeout(() => {
+            overlay.classList.add('hidden');
+            document.body.style.overflow = 'unset';
+        }, 300);
+    }
+};
+
+// Internal Event Wiring
+function attachEventListeners() {
+    const safeAddListener = (id, event, handler) => {
+        const el = document.getElementById(id);
+        if(el) el.addEventListener(event, handler);
+    };
+
+    // Search
+    safeAddListener('search-input', 'input', (e) => {
+        state.searchTerm = e.target.value;
+        updateUI();
+    });
+
+    // Sort Headers (Desktop)
+    document.querySelectorAll('[data-sort]').forEach(th => {
+        th.addEventListener('click', () => {
+            const field = th.getAttribute('data-sort');
+            if (state.sortField === field) {
+                state.sortDirection = state.sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                state.sortField = field;
+                state.sortDirection = 'asc';
+            }
+            updateUI();
+        });
+    });
+
+    // Sort Buttons (Mobile)
+    document.querySelectorAll('.mobile-sort-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const field = btn.getAttribute('data-sort');
+            if (state.sortField === field) {
+                state.sortDirection = state.sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                state.sortField = field;
+                state.sortDirection = 'asc';
+            }
+            updateUI();
+        });
+    });
+
+    // View Toggles
+    const setView = (mode) => {
+        state.viewMode = mode;
+        updateUI();
+    };
+    safeAddListener('view-list', 'click', () => setView('list'));
+    safeAddListener('mobile-view-list', 'click', () => setView('list'));
+    safeAddListener('view-chart', 'click', () => setView('chart'));
+    safeAddListener('mobile-view-chart', 'click', () => setView('chart'));
+
+    // Advanced Filter Toggle
+    safeAddListener('btn-advanced-filter', 'click', () => {
+        const panel = document.getElementById('advanced-filters-panel');
+        if(panel) panel.classList.toggle('hidden');
+        updateUI();
+    });
+
+    // Min/Max Inputs
+    safeAddListener('min-percent', 'input', (e) => {
+        state.minPercent = e.target.value;
+        updateUI();
+    });
+    safeAddListener('max-percent', 'input', (e) => {
+        state.maxPercent = e.target.value;
+        updateUI();
+    });
+
+    // Favorites Toggle
+    safeAddListener('btn-favorites', 'click', () => {
+        state.onlyFavorites = !state.onlyFavorites;
+        updateUI();
+    });
+
+    // Filter Type Buttons
+    document.querySelectorAll('.filter-type-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            state.filterType = btn.getAttribute('data-type');
+            updateUI();
+        });
+    });
+
+    // Reset Button
+    safeAddListener('btn-reset', 'click', () => {
+        state.searchTerm = '';
+        const searchInput = document.getElementById('search-input');
+        if(searchInput) searchInput.value = '';
+        
+        state.filterType = 'all';
+        state.onlyFavorites = false;
+        state.minPercent = '';
+        const minEl = document.getElementById('min-percent');
+        if(minEl) minEl.value = '';
+        
+        state.maxPercent = '';
+        const maxEl = document.getElementById('max-percent');
+        if(maxEl) maxEl.value = '';
+        
+        updateUI();
+    });
+
+    // Guide Modal
+    safeAddListener('btn-guide', 'click', () => {
+        const modal = document.getElementById('guide-modal');
+        if(modal) modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    });
+}
+
+function showError(msg) {
+    state.error = msg;
+    state.loading = false;
+    updateUI();
+}

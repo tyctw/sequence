@@ -1,488 +1,487 @@
+<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>桃園市高中職序位</title>
-  <meta name="description" content="桃園市高中職會考序位分析平台，提供最新普通科與職業類科升學資訊與排名數據。">
-  <meta name="keywords" content="桃園市高中,桃園市高職,會考序位,國中會考,升學資訊,桃園,分發序位,學校排名,TYCTW,普通科,職業類科">
-  <meta name="author" content="TYCTW">
-  <meta property="og:title" content="桃園市高中職序位 - 會考成績分析平台">
-  <meta property="og:description" content="提供桃園市各高中職的會考序位資料分析，協助國中畢業生選擇理想學校。">
-  <meta property="og:image" content="https://rcpett.vercel.app/logo.png">
-  <meta property="og:url" content="https://rcpett.vercel.app/">
-  <meta property="og:type" content="website">
-  <link rel="canonical" href="https://rcpett.vercel.app/">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="menu-styles.css">
-  <link rel="stylesheet" href="guide-styles.css">
-  <link rel="stylesheet" href="loading-animation.css">
-  <link rel="stylesheet" href="mobile-styles.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script type="module" src="app.js" defer></script>
-  <script type="module" src="guide.js" defer></script>
-</head>
-<body>
-  <div id="loading" class="loader-container">
-    <div class="loader">
-      <div class="loader-ripple"></div>
-      <div class="loader-circle"></div>
-      <div class="loader-circle"></div>
-      <div class="loader-circle"></div>
-      <div class="loader-text">
-        <span>載</span>
-        <span>入</span>
-        <span>資</span>
-        <span>料</span>
-        <span>中</span>
-        <span>...</span>
-      </div>
-    </div>
-  </div>
-
-  <header>
-    <div class="header-content">
-      <div class="logo">
-        <i class="fas fa-chart-bar"></i>
-        TYCTW 會考分析
-      </div>
-      <div class="search-container">
-        <input type="text" id="searchInput" placeholder="搜尋學校..." />
-        <i class="fas fa-search search-icon"></i>
-      </div>
-      <button class="menu-toggle">
-        <i class="fas fa-bars"></i>
-      </button>
-      <button id="helpBtn" class="help-button">
-        <i class="fas fa-question-circle"></i>
-      </button>
-    </div>
-  </header>
-
-  <div class="mobile-menu">
-    <button class="menu-close">
-      <i class="fas fa-times"></i>
-    </button>
-    <div class="mobile-menu-header">
-      <div class="logo">
-        <i class="fas fa-chart-bar"></i>
-        TYCTW 會考分析
-      </div>
-    </div>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#4f46e5" />
+    <meta name="description" content="桃連區會考各校高中錄取續位參考表" />
+    <title>桃連區會考落點分析</title>
     
-    <div class="mobile-menu-scroll">
-      <div class="menu-category">
-        <div class="menu-category-title">主要功能</div>
-        <a href="https://sites.google.com/view/tyctw/">
-          <i class="fas fa-home"></i> 回到主網頁
-        </a>
-        <a href="https://tyctw.github.io/">
-          <i class="fas fa-chart-line"></i> 落點分析系統
-        </a>
-      </div>
-      
-      <div class="menu-category">
-        <div class="menu-category-title">資源與工具</div>
-        <a href="https://tyctw.github.io/Navigation/" target="_blank">
-          <i class="fas fa-info-circle"></i> 更多資訊
-        </a>
-        <a href="#" id="menuHelpBtn">
-          <i class="fas fa-question-circle"></i> 使用說明
-        </a>
-      </div>
-      
-      <div class="menu-category">
-        <div class="menu-category-title">資料匯出</div>
-        <a href="#" id="menuExportCSV">
-          <i class="fas fa-file-csv"></i> 匯出CSV
-        </a>
-        <a href="#" id="menuExportPDF">
-          <i class="fas fa-file-pdf"></i> 匯出PDF
-        </a>
-        <a href="#" id="menuPrintButton">
-          <i class="fas fa-print"></i> 列印資料
-        </a>
-      </div>
-    </div>
-  </div>
-
-  <h1>
-    <i class="fas fa-school"></i>
-    桃園市高中職序位
-  </h1>
-
-  <div class="view-controls">
-    <div class="button-container">
-      <button id="normalBtn" class="button active">
-        <i class="fas fa-graduation-cap"></i> 普通科
-      </button>
-      <button id="vocationalBtn" class="button">
-        <i class="fas fa-tools"></i> 職業類科
-      </button>
-    </div>
-    <div class="view-toggle">
-      <button id="tableViewBtn" class="view-button active">
-        <i class="fas fa-table"></i> 表格檢視
-      </button>
-      <button id="chartViewBtn" class="view-button">
-        <i class="fas fa-chart-bar"></i> 圖表檢視
-      </button>
-    </div>
-  </div>
-
-  <div class="container table-view active" id="tableView">
-    <div class="table-responsive">
-      <table id="schoolTable">
-        <thead>
-          <tr>
-            <th onclick="sortTable(0)">
-              <i class="fas fa-sort"></i> 學校名稱
-            </th>
-            <th onclick="sortTable(1)">
-              <i class="fas fa-sort"></i> 序位累積比率
-            </th>
-            <th onclick="sortTable(2)">
-              <i class="fas fa-sort"></i> 序位累積人數
-            </th>
-          </tr>
-        </thead>
-        <tbody id="tableBody">
-        </tbody>
-      </table>
-    </div>
-    <div class="mobile-swipe-hint">
-      <i class="fas fa-chevron-left"></i>
-      左右滑動查看更多
-      <i class="fas fa-chevron-right"></i>
-    </div>
-  </div>
-
-  <div class="container chart-view" id="chartView">
-    <canvas id="schoolChart"></canvas>
-  </div>
-
-  <div class="data-summary">
-    <div class="summary-card">
-      <i class="fas fa-school"></i>
-      <h3>總學校數</h3>
-      <p id="totalSchools">0</p>
-    </div>
-    <div class="summary-card">
-      <i class="fas fa-users"></i>
-      <h3>平均序位人數</h3>
-      <p id="averageRank">0</p>
-    </div>
-    <div class="summary-card">
-      <i class="fas fa-percentage"></i>
-      <h3>平均比率</h3>
-      <p id="averageRate">0%</p>
-    </div>
-  </div>
-
-  <footer>
-    <div class="export-buttons">
-      <button id="exportCSV" class="export-button">
-        <i class="fas fa-file-csv"></i> 匯出CSV
-      </button>
-      <button id="exportPDF" class="export-button">
-        <i class="fas fa-file-pdf"></i> 匯出PDF
-      </button>
-      <button id="printButton" class="print-button">
-        <i class="fas fa-print"></i> 列印資料
-      </button>
-    </div>
-    <p>
-      <i class="far fa-copyright"></i> 2025 TYCTW桃園市高中普通科與職業類科序位. 版權所有。
-    </p>
-    <p>
-      <i class="fas fa-info-circle"></i> 以上資料僅供參考
-    </p>
-  </footer>
-
-  <div id="notification" class="notification">
-    <i class="fas fa-info-circle"></i>
-    <span id="notificationText"></span>
-  </div>
-
-  <div id="userGuideModal" class="modal">
-    <div class="modal-content">
-      <span class="close-btn">&times;</span>
-      <div class="guide-header">
-        <i class="fas fa-book-open"></i>
-        <h2>使用說明指南</h2>
-      </div>
-      <div class="guide-tabs">
-        <button class="guide-tab-btn active" data-tab="basics">基本功能</button>
-        <button class="guide-tab-btn" data-tab="data">資料說明</button>
-        <button class="guide-tab-btn" data-tab="mobile">行動裝置</button>
-        <button class="guide-tab-btn" data-tab="export">匯出功能</button>
-      </div>
-      <div class="guide-sections-container">
-        <div class="guide-tab-content active" id="basics-tab">
-          <div class="guide-section">
-            <div class="guide-icon">
-              <i class="fas fa-search"></i>
-            </div>
-            <div class="guide-text">
-              <h3>快速搜尋功能</h3>
-              <p>使用頁面上方的搜尋框，輸入學校名稱即可快速找到相關資訊：</p>
-              <ul>
-                <li><i class="fas fa-keyboard"></i> 支援模糊搜尋，輸入部分名稱即可</li>
-                <li><i class="fas fa-filter"></i> 即時過濾結果，立即顯示符合項目</li>
-                <li><i class="fas fa-history"></i> 搜尋結果即時更新，無需重新載入</li>
-              </ul>
-              <div class="guide-demo">
-                <div class="search-demo">
-                  <input type="text" placeholder="輸入學校名稱..." disabled />
-                  <i class="fas fa-search"></i>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="guide-section">
-            <div class="guide-icon">
-              <i class="fas fa-table"></i>
-            </div>
-            <div class="guide-text">
-              <h3>資料檢視模式</h3>
-              <p>提供兩種資料呈現方式，滿足不同需求：</p>
-              <ul>
-                <li><i class="fas fa-table"></i> <b>表格檢視：</b>詳細的數據資料，支援排序功能</li>
-                <li><i class="fas fa-chart-bar"></i> <b>圖表檢視：</b>視覺化呈現，直觀比較各校數據</li>
-              </ul>
-              <div class="guide-demo">
-                <div class="tab-demo">
-                  <button class="tab-demo-btn active"><i class="fas fa-table"></i> 表格檢視</button>
-                  <button class="tab-demo-btn"><i class="fas fa-chart-bar"></i> 圖表檢視</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="guide-section">
-            <div class="guide-icon">
-              <i class="fas fa-graduation-cap"></i>
-            </div>
-            <div class="guide-text">
-              <h3>類科切換功能</h3>
-              <p>依照您的需求選擇查看不同類科的資料：</p>
-              <ul>
-                <li><i class="fas fa-graduation-cap"></i> <b>普通科：</b>高中普通科的序位資料與分析</li>
-                <li><i class="fas fa-tools"></i> <b>職業類科：</b>高職各科別的序位資料與分析</li>
-              </ul>
-              <div class="guide-demo">
-                <button class="demo-btn active"><i class="fas fa-graduation-cap"></i> 普通科</button>
-                <button class="demo-btn"><i class="fas fa-tools"></i> 職業類科</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="guide-tab-content" id="data-tab">
-          <div class="guide-section">
-            <div class="guide-icon">
-              <i class="fas fa-chart-line"></i>
-            </div>
-            <div class="guide-text">
-              <h3>序位資料解讀</h3>
-              <p>了解如何解讀各項數據指標，幫助您做出更明智的選擇：</p>
-              <div class="data-info-box">
-                <h4><i class="fas fa-percentage"></i> 序位累積比率</h4>
-                <p>代表該校在所有考生中的相對位置，數值越高表示入學門檻越高。</p>
-                <h4><i class="fas fa-users"></i> 序位累積人數</h4>
-                <p>顯示會考成績達到該校標準的學生總人數。</p>
-              </div>
-              <div class="guide-demo">
-                <div class="data-example">
-                  <div class="example-item">
-                    <span class="example-name">範例高中</span>
-                    <span class="example-rate">85%</span>
-                    <span class="example-rank">4,250人</span>
-                  </div>
-                  <div class="example-explanation">
-                    <p>解讀：有4,250名學生的會考成績達到或超過該校標準，位於全體考生的前85%。</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="guide-section">
-            <div class="guide-icon">
-              <i class="fas fa-sort-amount-down"></i>
-            </div>
-            <div class="guide-text">
-              <h3>資料排序功能</h3>
-              <p>點擊表格標題可依照不同條件排序：</p>
-              <ul>
-                <li><i class="fas fa-sort-alpha-down"></i> 學校名稱：依學校名稱字母順序排列</li>
-                <li><i class="fas fa-sort-numeric-down"></i> 序位比率：依序位累積比率高低排列</li>
-                <li><i class="fas fa-sort-numeric-down-alt"></i> 序位人數：依序位累積人數多寡排列</li>
-              </ul>
-              <div class="highlight">
-                提示：點擊同一欄位兩次可切換升序/降序排列。
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="guide-tab-content" id="mobile-tab">
-          <div class="guide-section">
-            <div class="guide-icon">
-              <i class="fas fa-mobile-alt"></i>
-            </div>
-            <div class="guide-text">
-              <h3>行動裝置使用技巧</h3>
-              <p>在手機或平板上使用時的特殊功能與操作方式：</p>
-              <ul class="feature-list">
-                <li><i class="fas fa-arrows-alt-h"></i> 左右滑動查看完整表格內容</li>
-                <li><i class="fas fa-sync"></i> 雙指縮放調整圖表大小與細節</li>
-                <li><i class="fas fa-hand-point-up"></i> 點擊圖表數據點查看詳細資訊</li>
-                <li><i class="fas fa-bars"></i> 使用側邊選單快速存取所有功能</li>
-              </ul>
-              <div class="mobile-demo">
-                <div class="phone-outline">
-                  <div class="phone-screen">
-                    <div class="phone-header">
-                      <span class="phone-title">TYCTW 會考分析</span>
-                      <i class="fas fa-bars"></i>
-                    </div>
-                    <div class="phone-content">
-                      <div class="swipe-indicator">
-                        <i class="fas fa-chevron-left"></i>
-                        <span>左右滑動查看更多</span>
-                        <i class="fas fa-chevron-right"></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="guide-section">
-            <div class="guide-icon">
-              <i class="fas fa-tablet-alt"></i>
-            </div>
-            <div class="guide-text">
-              <h3>響應式設計</h3>
-              <p>系統會根據您的裝置自動調整版面配置：</p>
-              <ul>
-                <li><i class="fas fa-desktop"></i> 桌面版：完整功能，多欄位並排顯示</li>
-                <li><i class="fas fa-tablet-alt"></i> 平板版：優化觸控體驗，簡化部分版面</li>
-                <li><i class="fas fa-mobile-alt"></i> 手機版：單欄顯示，專為小螢幕優化</li>
-              </ul>
-              <div class="highlight">
-                無論使用何種裝置，都能獲得最佳的使用體驗！
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="guide-tab-content" id="export-tab">
-          <div class="guide-section">
-            <div class="guide-icon">
-              <i class="fas fa-file-export"></i>
-            </div>
-            <div class="guide-text">
-              <h3>資料匯出選項</h3>
-              <p>提供多種資料匯出格式，方便後續使用與分享：</p>
-              <div class="export-options">
-                <div class="export-option">
-                  <div class="export-icon">
-                    <i class="fas fa-file-csv"></i>
-                  </div>
-                  <div class="export-info">
-                    <h4>CSV 格式</h4>
-                    <p>適合用Excel進行進階分析與處理</p>
-                    <span class="export-tag">可編輯</span>
-                  </div>
-                </div>
-                <div class="export-option">
-                  <div class="export-icon">
-                    <i class="fas fa-file-pdf"></i>
-                  </div>
-                  <div class="export-info">
-                    <h4>PDF 格式</h4>
-                    <p>適合保存與分享，保持原始排版</p>
-                    <span class="export-tag">高品質</span>
-                  </div>
-                </div>
-                <div class="export-option">
-                  <div class="export-icon">
-                    <i class="fas fa-print"></i>
-                  </div>
-                  <div class="export-info">
-                    <h4>列印功能</h4>
-                    <p>支援客製化列印選項與預覽</p>
-                    <span class="export-tag">可自訂</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="guide-section">
-            <div class="guide-icon">
-              <i class="fas fa-share-alt"></i>
-            </div>
-            <div class="guide-text">
-              <h3>分享與保存</h3>
-              <p>將資料分享給他人或保存以供日後參考：</p>
-              <ul>
-                <li><i class="fas fa-link"></i> 複製連結：分享特定學校的資料頁面</li>
-                <li><i class="fas fa-save"></i> 儲存資料：將查詢結果保存到本機</li>
-                <li><i class="fas fa-history"></i> 瀏覽紀錄：系統會記住您最近查看的學校</li>
-              </ul>
-              <div class="highlight">
-                匯出的資料包含查詢時間，方便追蹤資料更新狀態。
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="guide-footer">
-        <button class="guide-close-btn">我已了解</button>
-        <label class="dont-show-again">
-          <input type="checkbox" id="dontShowAgain">
-          <span>不再顯示此說明</span>
-        </label>
-      </div>
-    </div>
-  </div>
-
-  <div class="seo-structured-data" aria-hidden="true">
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "EducationalOrganization",
-      "name": "桃園市高中職序位分析平台",
-      "url": "https://rcpett.vercel.app/",
-      "description": "提供桃園市高中職普通科與職業類科的會考序位分析數據，協助國中學生了解各校分發概況。",
-      "contactPoint": {
-        "@type": "ContactPoint",
-        "email": "tyctw.analyze@gmail.com",
-        "contactType": "customer service"
-      }
-    }
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'Microsoft JhengHei', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                        }
+                    },
+                    animation: {
+                        'spin-slow': 'spin 8s linear infinite',
+                        'spin-reverse-slow': 'spin 12s linear infinite reverse',
+                    }
+                }
+            }
+        }
     </script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Dataset",
-      "name": "桃園市高中職序位數據",
-      "description": "桃園市各高中職的會考序位數據，包含序位累積人數、序位累積比率，以及近年來的分發趨勢分析，幫助學生與家長做出更好的升學選擇。",
-      "keywords": ["桃園市", "高中", "高職", "會考", "序位", "排名", "升學資訊"],
-      "creator": {
-        "@type": "Organization",
-        "name": "TYCTW"
-      },
-      "license": "https://creativecommons.org/licenses/by-nc/4.0/"
-    }
-    </script>
-  </div>
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.3",
+    "recharts": "https://esm.sh/recharts@^3.5.1",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "lucide-react": "https://esm.sh/lucide-react@^0.561.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body class="bg-[#f3f4f8] text-slate-800 font-sans antialiased selection:bg-indigo-100 selection:text-indigo-900 pb-20 relative overflow-x-hidden">
 
+    <!-- Modern Animated Background -->
+    <div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none no-print">
+        <div class="absolute top-[-20%] left-[-10%] w-[60vw] h-[60vw] rounded-full bg-indigo-300/20 blur-[120px] mix-blend-multiply animate-pulse"></div>
+        <div class="absolute top-[20%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-purple-300/20 blur-[120px] mix-blend-multiply"></div>
+        <div class="absolute bottom-[-10%] left-[30%] w-[40vw] h-[40vw] rounded-full bg-sky-200/30 blur-[100px] mix-blend-multiply"></div>
+    </div>
+
+    <!-- Print Header -->
+    <div class="print-only tyctw-watermark">TYCTW 會考落點分析</div>
+    <div class="print-only mb-6 border-b-2 border-indigo-600 pb-4">
+        <h1 class="text-3xl font-extrabold text-slate-900">TYCTW 會考落點分析</h1>
+        <div class="flex justify-between items-end mt-2">
+            <p class="text-sm text-slate-500">高中職錄取續位參考表</p>
+            <div class="text-right text-xs text-slate-400">
+                <p>產生日期：<span id="print-date"></span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modern Header -->
+    <header class="glass-nav sticky top-0 z-40 transition-all duration-300 no-print">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 md:h-20 flex items-center justify-between">
+            <div class="flex items-center gap-4 group cursor-default">
+                <div class="relative">
+                    <div class="absolute inset-0 bg-indigo-500 rounded-2xl blur opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
+                    <div class="relative bg-gradient-to-br from-indigo-500 to-purple-600 text-white p-2.5 rounded-2xl shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-transform duration-300">
+                        <i data-lucide="bar-chart-2" class="w-5 h-5 md:w-6 md:h-6"></i>
+                    </div>
+                </div>
+                <div>
+                    <h1 class="text-lg md:text-2xl font-extrabold tracking-tight text-slate-800 leading-none">
+                        <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">TYCTW</span> 落點分析
+                    </h1>
+                    <p class="text-xs font-semibold text-slate-400 mt-1 hidden md:block tracking-wide uppercase">
+                        桃連區高中職錄取參考
+                    </p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-3">
+                <!-- Action Group -->
+                <div class="hidden md:flex items-center gap-2 bg-white/50 p-1.5 rounded-2xl border border-white/60 shadow-sm mr-2">
+                     <button id="view-list" class="view-toggle-btn active flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300">
+                        <i data-lucide="list" class="w-4 h-4"></i>
+                        列表
+                    </button>
+                    <button id="view-chart" class="view-toggle-btn flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300">
+                        <i data-lucide="pie-chart" class="w-4 h-4"></i>
+                        圖表
+                    </button>
+                </div>
+
+                <div class="flex gap-2">
+                    <button id="btn-guide" class="p-2.5 bg-white text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all border border-slate-200/50 shadow-sm group" title="說明">
+                        <i data-lucide="help-circle" class="w-5 h-5 group-hover:rotate-12 transition-transform"></i>
+                    </button>
+                    
+                    <button onclick="window.print()" class="hidden sm:flex items-center gap-2 px-4 py-2.5 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-sm font-bold shadow-lg shadow-slate-200 active:scale-95 transition-all">
+                        <i data-lucide="printer" class="w-4 h-4"></i>
+                        <span>列印</span>
+                    </button>
+
+                    <!-- Sidebar Toggle -->
+                    <button onclick="openSidebar()" class="flex items-center justify-center p-2.5 bg-white border border-slate-200/50 hover:border-indigo-200 hover:bg-indigo-50 text-slate-700 rounded-xl shadow-sm active:scale-95 transition-all group">
+                        <i data-lucide="menu" class="w-5 h-5 group-hover:text-indigo-600 transition-colors"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 mt-8 space-y-8">
+        
+        <!-- Disclaimer Banner -->
+        <div class="no-print relative overflow-hidden bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-100 rounded-3xl p-6 shadow-sm group">
+            <div class="absolute -right-10 -top-10 text-amber-100 opacity-50 group-hover:rotate-12 transition-transform duration-700">
+                <i data-lucide="shield-alert" class="w-40 h-40"></i>
+            </div>
+            <div class="relative z-10 flex flex-col md:flex-row gap-5 items-start">
+                <div class="p-3 bg-white/60 backdrop-blur rounded-2xl text-amber-500 shadow-sm ring-1 ring-amber-100">
+                    <i data-lucide="alert-circle" class="w-6 h-6"></i>
+                </div>
+                <div class="space-y-2">
+                    <h3 class="font-bold text-lg text-amber-900">資料參考重要聲明</h3>
+                    <p class="text-sm text-amber-800/80 leading-relaxed font-medium max-w-3xl">
+                        本站數據僅為歷年會考資訊之<strong>估計參考值</strong>。實際錄取結果受試題難度、招生名額及志願選填影響。
+                        <span class="block mt-1 text-amber-700 font-bold">請務必諮詢學校導師或專業顧問，切勿作為唯一依據。</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls Section -->
+        <div class="no-print sticky top-[80px] z-30">
+            <div class="glass-card rounded-3xl p-4 transition-all duration-300 hover:shadow-lg">
+                <div class="flex flex-col gap-4">
+                    <div class="flex flex-col md:flex-row gap-4">
+                        <!-- Search Bar -->
+                        <div class="relative flex-1 group">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i data-lucide="search" class="h-5 w-5 text-indigo-300 group-focus-within:text-indigo-500 transition-colors"></i>
+                            </div>
+                            <input type="text" id="search-input" class="block w-full pl-12 pr-4 py-3.5 bg-slate-50/50 border border-slate-200 rounded-2xl leading-5 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition-all font-medium text-slate-700 shadow-inner" placeholder="搜尋學校、科系關鍵字...">
+                        </div>
+
+                        <!-- Filter Controls -->
+                        <div class="flex gap-2 overflow-x-auto pb-1 md:pb-0 px-1 md:px-0 no-scrollbar items-center">
+                            
+                            <!-- Mobile View Toggle -->
+                            <div class="md:hidden flex bg-slate-100/80 p-1.5 rounded-xl shrink-0 mr-2 border border-slate-200/50">
+                                <button id="mobile-view-list" class="p-2.5 rounded-lg transition-all bg-white shadow-sm text-indigo-600">
+                                    <i data-lucide="list" class="w-5 h-5"></i>
+                                </button>
+                                <button id="mobile-view-chart" class="p-2.5 rounded-lg transition-all text-slate-400">
+                                    <i data-lucide="pie-chart" class="w-5 h-5"></i>
+                                </button>
+                            </div>
+
+                            <button id="btn-advanced-filter" class="flex items-center gap-2 px-4 py-3.5 rounded-2xl text-sm font-bold whitespace-nowrap transition-all border shrink-0 bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300 shadow-sm active:scale-95">
+                                <i data-lucide="sliders-horizontal" class="w-4 h-4"></i>
+                                <span class="hidden md:inline">進階篩選</span>
+                                <span class="md:hidden">篩選</span>
+                            </button>
+
+                            <button id="btn-favorites" class="flex items-center gap-2 px-4 py-3.5 rounded-2xl text-sm font-bold whitespace-nowrap transition-all border shrink-0 bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300 shadow-sm active:scale-95">
+                                <i data-lucide="star" class="w-4 h-4"></i>
+                                <span class="hidden md:inline">我的收藏</span>
+                                <span class="md:hidden">收藏</span>
+                            </button>
+
+                            <div class="w-px h-8 bg-slate-200 shrink-0 mx-2"></div>
+
+                            <div class="flex bg-slate-100/80 p-1.5 rounded-2xl shrink-0 border border-slate-200/50">
+                                <button class="filter-type-btn active px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition-all bg-white text-slate-800 shadow-sm" data-type="all">全部</button>
+                                <button class="filter-type-btn px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition-all text-slate-500 hover:text-slate-700" data-type="general">普通科</button>
+                                <button class="filter-type-btn px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition-all text-slate-500 hover:text-slate-700" data-type="vocational">職科</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Advanced Filters Panel -->
+                    <div id="advanced-filters-panel" class="hidden pt-4 border-t border-slate-100 animate-slide-up">
+                        <div class="flex flex-col md:flex-row gap-4 items-start md:items-end bg-slate-50/50 p-4 rounded-2xl border border-slate-100">
+                            <div class="w-full md:w-auto space-y-2">
+                                <label class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
+                                    <i data-lucide="percent" class="w-3 h-3"></i>
+                                    錄取比率區間
+                                </label>
+                                <div class="flex items-center gap-2">
+                                    <input type="number" id="min-percent" placeholder="0" class="w-full md:w-28 px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-center shadow-sm">
+                                    <span class="text-slate-300 font-bold">-</span>
+                                    <input type="number" id="max-percent" placeholder="100" class="w-full md:w-28 px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-center shadow-sm">
+                                </div>
+                            </div>
+                            <div class="flex-1"></div>
+                            <button id="btn-reset" class="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-slate-600 hover:bg-white px-4 py-2.5 rounded-xl transition-all ml-auto border border-transparent hover:border-slate-200 hover:shadow-sm">
+                                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                                重置條件
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loading-state" class="min-h-[500px] flex flex-col items-center justify-center relative overflow-hidden py-10">
+            <!-- Background Orbits -->
+            <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-40">
+                <div class="w-[300px] h-[300px] md:w-[500px] md:h-[500px] border border-indigo-200/60 rounded-full animate-spin-slow">
+                     <div class="absolute top-1/2 right-0 w-3 h-3 bg-indigo-300 rounded-full -mt-1.5 shadow-[0_0_10px_rgba(165,180,252,0.8)]"></div>
+                </div>
+                <div class="absolute w-[200px] h-[200px] md:w-[350px] md:h-[350px] border border-purple-200/60 rounded-full animate-spin-reverse-slow">
+                    <div class="absolute bottom-0 left-1/2 w-2.5 h-2.5 bg-purple-300 rounded-full -mt-1.5 shadow-[0_0_10px_rgba(216,180,254,0.8)]"></div>
+                </div>
+            </div>
+
+            <div class="relative z-10 flex flex-col items-center">
+                <!-- Center Graphic -->
+                <div class="relative w-28 h-28 mb-8 flex items-center justify-center">
+                     <!-- Pulsing Ring -->
+                     <div class="absolute inset-0 bg-indigo-100/50 rounded-full animate-ping opacity-75"></div>
+                     <div class="absolute inset-4 bg-white rounded-full shadow-xl shadow-indigo-100 flex items-center justify-center z-10 border border-slate-50">
+                         <i data-lucide="school" class="w-10 h-10 text-indigo-600 animate-pulse"></i>
+                     </div>
+                     <!-- Spinning Segment -->
+                     <div class="absolute inset-0 border-[6px] border-indigo-50 rounded-full"></div>
+                     <div class="absolute inset-0 border-[6px] border-transparent border-t-indigo-500 rounded-full animate-spin"></div>
+                </div>
+                
+                <!-- Text Content -->
+                <div class="text-center space-y-3 max-w-sm px-4">
+                    <h3 class="text-2xl font-black text-slate-800 tracking-tight">
+                        資料分析中...
+                    </h3>
+                    <p class="text-slate-500 font-medium text-sm">
+                        正在連線至雲端資料庫取得最新學校錄取資訊，請稍候。
+                    </p>
+                </div>
+
+                <!-- Bouncing Dots -->
+                <div class="flex gap-2 mt-8">
+                    <div class="w-2.5 h-2.5 rounded-full bg-indigo-600 animate-[bounce_1s_infinite]"></div>
+                    <div class="w-2.5 h-2.5 rounded-full bg-indigo-400 animate-[bounce_1s_infinite_0.15s]"></div>
+                    <div class="w-2.5 h-2.5 rounded-full bg-indigo-300 animate-[bounce_1s_infinite_0.3s]"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error State -->
+        <div id="error-state" class="hidden min-h-[400px] flex flex-col items-center justify-center">
+            <div class="glass-card p-10 rounded-[2rem] max-w-md w-full text-center border-t-4 border-t-rose-500 relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-8 opacity-5">
+                    <i data-lucide="wifi-off" class="w-32 h-32"></i>
+                </div>
+                <div class="p-4 bg-rose-50 rounded-2xl text-rose-500 inline-flex mb-6 ring-4 ring-rose-50/50">
+                    <i data-lucide="alert-octagon" class="w-10 h-10"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-slate-800">讀取發生錯誤</h3>
+                <p id="error-message" class="text-slate-500 mt-3 text-sm leading-relaxed mb-8 font-medium"></p>
+                <button onclick="window.location.reload()" class="w-full py-3.5 bg-slate-900 text-white rounded-xl font-bold hover:bg-indigo-600 hover:shadow-lg hover:shadow-indigo-500/20 transition-all flex items-center justify-center gap-2">
+                    <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                    重新整理頁面
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div id="content-area" class="hidden min-h-[400px]">
+            <!-- List View -->
+            <div id="list-view-container">
+                <!-- Desktop Table: Floating Rows Style -->
+                <div class="hidden md:block space-y-3">
+                    <!-- Header Row -->
+                    <div class="grid grid-cols-12 gap-4 px-6 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                        <div class="col-span-1 text-center">收藏</div>
+                        <div class="col-span-3 cursor-pointer hover:text-indigo-600 transition-colors flex items-center gap-1" data-sort="name" id="header-name">
+                            學校名稱 <span class="sort-icon" id="sort-icon-name"></span>
+                        </div>
+                        <div class="col-span-3 cursor-pointer hover:text-indigo-600 transition-colors flex items-center gap-1" data-sort="percent" id="header-percent">
+                            序位比率 <span class="sort-icon" id="sort-icon-percent"></span>
+                        </div>
+                        <div class="col-span-2 cursor-pointer hover:text-indigo-600 transition-colors flex items-center gap-1" data-sort="count" id="header-count">
+                            累積人數 <span class="sort-icon" id="sort-icon-count"></span>
+                        </div>
+                        <div class="col-span-3 text-right">操作與類別</div>
+                    </div>
+                    
+                    <div id="table-body" class="space-y-3">
+                        <!-- JS generated rows will go here -->
+                    </div>
+                </div>
+
+                <!-- Mobile Cards -->
+                <div class="md:hidden space-y-4">
+                    <div class="glass-nav p-2 rounded-2xl flex justify-between items-center text-xs font-bold text-slate-500 sticky top-[156px] z-20 mx-1">
+                        <span class="pl-2">排序方式</span>
+                        <div class="flex gap-1">
+                           <button data-sort="percent" class="mobile-sort-btn px-4 py-2 rounded-xl transition-all border border-transparent">比率</button>
+                           <button data-sort="count" class="mobile-sort-btn px-4 py-2 rounded-xl transition-all border border-transparent">人數</button>
+                        </div>
+                    </div>
+                    <div id="mobile-cards-container" class="space-y-4">
+                        <!-- Cards will be injected here -->
+                    </div>
+                </div>
+
+                <!-- Empty State -->
+                <div id="empty-state" class="hidden p-16 text-center text-slate-400 flex flex-col items-center glass-card rounded-[2rem] border-dashed border-2 border-slate-200 mt-8">
+                    <div class="p-4 bg-slate-50 rounded-full mb-4">
+                        <i data-lucide="search-x" class="w-12 h-12 opacity-30"></i>
+                    </div>
+                    <span class="text-lg font-bold text-slate-600">沒有找到符合條件的學校</span>
+                    <p class="text-sm mt-2 text-slate-500 font-medium">請嘗試調整搜尋關鍵字或放寬篩選條件</p>
+                    <button id="btn-reset-empty" class="mt-6 px-6 py-2.5 bg-white border border-slate-200 text-slate-600 font-bold rounded-xl hover:bg-slate-50 transition-all shadow-sm">
+                        清除搜尋條件
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chart View -->
+            <div id="chart-view-container" class="hidden glass-card p-6 md:p-10 rounded-[2.5rem] relative overflow-hidden">
+                <div class="mb-8 relative z-10">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="p-2 bg-indigo-100 rounded-xl text-indigo-600">
+                            <i data-lucide="bar-chart-2" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-2xl font-extrabold text-slate-800">錄取續位分佈圖</h3>
+                    </div>
+                    <p class="text-sm font-medium text-slate-500 pl-1">
+                        顯示前 30 筆資料的入學門檻分佈（累積百分比由低至高）。
+                    </p>
+                </div>
+                <div class="h-[600px] w-full relative z-10 bg-white/50 rounded-2xl p-4 border border-slate-100/50">
+                    <canvas id="statsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-20 py-10 text-center border-t border-slate-200/60 relative">
+            <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent"></div>
+            <div class="flex justify-center items-center gap-2 mb-4 opacity-50">
+                 <i data-lucide="graduation-cap" class="w-6 h-6"></i>
+            </div>
+            <p class="text-slate-400 text-sm font-semibold tracking-wide">
+                © <span id="copyright-year"></span> TYCTW 會考落點分析
+            </p>
+            <p class="text-slate-300 text-xs mt-2">Designed for Taoyuan Students</p>
+        </footer>
+    </main>
+
+    <!-- Right Sidebar Menu -->
+    <div id="sidebar-overlay" class="fixed inset-0 z-50 bg-slate-900/10 backdrop-blur-sm hidden transition-opacity duration-300 opacity-0" onclick="closeSidebar()"></div>
+    <div id="sidebar-panel" class="fixed top-0 right-0 z-50 h-full w-[300px] bg-white/90 backdrop-blur-xl shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col no-print border-l border-white/50">
+        <div class="flex items-center justify-between p-6 border-b border-slate-100/50 bg-slate-50/30">
+            <h2 class="font-bold text-lg text-slate-800 flex items-center gap-2">
+                <span class="w-1.5 h-5 bg-indigo-600 rounded-full"></span>
+                功能選單
+            </h2>
+            <button onclick="closeSidebar()" class="p-2.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-full transition-colors">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+        <nav class="flex-1 overflow-y-auto p-4 space-y-3">
+            <a href="https://sites.google.com/view/tyctw/" target="_blank" class="flex items-center gap-4 px-4 py-4 text-slate-600 hover:text-indigo-600 hover:bg-indigo-50/80 rounded-2xl transition-all font-bold group">
+                <div class="p-2.5 bg-white border border-slate-100 text-slate-400 group-hover:bg-white group-hover:text-indigo-500 rounded-xl shadow-sm transition-colors">
+                    <i data-lucide="home" class="w-5 h-5"></i>
+                </div>
+                首頁
+                <i data-lucide="chevron-right" class="w-4 h-4 ml-auto text-slate-300 group-hover:text-indigo-400"></i>
+            </a>
+            <a href="https://tyctw.github.io/spare" target="_blank" class="flex items-center gap-4 px-4 py-4 text-slate-600 hover:text-indigo-600 hover:bg-indigo-50/80 rounded-2xl transition-all font-bold group">
+                <div class="p-2.5 bg-white border border-slate-100 text-slate-400 group-hover:bg-white group-hover:text-indigo-500 rounded-xl shadow-sm transition-colors">
+                    <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
+                </div>
+                落點分析
+                <i data-lucide="chevron-right" class="w-4 h-4 ml-auto text-slate-300 group-hover:text-indigo-400"></i>
+            </a>
+            <a href="https://tyctw.github.io/Navigation/" target="_blank" class="flex items-center gap-4 px-4 py-4 text-slate-600 hover:text-indigo-600 hover:bg-indigo-50/80 rounded-2xl transition-all font-bold group">
+                <div class="p-2.5 bg-white border border-slate-100 text-slate-400 group-hover:bg-white group-hover:text-indigo-500 rounded-xl shadow-sm transition-colors">
+                    <i data-lucide="file-text" class="w-5 h-5"></i>
+                </div>
+                更多資料
+                <i data-lucide="chevron-right" class="w-4 h-4 ml-auto text-slate-300 group-hover:text-indigo-400"></i>
+            </a>
+        </nav>
+        <div class="p-6 bg-slate-50/50">
+             <div class="bg-indigo-600 rounded-2xl p-4 text-white shadow-lg shadow-indigo-500/30 relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-3 opacity-20">
+                    <i data-lucide="graduation-cap" class="w-16 h-16 -rotate-12"></i>
+                </div>
+                <h4 class="font-bold text-lg relative z-10">祝考試順利！</h4>
+                <p class="text-indigo-100 text-xs mt-1 relative z-10 opacity-90">TYCTW Team</p>
+             </div>
+        </div>
+    </div>
+
+    <!-- Guide Modal -->
+    <div id="guide-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 no-print">
+        <div class="absolute inset-0 bg-slate-900/30 backdrop-blur-md transition-opacity" onclick="closeGuide()"></div>
+        <div class="relative w-full max-w-2xl bg-white rounded-[2rem] shadow-2xl flex flex-col max-h-[90vh] overflow-hidden animate-fade-in border border-white/50">
+            <div class="flex items-center justify-between px-8 py-6 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white">
+                <div class="flex items-center gap-3 text-slate-800">
+                    <div class="p-2.5 bg-indigo-100 rounded-xl text-indigo-600 shadow-sm">
+                        <i data-lucide="book-open" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-extrabold text-slate-800">使用指南</h2>
+                        <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mt-0.5">PLATFORM GUIDE</p>
+                    </div>
+                </div>
+                <button onclick="closeGuide()" class="p-2.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-8 space-y-8">
+                <section>
+                    <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <span class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center">
+                             <i data-lucide="info" class="w-4 h-4"></i>
+                        </span>
+                        關於本平台
+                    </h3>
+                    <div class="bg-blue-50/50 p-5 rounded-2xl border border-blue-100 text-slate-600 leading-relaxed text-sm font-medium">
+                        「TYCTW 桃連區會考落點分析」是專為桃園、連江考區學生設計的志願選填輔助工具。整合歷年會考數據，以視覺化卡片呈現，協助您快速評估落點。
+                    </div>
+                </section>
+                
+                <section class="space-y-4">
+                    <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                         <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center">
+                             <i data-lucide="zap" class="w-4 h-4"></i>
+                        </span>
+                        功能特色
+                    </h3>
+                    <div class="grid sm:grid-cols-2 gap-4">
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-indigo-300 hover:shadow-md transition-all group cursor-default">
+                            <h4 class="font-bold text-slate-700 mb-2 flex items-center gap-2 text-sm">
+                                <i data-lucide="search" class="w-4 h-4 text-indigo-400 group-hover:text-indigo-600"></i>
+                                智慧搜尋
+                            </h4>
+                            <p class="text-xs text-slate-500 leading-relaxed">輸入關鍵字即可快速找到學校或科系，支援模糊搜尋。</p>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-indigo-300 hover:shadow-md transition-all group cursor-default">
+                            <h4 class="font-bold text-slate-700 mb-2 flex items-center gap-2 text-sm">
+                                <i data-lucide="sliders-horizontal" class="w-4 h-4 text-indigo-400 group-hover:text-indigo-600"></i>
+                                進階篩選
+                            </h4>
+                            <p class="text-xs text-slate-500 leading-relaxed">可依照錄取百分比區間進行精準篩選，鎖定目標。</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="p-6 border-t border-slate-100 bg-slate-50/50 flex justify-end">
+                <button onclick="closeGuide()" class="px-8 py-3 bg-slate-900 hover:bg-indigo-600 text-white font-bold rounded-xl transition-all shadow-lg shadow-slate-200 active:scale-95">
+                    開始使用
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+<script type="module" src="/index.tsx"></script>
 </body>
 </html>
