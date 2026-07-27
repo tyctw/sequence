@@ -127,3 +127,188 @@
     display: inline-block;
     vertical-align: middle;
 }
+
+/* Keep filter labels readable even when their state is changed by JavaScript. */
+.filter-type-btn {
+    color: #64748b;
+}
+
+.filter-type-btn:hover {
+    color: #334155;
+}
+
+.filter-type-btn.active {
+    background-color: #1e293b;
+    color: #ffffff;
+    box-shadow: 0 8px 16px -6px rgba(71, 85, 105, 0.35);
+}
+
+/* Filter toolbar */
+.filter-panel {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(248, 250, 252, 0.88));
+    border: 1px solid rgba(203, 213, 225, 0.72);
+    box-shadow: 0 14px 32px -24px rgba(15, 23, 42, 0.45);
+}
+
+/* Keep filters available while the results list is scrolled. */
+.filter-sticky {
+    position: sticky;
+    top: 4rem;
+    z-index: 30;
+}
+
+@media (min-width: 768px) {
+    .filter-sticky {
+        top: 5rem;
+    }
+}
+
+.filter-main-row {
+    align-items: center;
+}
+
+.filter-search input {
+    min-height: 52px;
+    background: #ffffff;
+    border-color: #dbe4f0;
+    box-shadow: 0 3px 10px -8px rgba(15, 23, 42, 0.4);
+}
+
+.filter-actions {
+    align-items: center;
+}
+
+.filter-actions > button {
+    min-height: 48px;
+    border-color: #dbe4f0;
+    background: #ffffff;
+    color: #475569;
+    box-shadow: 0 3px 10px -8px rgba(15, 23, 42, 0.42);
+}
+
+.filter-actions > button:hover {
+    background: #f5f7ff;
+    border-color: #a5b4fc;
+    color: #4f46e5;
+}
+
+.filter-view-switch,
+.filter-type-group {
+    background: #eef2f7;
+    border-color: #dbe4f0;
+}
+
+.filter-view-switch button {
+    min-width: 42px;
+}
+
+.filter-type-group {
+    gap: 3px;
+    padding: 4px;
+}
+
+.filter-type-btn {
+    min-height: 40px;
+    padding: 0 1rem;
+    border-radius: 0.7rem;
+    font-size: 0.8125rem;
+}
+
+.filter-type-btn:hover {
+    background: #ffffff;
+}
+
+.filter-type-btn.active {
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    box-shadow: 0 6px 12px -7px rgba(79, 70, 229, 0.8);
+}
+
+/* Keyboard accessibility */
+.skip-link {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 100;
+    transform: translateY(-160%);
+    padding: 0.7rem 1rem;
+    border-radius: 0.75rem;
+    background: #1e1b4b;
+    color: #ffffff;
+    font-weight: 800;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+}
+
+.skip-link:focus {
+    transform: translateY(0);
+}
+
+:focus-visible {
+    outline: 3px solid #4f46e5;
+    outline-offset: 3px;
+}
+
+#main-content:focus {
+    outline: none;
+}
+
+.advanced-filter-content {
+    background: linear-gradient(135deg, #f8faff, #f8fafc);
+    border-color: #e0e7ff;
+}
+
+@media (max-width: 767px) {
+    .filter-sticky {
+        top: 4rem;
+    }
+
+    .filter-panel {
+        padding: 0.9rem;
+        border-radius: 1.35rem;
+    }
+
+    .filter-main-row {
+        gap: 0.75rem;
+    }
+
+    .filter-actions {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        width: 100%;
+        gap: 0.5rem;
+        padding: 0;
+    }
+
+    .filter-view-switch {
+        margin-right: 0 !important;
+        padding: 0.125rem !important;
+    }
+
+    .filter-view-switch button {
+        min-width: 32px;
+        padding: 0.55rem 0.375rem !important;
+    }
+
+    .filter-actions > button {
+        justify-content: center;
+        min-width: 0;
+        gap: 0.35rem;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+
+    .filter-type-group {
+        grid-column: 1 / -1;
+        width: 100%;
+    }
+
+    .filter-type-btn {
+        flex: 1;
+        padding: 0 0.5rem;
+    }
+
+    .advanced-filter-content {
+        padding: 0.9rem;
+        border-radius: 1rem;
+    }
+}

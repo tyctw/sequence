@@ -1,4 +1,5 @@
 const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbyhTgVSZRz2OBklNDfjBUUoSl_ah6-9-rYe97-XsY7aKW9Dah5k-C-Ffp7tGBt-PnqV/exec';
+const TOTAL_CANDIDATES = 16206;
 
 // State Management
 const state = {
@@ -71,13 +72,18 @@ async function fetchData() {
                 department = category === 'general' ? '普通科' : '職業類科';
             }
 
+            const count = Number(String(item.rank).replace(/,/g, ''));
+            const percent = Number.isFinite(count)
+                ? Number(((count / TOTAL_CANDIDATES) * 100).toFixed(2))
+                : 0;
+
             return {
                 id: `${category}-${index}`,
                 name: item.name,
                 schoolName,
                 department,
-                percent: item.rate,
-                count: item.rank,
+                percent,
+                count,
                 category: category
             };
         };
@@ -134,46 +140,9 @@ function updateUI() {
     renderSortIcons();
     updateFilterButtons();
 
-    // Handle View Mode Switching
+    // The results are shown as a list only.
     const listViewContainer = document.getElementById('list-view-container');
-    const chartViewContainer = document.getElementById('chart-view-container');
-
-    if (state.viewMode === 'list') {
-        listViewContainer.classList.remove('hidden');
-        chartViewContainer.classList.add('hidden');
-    } else {
-        listViewContainer.classList.add('hidden');
-        chartViewContainer.classList.remove('hidden');
-        // Small timeout to ensure container is visible before rendering chart
-        setTimeout(() => renderChart(processedData), 0);
-    }
-
-    // Update View Buttons State (Desktop & Mobile)
-    const updateBtnState = (btnId, isActive, isMobile) => {
-        const btn = document.getElementById(btnId);
-        if (!btn) return;
-
-        if (isMobile) {
-            // Mobile Styles
-            if (isActive) {
-                btn.className = 'p-2.5 rounded-lg transition-all bg-white shadow-sm text-indigo-600';
-            } else {
-                btn.className = 'p-2.5 rounded-lg transition-all text-slate-400';
-            }
-        } else {
-            // Desktop Styles
-            if (isActive) {
-                btn.className = 'view-toggle-btn flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 bg-indigo-600 text-white shadow-md shadow-indigo-500/20';
-            } else {
-                btn.className = 'view-toggle-btn flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 bg-transparent text-slate-600 hover:bg-white/50';
-            }
-        }
-    };
-
-    updateBtnState('view-list', state.viewMode === 'list', false);
-    updateBtnState('mobile-view-list', state.viewMode === 'list', true);
-    updateBtnState('view-chart', state.viewMode === 'chart', false);
-    updateBtnState('mobile-view-chart', state.viewMode === 'chart', true);
+    if (listViewContainer) listViewContainer.classList.remove('hidden');
 
 
     // Empty State visibility
@@ -559,7 +528,9 @@ function updateFilterButtons() {
     // Type Buttons
     document.querySelectorAll('.filter-type-btn').forEach(btn => {
         const type = btn.getAttribute('data-type');
-        if (type === state.filterType) {
+        const isActive = type === state.filterType;
+        btn.setAttribute('aria-pressed', String(isActive));
+        if (isActive) {
             btn.classList.add('bg-slate-800', 'text-white', 'shadow-lg', 'shadow-slate-500/30');
             btn.classList.remove('text-slate-500', 'hover:text-slate-700');
         } else {
@@ -598,8 +569,12 @@ window.openGoogleMaps = (query) => {
 
 window.closeGuide = () => {
     const modal = document.getElementById('guide-modal');
-    if(modal) modal.classList.add('hidden');
+    if(modal) {
+        modal.classList.add('hidden');
+        modal.setAttribute('aria-hidden', 'true');
+    }
     document.body.style.overflow = 'unset';
+    document.getElementById('btn-guide')?.focus();
 };
 
 window.openSidebar = () => {
@@ -608,9 +583,13 @@ window.openSidebar = () => {
     
     if (overlay && panel) {
         overlay.classList.remove('hidden');
+        overlay.setAttribute('aria-hidden', 'false');
+        panel.setAttribute('aria-hidden', 'false');
+        document.getElementById('btn-sidebar')?.setAttribute('aria-expanded', 'true');
         setTimeout(() => {
             overlay.classList.remove('opacity-0');
             panel.classList.remove('translate-x-full');
+            panel.querySelector('button')?.focus();
         }, 10);
         document.body.style.overflow = 'hidden';
     }
@@ -624,10 +603,14 @@ window.closeSidebar = () => {
     if (overlay && panel) {
         overlay.classList.add('opacity-0');
         panel.classList.add('translate-x-full');
+        overlay.setAttribute('aria-hidden', 'true');
+        panel.setAttribute('aria-hidden', 'true');
+        document.getElementById('btn-sidebar')?.setAttribute('aria-expanded', 'false');
         
         setTimeout(() => {
             overlay.classList.add('hidden');
             document.body.style.overflow = 'unset';
+            document.getElementById('btn-sidebar')?.focus();
         }, 300);
     }
 };
@@ -673,20 +656,13 @@ function attachEventListeners() {
         });
     });
 
-    // View Toggles
-    const setView = (mode) => {
-        state.viewMode = mode;
-        updateUI();
-    };
-    safeAddListener('view-list', 'click', () => setView('list'));
-    safeAddListener('mobile-view-list', 'click', () => setView('list'));
-    safeAddListener('view-chart', 'click', () => setView('chart'));
-    safeAddListener('mobile-view-chart', 'click', () => setView('chart'));
-
     // Advanced Filter Toggle
     safeAddListener('btn-advanced-filter', 'click', () => {
         const panel = document.getElementById('advanced-filters-panel');
-        if(panel) panel.classList.toggle('hidden');
+        if(panel) {
+            panel.classList.toggle('hidden');
+            document.getElementById('btn-advanced-filter')?.setAttribute('aria-expanded', String(!panel.classList.contains('hidden')));
+        }
         updateUI();
     });
 
@@ -736,8 +712,20 @@ function attachEventListeners() {
     // Guide Modal
     safeAddListener('btn-guide', 'click', () => {
         const modal = document.getElementById('guide-modal');
-        if(modal) modal.classList.remove('hidden');
+        if(modal) {
+            modal.classList.remove('hidden');
+            modal.setAttribute('aria-hidden', 'false');
+            setTimeout(() => modal.querySelector('button')?.focus(), 0);
+        }
         document.body.style.overflow = 'hidden';
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key !== 'Escape') return;
+        const guideModal = document.getElementById('guide-modal');
+        const sidebar = document.getElementById('sidebar-panel');
+        if (guideModal && !guideModal.classList.contains('hidden')) closeGuide();
+        else if (sidebar && !sidebar.classList.contains('translate-x-full')) closeSidebar();
     });
 }
 

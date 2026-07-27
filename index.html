@@ -4,8 +4,18 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#4f46e5" />
-    <meta name="description" content="桃連區會考各校高中錄取續位參考表" />
-    <title>桃連區會考落點分析</title>
+    <meta name="description" content="桃連區高中職會考序位區間查詢工具，依累積人數自動換算序位比率，快速比較普通科與技職科的會考落點參考資訊。" />
+    <meta name="keywords" content="桃連區會考,桃連區高中職,會考序位區間,會考落點分析,桃園高中職,新竹高中職,基北區會考,序位比率" />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="TYCTW" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh_TW" />
+    <meta property="og:title" content="桃連區高中職會考序位區間｜TYCTW 落點分析" />
+    <meta property="og:description" content="查詢桃連區高中職會考序位區間，依累積人數自動換算序位比率，掌握普通科與技職科落點參考。" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="桃連區高中職會考序位區間｜TYCTW 落點分析" />
+    <meta name="twitter:description" content="桃連區高中職會考序位區間與落點參考查詢工具。" />
+    <title>桃連區高中職會考序位區間｜TYCTW 落點分析</title>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6966991656561179"
      crossorigin="anonymous"></script>
     <!-- Tailwind CSS -->
@@ -35,14 +45,26 @@
         }
     </script>
     
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <!-- Custom Styles -->
     <link rel="stylesheet" href="style.css">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "桃連區高中職會考序位區間｜TYCTW 落點分析",
+        "description": "提供桃連區高中職會考序位區間、累積人數與序位比率的落點參考查詢。",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "Web",
+        "inLanguage": "zh-TW",
+        "provider": {
+            "@type": "Organization",
+            "name": "TYCTW"
+        }
+    }
+    </script>
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -59,6 +81,7 @@
 <link rel="stylesheet" href="/index.css">
 </head>
 <body class="bg-[#f3f4f8] text-slate-800 font-sans antialiased selection:bg-indigo-100 selection:text-indigo-900 pb-20 relative overflow-x-hidden">
+    <a class="skip-link" href="#main-content">跳至主要內容</a>
 
     <!-- Modern Animated Background -->
     <div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none no-print">
@@ -91,29 +114,17 @@
                 </div>
                 <div>
                     <h1 class="text-lg md:text-2xl font-extrabold tracking-tight text-slate-800 leading-none">
-                        <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">TYCTW</span> 落點分析
+                        <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">TYCTW</span> 桃連區高中職會考序位區間
                     </h1>
                     <p class="text-xs font-semibold text-slate-400 mt-1 hidden md:block tracking-wide uppercase">
-                        桃連區高中職錄取參考
+                        桃連區高中職會考序位區間與落點參考
                     </p>
                 </div>
             </div>
             
             <div class="flex items-center gap-3">
-                <!-- Action Group -->
-                <div class="hidden md:flex items-center gap-2 bg-white/50 p-1.5 rounded-2xl border border-white/60 shadow-sm mr-2">
-                     <button id="view-list" class="view-toggle-btn active flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300">
-                        <i data-lucide="list" class="w-4 h-4"></i>
-                        列表
-                    </button>
-                    <button id="view-chart" class="view-toggle-btn flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300">
-                        <i data-lucide="pie-chart" class="w-4 h-4"></i>
-                        圖表
-                    </button>
-                </div>
-
                 <div class="flex gap-2">
-                    <button id="btn-guide" class="p-2.5 bg-white text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all border border-slate-200/50 shadow-sm group" title="說明">
+                    <button id="btn-guide" aria-label="開啟使用指南" aria-haspopup="dialog" class="p-2.5 bg-white text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all border border-slate-200/50 shadow-sm group" title="說明">
                         <i data-lucide="help-circle" class="w-5 h-5 group-hover:rotate-12 transition-transform"></i>
                     </button>
                     
@@ -123,7 +134,7 @@
                     </button>
 
                     <!-- Sidebar Toggle -->
-                    <button onclick="openSidebar()" class="flex items-center justify-center p-2.5 bg-white border border-slate-200/50 hover:border-indigo-200 hover:bg-indigo-50 text-slate-700 rounded-xl shadow-sm active:scale-95 transition-all group">
+                    <button id="btn-sidebar" onclick="openSidebar()" aria-label="開啟功能選單" aria-controls="sidebar-panel" aria-expanded="false" class="flex items-center justify-center p-2.5 bg-white border border-slate-200/50 hover:border-indigo-200 hover:bg-indigo-50 text-slate-700 rounded-xl shadow-sm active:scale-95 transition-all group">
                         <i data-lucide="menu" class="w-5 h-5 group-hover:text-indigo-600 transition-colors"></i>
                     </button>
                 </div>
@@ -131,54 +142,46 @@
         </div>
     </header>
 
-    <main class="max-w-6xl mx-auto px-4 sm:px-6 mt-8 space-y-8">
+    <main id="main-content" tabindex="-1" class="max-w-6xl mx-auto px-4 sm:px-6 mt-8 space-y-8">
         
-        <!-- Disclaimer Banner -->
-        <div class="no-print relative overflow-hidden bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-100 rounded-3xl p-6 shadow-sm group">
-            <div class="absolute -right-10 -top-10 text-amber-100 opacity-50 group-hover:rotate-12 transition-transform duration-700">
-                <i data-lucide="shield-alert" class="w-40 h-40"></i>
-            </div>
-            <div class="relative z-10 flex flex-col md:flex-row gap-5 items-start">
-                <div class="p-3 bg-white/60 backdrop-blur rounded-2xl text-amber-500 shadow-sm ring-1 ring-amber-100">
-                    <i data-lucide="alert-circle" class="w-6 h-6"></i>
+        <!-- Recommended Reading -->
+        <section class="no-print rounded-3xl border border-indigo-100 bg-gradient-to-br from-indigo-50 via-white to-violet-50 p-6 shadow-sm" aria-labelledby="reading-title">
+            <div class="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+                <div>
+                    <p class="text-xs font-extrabold tracking-widest text-indigo-500">TYCTW GUIDE</p>
+                    <h2 id="reading-title" class="mt-1 text-xl font-extrabold text-slate-800">先看這 6 篇，少走志願選填的冤枉路</h2>
+                    <p class="mt-1 text-sm font-medium text-slate-500">用幾分鐘看懂序位、成績與校系選擇，讓每一個志願都有清楚的理由。</p>
                 </div>
-                <div class="space-y-2">
-                    <h3 class="font-bold text-lg text-amber-900">資料參考重要聲明</h3>
-                    <p class="text-sm text-amber-800/80 leading-relaxed font-medium max-w-3xl">
-                        本站數據僅為歷年會考資訊之<strong>估計參考值</strong>。實際錄取結果受試題難度、招生名額及志願選填影響。
-                        <span class="block mt-1 text-amber-700 font-bold">請務必諮詢學校導師或專業顧問，切勿作為唯一依據。</span>
-                    </p>
-                </div>
+                <a href="exam-rank-guide.html" class="text-sm font-bold text-indigo-600 hover:text-indigo-800">從序位指南開始 →</a>
             </div>
-        </div>
+            <div class="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                <a href="exam-rank-guide.html" class="group rounded-2xl border border-white bg-white/80 p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md"><i data-lucide="bar-chart-2" class="mb-3 h-5 w-5 text-indigo-500"></i><h3 class="font-bold text-slate-800 group-hover:text-indigo-700">3 分鐘看懂：我的序位在哪？</h3><p class="mt-1 text-xs leading-5 text-slate-500">別把區間看成名次；一次讀懂累積人數怎麼用。</p></a>
+                <a href="exam-score-guide.html" class="group rounded-2xl border border-white bg-white/80 p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md"><i data-lucide="file-check-2" class="mb-3 h-5 w-5 text-indigo-500"></i><h3 class="font-bold text-slate-800 group-hover:text-indigo-700">成績單別只看 A、B、C</h3><p class="mt-1 text-xs leading-5 text-slate-500">看懂等級與標示，才知道下一步該怎麼規劃。</p></a>
+                <a href="admission-preference-guide.html" class="group rounded-2xl border border-white bg-white/80 p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md"><i data-lucide="list-checks" class="mb-3 h-5 w-5 text-indigo-500"></i><h3 class="font-bold text-slate-800 group-hover:text-indigo-700">志願怎麼排，才不會後悔？</h3><p class="mt-1 text-xs leading-5 text-slate-500">衝刺、適中、保守志願，一次建立有邏輯的順序。</p></a>
+                <a href="general-vocational-guide.html" class="group rounded-2xl border border-white bg-white/80 p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md"><i data-lucide="graduation-cap" class="mb-3 h-5 w-5 text-indigo-500"></i><h3 class="font-bold text-slate-800 group-hover:text-indigo-700">普通科 vs 技職，怎麼選？</h3><p class="mt-1 text-xs leading-5 text-slate-500">先看課程與學習方式，找到真正適合的高中生活。</p></a>
+                <a href="admission-timeline-guide.html" class="group rounded-2xl border border-white bg-white/80 p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md"><i data-lucide="calendar-days" class="mb-3 h-5 w-5 text-indigo-500"></i><h3 class="font-bold text-slate-800 group-hover:text-indigo-700">會考後，別漏掉這些事</h3><p class="mt-1 text-xs leading-5 text-slate-500">從查成績到報到，用一篇掌握每個關鍵階段。</p></a>
+                <a href="school-comparison-guide.html" class="group rounded-2xl border border-white bg-white/80 p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md"><i data-lucide="school" class="mb-3 h-5 w-5 text-indigo-500"></i><h3 class="font-bold text-slate-800 group-hover:text-indigo-700">高中職怎麼選，才適合自己？</h3><p class="mt-1 text-xs leading-5 text-slate-500">用一張比較表，讓選校不只憑感覺或校名。</p></a>
+            </div>
+        </section>
 
         <!-- Controls Section -->
-        <div class="no-print sticky top-[80px] z-30">
-            <div class="glass-card rounded-3xl p-4 transition-all duration-300 hover:shadow-lg">
+        <div class="no-print filter-sticky z-30">
+            <div class="glass-card filter-panel rounded-3xl p-4 transition-all duration-300 hover:shadow-lg">
                 <div class="flex flex-col gap-4">
-                    <div class="flex flex-col md:flex-row gap-4">
+                    <div class="filter-main-row flex flex-col md:flex-row gap-4">
                         <!-- Search Bar -->
-                        <div class="relative flex-1 group">
+                        <div class="filter-search relative flex-1 group">
                             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                 <i data-lucide="search" class="h-5 w-5 text-indigo-300 group-focus-within:text-indigo-500 transition-colors"></i>
                             </div>
-                            <input type="text" id="search-input" class="block w-full pl-12 pr-4 py-3.5 bg-slate-50/50 border border-slate-200 rounded-2xl leading-5 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition-all font-medium text-slate-700 shadow-inner" placeholder="搜尋學校、科系關鍵字...">
+                            <label for="search-input" class="sr-only">搜尋學校或科系</label>
+                            <input type="text" id="search-input" aria-label="搜尋學校或科系" class="block w-full pl-12 pr-4 py-3.5 bg-slate-50/50 border border-slate-200 rounded-2xl leading-5 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition-all font-medium text-slate-700 shadow-inner" placeholder="搜尋學校、科系關鍵字...">
                         </div>
 
                         <!-- Filter Controls -->
-                        <div class="flex gap-2 overflow-x-auto pb-1 md:pb-0 px-1 md:px-0 no-scrollbar items-center">
+                        <div class="filter-actions flex flex-wrap md:flex-nowrap gap-2 overflow-visible md:overflow-x-auto pb-1 md:pb-0 px-1 md:px-0 no-scrollbar items-center">
                             
-                            <!-- Mobile View Toggle -->
-                            <div class="md:hidden flex bg-slate-100/80 p-1.5 rounded-xl shrink-0 mr-2 border border-slate-200/50">
-                                <button id="mobile-view-list" class="p-2.5 rounded-lg transition-all bg-white shadow-sm text-indigo-600">
-                                    <i data-lucide="list" class="w-5 h-5"></i>
-                                </button>
-                                <button id="mobile-view-chart" class="p-2.5 rounded-lg transition-all text-slate-400">
-                                    <i data-lucide="pie-chart" class="w-5 h-5"></i>
-                                </button>
-                            </div>
-
-                            <button id="btn-advanced-filter" class="flex items-center gap-2 px-4 py-3.5 rounded-2xl text-sm font-bold whitespace-nowrap transition-all border shrink-0 bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300 shadow-sm active:scale-95">
+                            <button id="btn-advanced-filter" aria-expanded="false" aria-controls="advanced-filters-panel" class="flex items-center gap-2 px-4 py-3.5 rounded-2xl text-sm font-bold whitespace-nowrap transition-all border shrink-0 bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300 shadow-sm active:scale-95">
                                 <i data-lucide="sliders-horizontal" class="w-4 h-4"></i>
                                 <span class="hidden md:inline">進階篩選</span>
                                 <span class="md:hidden">篩選</span>
@@ -190,28 +193,28 @@
                                 <span class="md:hidden">收藏</span>
                             </button>
 
-                            <div class="w-px h-8 bg-slate-200 shrink-0 mx-2"></div>
+                            <div class="hidden md:block w-px h-8 bg-slate-200 shrink-0 mx-2"></div>
 
-                            <div class="flex bg-slate-100/80 p-1.5 rounded-2xl shrink-0 border border-slate-200/50">
-                                <button class="filter-type-btn active px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition-all bg-white text-slate-800 shadow-sm" data-type="all">全部</button>
-                                <button class="filter-type-btn px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition-all text-slate-500 hover:text-slate-700" data-type="general">普通科</button>
-                                <button class="filter-type-btn px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition-all text-slate-500 hover:text-slate-700" data-type="vocational">職科</button>
+                            <div class="filter-type-group flex w-full justify-between bg-slate-100/80 p-1.5 rounded-2xl shrink-0 border border-slate-200/50 md:w-auto md:justify-start" role="group" aria-label="學制篩選">
+                                <button aria-pressed="true" class="filter-type-btn active px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition-all bg-white text-slate-800 shadow-sm" data-type="all">全部</button>
+                                <button aria-pressed="false" class="filter-type-btn px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition-all text-slate-500 hover:text-slate-700" data-type="general">普通科</button>
+                                <button aria-pressed="false" class="filter-type-btn px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition-all text-slate-500 hover:text-slate-700" data-type="vocational">職科</button>
                             </div>
                         </div>
                     </div>
 
                     <!-- Advanced Filters Panel -->
                     <div id="advanced-filters-panel" class="hidden pt-4 border-t border-slate-100 animate-slide-up">
-                        <div class="flex flex-col md:flex-row gap-4 items-start md:items-end bg-slate-50/50 p-4 rounded-2xl border border-slate-100">
+                        <div class="advanced-filter-content flex flex-col md:flex-row gap-4 items-start md:items-end bg-slate-50/50 p-4 rounded-2xl border border-slate-100">
                             <div class="w-full md:w-auto space-y-2">
-                                <label class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
+                                <label for="min-percent" class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
                                     <i data-lucide="percent" class="w-3 h-3"></i>
                                     錄取比率區間
                                 </label>
                                 <div class="flex items-center gap-2">
-                                    <input type="number" id="min-percent" placeholder="0" class="w-full md:w-28 px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-center shadow-sm">
+                                    <input type="number" id="min-percent" aria-label="最低序位比率" placeholder="0" class="w-full md:w-28 px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-center shadow-sm">
                                     <span class="text-slate-300 font-bold">-</span>
-                                    <input type="number" id="max-percent" placeholder="100" class="w-full md:w-28 px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-center shadow-sm">
+                                    <input type="number" id="max-percent" aria-label="最高序位比率" placeholder="100" class="w-full md:w-28 px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-center shadow-sm">
                                 </div>
                             </div>
                             <div class="flex-1"></div>
@@ -340,23 +343,6 @@
                 </div>
             </div>
 
-            <!-- Chart View -->
-            <div id="chart-view-container" class="hidden glass-card p-6 md:p-10 rounded-[2.5rem] relative overflow-hidden">
-                <div class="mb-8 relative z-10">
-                    <div class="flex items-center gap-3 mb-2">
-                        <div class="p-2 bg-indigo-100 rounded-xl text-indigo-600">
-                            <i data-lucide="bar-chart-2" class="w-6 h-6"></i>
-                        </div>
-                        <h3 class="text-2xl font-extrabold text-slate-800">錄取續位分佈圖</h3>
-                    </div>
-                    <p class="text-sm font-medium text-slate-500 pl-1">
-                        顯示前 30 筆資料的入學門檻分佈（累積百分比由低至高）。
-                    </p>
-                </div>
-                <div class="h-[600px] w-full relative z-10 bg-white/50 rounded-2xl p-4 border border-slate-100/50">
-                    <canvas id="statsChart"></canvas>
-                </div>
-            </div>
         </div>
 
         <!-- Footer -->
@@ -373,14 +359,14 @@
     </main>
 
     <!-- Right Sidebar Menu -->
-    <div id="sidebar-overlay" class="fixed inset-0 z-50 bg-slate-900/10 backdrop-blur-sm hidden transition-opacity duration-300 opacity-0" onclick="closeSidebar()"></div>
-    <div id="sidebar-panel" class="fixed top-0 right-0 z-50 h-full w-[300px] bg-white/90 backdrop-blur-xl shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col no-print border-l border-white/50">
+    <div id="sidebar-overlay" aria-hidden="true" class="fixed inset-0 z-50 bg-slate-900/10 backdrop-blur-sm hidden transition-opacity duration-300 opacity-0" onclick="closeSidebar()"></div>
+    <aside id="sidebar-panel" role="dialog" aria-modal="true" aria-labelledby="sidebar-title" aria-hidden="true" class="fixed top-0 right-0 z-50 h-full w-[300px] bg-white/90 backdrop-blur-xl shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col no-print border-l border-white/50">
         <div class="flex items-center justify-between p-6 border-b border-slate-100/50 bg-slate-50/30">
-            <h2 class="font-bold text-lg text-slate-800 flex items-center gap-2">
+            <h2 id="sidebar-title" class="font-bold text-lg text-slate-800 flex items-center gap-2">
                 <span class="w-1.5 h-5 bg-indigo-600 rounded-full"></span>
                 功能選單
             </h2>
-            <button onclick="closeSidebar()" class="p-2.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-full transition-colors">
+            <button onclick="closeSidebar()" aria-label="關閉功能選單" class="p-2.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-full transition-colors">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
         </div>
@@ -397,6 +383,13 @@
                     <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
                 </div>
                 落點分析
+                <i data-lucide="chevron-right" class="w-4 h-4 ml-auto text-slate-300 group-hover:text-indigo-400"></i>
+            </a>
+            <a href="exam-rank-guide.html" class="flex items-center gap-4 px-4 py-4 text-slate-600 hover:text-indigo-600 hover:bg-indigo-50/80 rounded-2xl transition-all font-bold group">
+                <div class="p-2.5 bg-white border border-slate-100 text-slate-400 group-hover:bg-white group-hover:text-indigo-500 rounded-xl shadow-sm transition-colors">
+                    <i data-lucide="book-open" class="w-5 h-5"></i>
+                </div>
+                會考序位指南
                 <i data-lucide="chevron-right" class="w-4 h-4 ml-auto text-slate-300 group-hover:text-indigo-400"></i>
             </a>
             <a href="https://tyctw.github.io/Navigation/" target="_blank" class="flex items-center gap-4 px-4 py-4 text-slate-600 hover:text-indigo-600 hover:bg-indigo-50/80 rounded-2xl transition-all font-bold group">
@@ -416,10 +409,10 @@
                 <p class="text-indigo-100 text-xs mt-1 relative z-10 opacity-90">TYCTW Team</p>
              </div>
         </div>
-    </div>
+    </aside>
 
     <!-- Guide Modal -->
-    <div id="guide-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 no-print">
+    <div id="guide-modal" role="dialog" aria-modal="true" aria-labelledby="guide-title" aria-hidden="true" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 no-print">
         <div class="absolute inset-0 bg-slate-900/30 backdrop-blur-md transition-opacity" onclick="closeGuide()"></div>
         <div class="relative w-full max-w-2xl bg-white rounded-[2rem] shadow-2xl flex flex-col max-h-[90vh] overflow-hidden animate-fade-in border border-white/50">
             <div class="flex items-center justify-between px-8 py-6 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white">
@@ -428,11 +421,11 @@
                         <i data-lucide="book-open" class="w-6 h-6"></i>
                     </div>
                     <div>
-                        <h2 class="text-xl font-extrabold text-slate-800">使用指南</h2>
+                        <h2 id="guide-title" class="text-xl font-extrabold text-slate-800">使用指南</h2>
                         <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mt-0.5">PLATFORM GUIDE</p>
                     </div>
                 </div>
-                <button onclick="closeGuide()" class="p-2.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors">
+                <button onclick="closeGuide()" aria-label="關閉使用指南" class="p-2.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors">
                     <i data-lucide="x" class="w-6 h-6"></i>
                 </button>
             </div>
