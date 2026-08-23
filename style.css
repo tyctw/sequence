@@ -150,17 +150,9 @@
     box-shadow: 0 14px 32px -24px rgba(15, 23, 42, 0.45);
 }
 
-/* Keep filters available while the results list is scrolled. */
+/* Keep filters at their original place in the page layout. */
 .filter-sticky {
-    position: sticky;
-    top: 4rem;
-    z-index: 30;
-}
-
-@media (min-width: 768px) {
-    .filter-sticky {
-        top: 5rem;
-    }
+    position: static;
 }
 
 .filter-main-row {
@@ -258,10 +250,6 @@
 }
 
 @media (max-width: 767px) {
-    .filter-sticky {
-        top: 4rem;
-    }
-
     .filter-panel {
         padding: 0.9rem;
         border-radius: 1.35rem;

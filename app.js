@@ -530,6 +530,7 @@ function updateFilterButtons() {
         const type = btn.getAttribute('data-type');
         const isActive = type === state.filterType;
         btn.setAttribute('aria-pressed', String(isActive));
+        btn.classList.toggle('active', isActive);
         if (isActive) {
             btn.classList.add('bg-slate-800', 'text-white', 'shadow-lg', 'shadow-slate-500/30');
             btn.classList.remove('text-slate-500', 'hover:text-slate-700');
